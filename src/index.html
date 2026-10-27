@@ -32,10 +32,21 @@
   .dim { color: #8b93a3; font-size: 9.5px; }
   #dot { width: 5px; height: 5px; border-radius: 50%; background: #58d68d; box-shadow: 0 0 6px currentColor; }
   #dot.err { background: #ec7063; }
+  #calbar {
+    display: none;
+    position: absolute; left: 50%; top: 8px; transform: translateX(-50%);
+    max-width: 92%; padding: 6px 12px; border-radius: 8px;
+    background: rgba(40, 120, 220, .94); color: #fff;
+    font-size: 11px; line-height: 1.4; text-align: center; white-space: pre-wrap;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, .4);
+    pointer-events: none; z-index: 10;
+  }
+  #calbar.on { display: block; }
 </style>
 </head>
 <body>
 <canvas id="stage"></canvas>
+<div id="calbar"></div>
 <div id="hud" data-opaque="1" title="右键打开菜单">
   <span id="dot"></span>
   <span class="val" id="bal">--</span>

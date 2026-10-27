@@ -40,6 +40,16 @@ let lastOver = null
 let hasHitAreas = false
 let groups = {}
 let fitMode = 'auto'
+let anchors = null        // 标定后的触摸锚点 { head:{x,y,r}, body:..., special:... }
+let skinName = null       // 当前皮肤目录名
+let calibrating = null    // 标定中的临时状态
+
+/** 标定步骤：依次点三个位置 */
+const CAL_STEPS = [
+  { key: 'head', label: '头部', hint: '点一下她的头顶附近', r: 0.11 },
+  { key: 'body', label: '身体', hint: '点一下胸口或躯干', r: 0.14 },
+  { key: 'special', label: '特殊', hint: '点一下腿、裙摆这类位置', r: 0.16 },
+]
 
 // ---------- 模型 ----------------------------------------------------------
 async function loadModel(url) {
@@ -53,6 +63,16 @@ async function loadModel(url) {
 
   groups = model.internalModel.motionManager.definitions ?? {}
   hasHitAreas = (model.internalModel.settings?.hitAreas?.length ?? 0) > 0
+
+  // 读取该皮肤的标定数据（有就用锚点，没有就走兜底）
+  skinName = url.match(/assets\/([^/]+)\//)?.[1] ?? null
+  anchors = null
+  if (skinName) {
+    try {
+      const saved = await window.pet.hitareas(skinName)
+      if (saved?.anchors && Object.keys(saved.anchors).length) anchors = saved.anchors
+    } catch {}
+  }
 
   layout()
   startIdle()
@@ -88,11 +108,32 @@ window.addEventListener('resize', layout)
 
 function hitAt(x, y) {
   if (!model) return []
+  if (!modelRect) return []
+  const { x: rx, y: ry, w, h } = modelRect
+
+  // 标定过：按锚点算最近区域（x 按宽高比换算成"高度单位"，避免竖图横向误差）
+  if (anchors) {
+    const nx = (x - rx) / w
+    const ny = (y - ry) / h
+    const aspect = w / h
+    let best = null
+    let bestD = Infinity
+    for (const [k, a] of Object.entries(anchors)) {
+      const dx = (nx - a.x) * aspect
+      const dy = ny - a.y
+      const d = Math.hypot(dx, dy)
+      if (d < bestD) { bestD = d; best = k }
+    }
+    if (best && bestD <= (anchors[best].r ?? 0.14)) return [best]
+    return []
+  }
+
+  // 内置 HitAreas（官方模型）
   if (hasHitAreas) {
     try { return model.hitTest(x, y) ?? [] } catch { return [] }
   }
-  if (!modelRect) return []
-  const { x: rx, y: ry, w, h } = modelRect
+
+  // 兜底：按身高比例切三段
   if (x < rx || x > rx + w || y < ry || y > ry + h) return []
   const rel = (y - ry) / h
   const r = REGIONS.find((r) => rel >= r.y0 && rel < r.y1)
@@ -103,13 +144,69 @@ function hitAt(x, y) {
 // 主进程轮询全局光标位置来切换穿透，避免 mousemove 丢事件时中键穿透到下层窗口
 function publishInteractive() {
   const rects = []
-  if (modelRect) rects.push({ x: modelRect.x, y: modelRect.y, w: modelRect.w, h: modelRect.h })
+  // 标定时整窗接收点击，否则只认模型矩形和气泡
+  if (calibrating) {
+    rects.push({ x: 0, y: 0, w: window.innerWidth, h: window.innerHeight })
+  } else if (modelRect) {
+    rects.push({ x: modelRect.x, y: modelRect.y, w: modelRect.w, h: modelRect.h })
+  }
   const hud = el('hud')
   if (hud) {
     const r = hud.getBoundingClientRect()
     rects.push({ x: r.x, y: r.y, w: r.width, h: r.height })
   }
   try { window.pet.interactive(rects) } catch {}
+}
+
+// ---------- 触摸区标定 ----------------------------------------------------
+const calBar = el('calbar')
+
+function setCalBar(text) {
+  if (!calBar) return
+  calBar.textContent = text || ''
+  calBar.classList.toggle('on', !!text)
+}
+
+function startCalibration() {
+  if (!model || !modelRect) return
+  calibrating = { step: 0, collected: {} }
+  publishInteractive()
+  setCalBar(`标定 1/3 · ${CAL_STEPS[0].hint}`)
+  console.log('[calibrate] 开始标定', skinName)
+}
+
+function cancelCalibration(msg) {
+  calibrating = null
+  setCalBar('')
+  publishInteractive()
+  if (msg) {
+    setCalBar(msg)
+    setTimeout(() => setCalBar(''), 2500)
+  }
+}
+
+async function handleCalibrateClick(e) {
+  if (!calibrating || !modelRect) return
+  const { x: rx, y: ry, w, h } = modelRect
+  const nx = Math.min(1, Math.max(0, (e.clientX - rx) / w))
+  const ny = Math.min(1, Math.max(0, (e.clientY - ry) / h))
+  const step = CAL_STEPS[calibrating.step]
+  calibrating.collected[step.key] = { x: +nx.toFixed(4), y: +ny.toFixed(4), r: step.r }
+  calibrating.step++
+
+  if (calibrating.step < CAL_STEPS.length) {
+    setCalBar(`标定 ${calibrating.step + 1}/3 · ${CAL_STEPS[calibrating.step].hint}`)
+    return
+  }
+
+  const data = { version: 1, skin: skinName, anchors: calibrating.collected, updatedAt: new Date().toISOString() }
+  const res = await window.pet.saveHitareas(skinName, data)
+  if (res?.ok) {
+    anchors = data.anchors
+    cancelCalibration('✓ 已保存，点哪里都对了')
+  } else {
+    cancelCalibration('✗ 保存失败：' + (res?.error ?? '未知错误'))
+  }
 }
 
 // 中键：一键隐藏（托盘图标或 Ctrl+Alt+Z 恢复）
@@ -124,6 +221,11 @@ window.addEventListener('auxclick', (e) => { if (e.button === 1) e.preventDefaul
 
 // ---------- 拖动 / 点击 ---------------------------------------------------
 canvas.addEventListener('pointerdown', (e) => {
+  if (calibrating) {
+    e.preventDefault()
+    handleCalibrateClick(e)
+    return
+  }
   if (e.button !== 0) return
   if (!hitAt(e.clientX, e.clientY).length) return
   dragging = true
@@ -245,6 +347,22 @@ function boot() {
   })
 
   window.pet.onSkin((rel) => switchSkin(rel))
+
+  window.pet.onCalibrate(() => startCalibration())
+  window.pet.onHitareasCleared(async () => {
+    anchors = null
+    if (skinName) {
+      try {
+        const saved = await window.pet.hitareas(skinName)
+        anchors = saved?.anchors ?? null
+      } catch {}
+    }
+    setCalBar('已清除标定，回到默认分区')
+    setTimeout(() => setCalBar(''), 2200)
+  })
+  window.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && calibrating) cancelCalibration('已取消标定')
+  })
 
   window.pet.fit().then((m) => { fitMode = m || 'auto'; layout() }).catch(() => {})
   window.pet.onFit((m) => { fitMode = m; layout() })

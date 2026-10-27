@@ -17,3 +17,7 @@ tools/.usage-cache.json
 Thumbs.db
 .DS_Store
 *.log
+
+# 测试/截图用的独立 profile
+.snapshot-profile/
+.calib-test-profile/

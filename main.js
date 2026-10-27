@@ -8,6 +8,11 @@ const ROOT = __dirname
 const USAGE_SCRIPT = path.join(ROOT, 'tools', 'dsh_usage.mjs')
 const CONFIG_FILE = path.join(ROOT, 'config.json')
 
+// --snapshot 用独立 userData，避免和正在运行的桌宠抢缓存锁
+if (process.argv.includes('--snapshot')) {
+  app.setPath('userData', path.join(ROOT, '.snapshot-profile'))
+}
+
 const DEFAULT_CONFIG = {
   // 窗口宽高留空 = 按屏幕自动算（约屏幕宽的 15%，高 1.5 倍，落在桌宠尺寸区间）
   window: { width: 0, height: 0, marginRight: 32, marginBottom: 0 },
@@ -264,6 +269,23 @@ ipcMain.on('pet:menu', () => {
         },
       })),
     },
+    {
+      label: '触摸区',
+      submenu: [
+        { label: '开始标定…', click: () => { if (win) win.webContents.send('pet:calibrate') } },
+        {
+          label: '清除当前皮肤标定',
+          click: () => {
+            try {
+              const f = hitAreasFile(config.skin)
+              if (fs.existsSync(f)) fs.unlinkSync(f)
+              console.log('[calibrate] 已清除', config.skin)
+            } catch {}
+            if (win) win.webContents.send('pet:hitareas-cleared')
+          },
+        },
+      ],
+    },
     { type: 'separator' },
     { label: '重新加载', click: () => win.reload() },
     { label: '打开配置', click: () => require('electron').shell.openPath(CONFIG_FILE) },
@@ -276,6 +298,34 @@ ipcMain.on('pet:menu', () => {
 ipcMain.handle('pet:skin', () => skinRelPath(config.skin))
 ipcMain.handle('pet:skins', () => scanSkins())
 ipcMain.handle('pet:fit', () => config.fit ?? 'auto')
+
+// ---- 触摸区标定 ----------------------------------------------------------
+function hitAreasFile(skin) {
+  return path.join(ASSETS, skin, 'hitareas.json')
+}
+
+ipcMain.handle('pet:hitareas', (_e, skin) => {
+  try { return JSON.parse(fs.readFileSync(hitAreasFile(skin), 'utf8')) } catch { return null }
+})
+
+ipcMain.handle('pet:save-hitareas', (_e, skin, data) => {
+  try {
+    fs.writeFileSync(hitAreasFile(skin), JSON.stringify(data, null, 2), 'utf8')
+    console.log('[calibrate] 已保存', skin, JSON.stringify(data.anchors))
+    return { ok: true }
+  } catch (e) {
+    console.error('[calibrate] 保存失败', e.message)
+    return { ok: false, error: e.message }
+  }
+})
+
+ipcMain.handle('pet:clear-hitareas', (_e, skin) => {
+  try {
+    const f = hitAreasFile(skin)
+    if (fs.existsSync(f)) fs.unlinkSync(f)
+    return { ok: true }
+  } catch (e) { return { ok: false, error: e.message } }
+})
 
 // ---- DSH token 用量 ------------------------------------------------------
 function readUsage() {
