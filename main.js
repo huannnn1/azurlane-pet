@@ -19,6 +19,10 @@ const DEFAULT_CONFIG = {
   skin: 'lafei_4',
   fit: 'auto', // auto | contain | cover
   hintShown: false, // 首次隐藏时用气泡提示一次怎么恢复
+  opacity: 1,
+  sizeScale: 1,
+  alwaysOnTop: true,
+  autoStart: false,
   deepseek: { apiKey: '', baseUrl: 'https://api.deepseek.com' },
   usage: { refreshMinutes: 5, sessionOnly: false },
 }
@@ -38,6 +42,45 @@ function scanSkins() {
 
 function skinRelPath(skin) {
   return `../assets/${skin}/${skin}.model3.json`
+}
+
+function saveConfig() {
+  try { fs.writeFileSync(CONFIG_FILE, JSON.stringify(config, null, 2), 'utf8') } catch {}
+}
+
+/** 把外观相关配置应用到窗口 */
+function applyAppearance() {
+  if (!win || win.isDestroyed()) return
+  const area = screen.getPrimaryDisplay().workArea
+  const auto = autoSize(area)
+  const baseW = config.window?.width || auto.width
+  const baseH = config.window?.height || auto.height
+  const k = config.sizeScale ?? 1
+  const w = Math.round(baseW * k)
+  const h = Math.round(baseH * k)
+
+  try { win.setOpacity(Math.max(0.2, Math.min(1, config.opacity ?? 1))) } catch {}
+  try { win.setAlwaysOnTop(!!config.alwaysOnTop, 'screen-saver') } catch {}
+  try {
+    const [cx, cy] = win.getPosition()
+    win.setBounds({ x: cx, y: cy, width: w, height: h })
+  } catch {}
+}
+
+function applyAutoStart() {
+  try {
+    if (app.isPackaged) {
+      app.setLoginItemSettings({ openAtLogin: !!config.autoStart, path: process.execPath })
+    } else {
+      // 开发模式指向 electron.exe + 项目目录
+      app.setLoginItemSettings({
+        openAtLogin: !!config.autoStart,
+        path: process.execPath,
+        args: [path.join(__dirname)],
+      })
+    }
+    console.log('[autostart]', config.autoStart ? '已开启' : '已关闭')
+  } catch (e) { console.error('[autostart] 失败', e.message) }
 }
 
 /** 桌宠尺寸：屏幕宽的 14%，夹在 220~320 之间，高宽比 1.5 */
@@ -69,7 +112,7 @@ function hidePet() {
       tray.displayBalloon({ title: '桌宠已隐藏', content: '想找回来？点一下右下角托盘区的蓝色小圆点。' })
     } catch {}
     config.hintShown = true
-    try { fs.writeFileSync(CONFIG_FILE, JSON.stringify(config, null, 2), 'utf8') } catch {}
+    saveConfig()
   }
 }
 
@@ -201,6 +244,7 @@ function createWindow() {
 
   startHoverWatch()
   startActivityWatch()
+  applyAppearance()
 }
 
 // ---- 鼠标穿透 ------------------------------------------------------------
@@ -251,7 +295,7 @@ ipcMain.on('pet:menu', () => {
       label: s + (s === current ? '  ✓' : ''),
       click: () => {
         config.skin = s
-        try { fs.writeFileSync(CONFIG_FILE, JSON.stringify(config, null, 2), 'utf8') } catch {}
+        saveConfig()
         if (win) win.webContents.send('pet:skin-changed', skinRelPath(s))
       },
     })),
@@ -265,10 +309,43 @@ ipcMain.on('pet:menu', () => {
         label: { auto: '自动', contain: '完整显示', cover: '铺满裁切' }[m] + (config.fit === m ? '  ✓' : ''),
         click: () => {
           config.fit = m
-          try { fs.writeFileSync(CONFIG_FILE, JSON.stringify(config, null, 2), 'utf8') } catch {}
+          saveConfig()
           if (win) win.webContents.send('pet:fit-changed', m)
         },
       })),
+    },
+    {
+      label: '外观',
+      submenu: [
+        {
+          label: '透明度',
+          submenu: [1, 0.9, 0.8, 0.7, 0.6].map((v) => ({
+            label: `${Math.round(v * 100)}%` + (Math.abs((config.opacity ?? 1) - v) < 0.01 ? '  ✓' : ''),
+            click: () => { config.opacity = v; saveConfig(); applyAppearance() },
+          })),
+        },
+        {
+          label: '大小',
+          submenu: [0.7, 0.85, 1, 1.2, 1.5].map((v) => ({
+            label: ({ 0.7: '小', 0.85: '较小', 1: '标准', 1.2: '较大', 1.5: '大' }[v]) +
+              (Math.abs((config.sizeScale ?? 1) - v) < 0.01 ? '  ✓' : ''),
+            click: () => { config.sizeScale = v; saveConfig(); applyAppearance() },
+          })),
+        },
+        {
+          label: '始终置顶',
+          type: 'checkbox',
+          checked: config.alwaysOnTop !== false,
+          click: (mi) => { config.alwaysOnTop = mi.checked; saveConfig(); applyAppearance() },
+        },
+        { type: 'separator' },
+        {
+          label: '开机自启',
+          type: 'checkbox',
+          checked: !!config.autoStart,
+          click: (mi) => { config.autoStart = mi.checked; saveConfig(); applyAutoStart() },
+        },
+      ],
     },
     {
       label: '触摸区',
