@@ -274,13 +274,33 @@ function startIdle() {
 }
 
 // 空闲时随机小动作（游戏里的 main_1/2/3 就是待机轮换动作）
-setInterval(() => {
+// DSH 正在跑任务时节奏加快，摸鱼时放慢
+let activityActive = false
+let idleTimer = null
+
+function playRandomMain() {
   if (!model || dragging) return
   const keys = ['main_1', 'main_2', 'main_3'].filter((k) => groups[k]?.length)
   if (keys.length) {
     try { model.motion(keys[Math.floor(Math.random() * keys.length)]) } catch {}
   }
-}, 50_000)
+}
+
+function scheduleIdleTick() {
+  if (idleTimer) clearTimeout(idleTimer)
+  const delay = activityActive ? 12_000 : 50_000
+  idleTimer = setTimeout(() => {
+    playRandomMain()
+    scheduleIdleTick()
+  }, delay)
+}
+
+function setActivity(active) {
+  if (active === activityActive) return
+  activityActive = active
+  scheduleIdleTick()
+  if (active) playRandomMain()
+}
 
 // ---------- HUD -----------------------------------------------------------
 const fmt = (n) => {
@@ -347,6 +367,8 @@ function boot() {
   })
 
   window.pet.onSkin((rel) => switchSkin(rel))
+  window.pet.onActivity((active) => setActivity(active))
+  scheduleIdleTick()
 
   window.pet.onCalibrate(() => startCalibration())
   window.pet.onHitareasCleared(async () => {

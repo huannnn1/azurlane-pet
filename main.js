@@ -200,6 +200,7 @@ function createWindow() {
   }
 
   startHoverWatch()
+  startActivityWatch()
 }
 
 // ---- 鼠标穿透 ------------------------------------------------------------
@@ -326,6 +327,48 @@ ipcMain.handle('pet:clear-hitareas', (_e, skin) => {
     return { ok: true }
   } catch (e) { return { ok: false, error: e.message } }
 })
+
+// ---- DSH 活动状态（用于待机动作节奏）--------------------------------------
+const SESSIONS_ROOT = process.env.DSH_HOME
+  ? path.join(process.env.DSH_HOME, 'sessions')
+  : path.join(require('node:os').homedir(), '.dsh', 'sessions')
+const ACTIVE_WINDOW_MS = 20000
+
+/** 扫最近被写过的会话文件时间戳（只看目录 + stat，不解压） */
+function latestSessionMtime() {
+  let latest = 0
+  let workspaces = []
+  try { workspaces = fs.readdirSync(SESSIONS_ROOT, { withFileTypes: true }) } catch { return 0 }
+  for (const ws of workspaces) {
+    if (!ws.isDirectory()) continue
+    const wsPath = path.join(SESSIONS_ROOT, ws.name)
+    let subs = []
+    try { subs = fs.readdirSync(wsPath, { withFileTypes: true }) } catch { continue }
+    for (const sub of subs) {
+      if (!sub.isDirectory()) continue
+      const f = path.join(wsPath, sub.name, 'session.v4.jsonl.zstd')
+      try {
+        const st = fs.statSync(f)
+        if (st.mtimeMs > latest) latest = st.mtimeMs
+      } catch {}
+    }
+  }
+  return latest
+}
+
+let lastActive = null
+function startActivityWatch() {
+  setInterval(() => {
+    if (!win || win.isDestroyed()) return
+    const latest = latestSessionMtime()
+    const active = latest > 0 && (Date.now() - latest) < ACTIVE_WINDOW_MS
+    if (active !== lastActive) {
+      lastActive = active
+      console.log('[activity]', active ? 'DSH 正在活动' : '空闲')
+      try { win.webContents.send('pet:activity', active) } catch {}
+    }
+  }, 2500)
+}
 
 // ---- DSH token 用量 ------------------------------------------------------
 function readUsage() {
