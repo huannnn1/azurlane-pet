@@ -1,0 +1,19 @@
+{
+  "window": {
+    "width": 0,
+    "height": 0,
+    "marginRight": 32,
+    "marginBottom": 0
+  },
+  "skin": "lafei_4",
+  "fit": "auto",
+  "hintShown": false,
+  "deepseek": {
+    "apiKey": "在这里填你的 DeepSeek API Key",
+    "baseUrl": "https://api.deepseek.com"
+  },
+  "usage": {
+    "refreshMinutes": 5,
+    "sessionOnly": false
+  }
+}
