@@ -58,24 +58,35 @@ async function loadModel(url) {
     model = null
     modelRect = null
   }
-  model = await PIXI.live2d.Live2DModel.from(url, { autoInteract: false, idleMotionGroup: 'idle' })
+
+  skinName = url.match(/assets\/([^/]+)\//)?.[1] ?? null
+
+  try {
+    model = await PIXI.live2d.Live2DModel.from(url, { autoInteract: false, idleMotionGroup: 'idle' })
+  } catch (e) {
+    console.log('[skin] 加载失败:', skinName, e.message)
+    if (skinName) { try { window.pet.skinFailed(skinName) } catch {} }
+    throw e
+  }
+
   app.stage.addChild(model)
 
   groups = model.internalModel.motionManager.definitions ?? {}
   hasHitAreas = (model.internalModel.settings?.hitAreas?.length ?? 0) > 0
 
   // 读取该皮肤的标定数据（有就用锚点，没有就走兜底）
-  skinName = url.match(/assets\/([^/]+)\//)?.[1] ?? null
   anchors = null
   if (skinName) {
     try {
       const saved = await window.pet.hitareas(skinName)
       if (saved?.anchors && Object.keys(saved.anchors).length) anchors = saved.anchors
     } catch {}
+    try { window.pet.skinOk(skinName) } catch {}
   }
 
   layout()
   startIdle()
+  setCalBar('')
 }
 
 async function switchSkin(url) {
@@ -360,10 +371,8 @@ function boot() {
     MODEL_URL = url
     return loadModel(url)
   }).catch((e) => {
-    document.body.insertAdjacentHTML(
-      'beforeend',
-      `<div style="position:absolute;left:6px;top:6px;color:#ec7063;font:11px monospace;white-space:pre-wrap">模型加载失败: ${e.message}</div>`,
-    )
+    console.log('[boot] 模型加载失败:', e.message)
+    setCalBar('这个皮肤加载失败，正在换一个…')
   })
 
   window.pet.onSkin((rel) => switchSkin(rel))

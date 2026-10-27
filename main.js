@@ -405,6 +405,36 @@ ipcMain.handle('pet:clear-hitareas', (_e, skin) => {
   } catch (e) { return { ok: false, error: e.message } }
 })
 
+// ---- 皮肤加载结果：记住能用的，坏了自动退回 ---------------------------------
+ipcMain.on('pet:skin-ok', (_e, skin) => {
+  if (skin && config.lastGoodSkin !== skin) {
+    config.lastGoodSkin = skin
+    saveConfig()
+  }
+})
+
+let fallbackTried = 0
+ipcMain.on('pet:skin-failed', (_e, skin) => {
+  if (!win) return
+  const list = scanSkins().filter((s) => s !== skin)
+  if (!list.length) {
+    console.warn('[fallback] 没有其他皮肤可用')
+    return
+  }
+  if (fallbackTried >= 3) {
+    console.warn('[fallback] 连续失败，停止自动切换')
+    return
+  }
+  fallbackTried++
+  const prefer = config.lastGoodSkin && list.includes(config.lastGoodSkin)
+    ? config.lastGoodSkin
+    : list.includes('lafei_4') ? 'lafei_4' : list[0]
+  console.log(`[fallback] ${skin} 加载失败 → 切到 ${prefer}`)
+  config.skin = prefer
+  saveConfig()
+  win.webContents.send('pet:skin-changed', skinRelPath(prefer))
+})
+
 // ---- DSH 活动状态（用于待机动作节奏）--------------------------------------
 const SESSIONS_ROOT = process.env.DSH_HOME
   ? path.join(process.env.DSH_HOME, 'sessions')
