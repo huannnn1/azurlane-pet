@@ -1,0 +1,630 @@
+{
+	"source": "ship_skin_template + ship_skin_newmainui_shift + ship_l2d + ship_l2d_tips (decompiled Azur Lane JSON)",
+	"designHeight": 1080,
+	"defaultScale": 52,
+	"dragRateMultipliers": {
+		"x": 5,
+		"y": 3,
+		"damping": 0.3
+	},
+	"skins": {
+		"abeikelongbi_3": {
+			"hx": true
+		},
+		"adaerbote_2": {},
+		"adaerbote_3": {
+			"hotspots": 10
+		},
+		"aerbien_3": {
+			"hotspots": 30
+		},
+		"aersasi_2": {
+			"hotspots": 11,
+			"guide": true
+		},
+		"aersasi_3": {
+			"hotspots": 66,
+			"guide": true
+		},
+		"aidang_2": {},
+		"aierdeliqi_4": {},
+		"aierdeliqi_5": {},
+		"aijier_2": {},
+		"aijier_3": {
+			"hotspots": 8,
+			"hx": true
+		},
+		"aijier_4": {
+			"hotspots": 17
+		},
+		"ailunsamuna_2": {
+			"hx": true
+		},
+		"ailunsamuna_3": {
+			"hotspots": 3
+		},
+		"aimierbeierding_2": {},
+		"aimierbeierding_3": {
+			"hx": true
+		},
+		"aimudeng_2": {
+			"hx": true
+		},
+		"aisaikesi_4": {},
+		"ankeleiqi_2": {
+			"hotspots": 3,
+			"guide": true,
+			"hx": true
+		},
+		"ankeleiqi_3": {
+			"hotspots": 43
+		},
+		"ankeleiqi_4": {
+			"hotspots": 34,
+			"guide": true
+		},
+		"anninvwang_2": {
+			"hotspots": 30,
+			"guide": true
+		},
+		"antu_2": {
+			"hotspots": 65,
+			"guide": true
+		},
+		"aogusite_4": {
+			"hotspots": 35,
+			"guide": true
+		},
+		"baerdimo_5": {},
+		"baerdimo_6": {
+			"hotspots": 1
+		},
+		"baifeng_2": {
+			"hotspots": 40,
+			"guide": true
+		},
+		"baifeng_3": {
+			"hotspots": 55,
+			"guide": true
+		},
+		"bailong_3": {
+			"hotspots": 7
+		},
+		"baiyanjuren_4": {
+			"hotspots": 38,
+			"guide": true
+		},
+		"banerwei_3": {
+			"hotspots": 4,
+			"guide": true
+		},
+		"banrenma_2": {},
+		"beianpudunii_2": {
+			"hotspots": 1
+		},
+		"beierfasite_2": {},
+		"beikaluolaina_2": {
+			"hx": true
+		},
+		"beilaosenlin_2": {
+			"hotspots": 31,
+			"guide": true
+		},
+		"benningdun_2": {
+			"hotspots": 70,
+			"guide": true
+		},
+		"biaoqiang_3": {},
+		"bisimai_2": {
+			"hx": true
+		},
+		"bisimai_4": {
+			"hotspots": 21
+		},
+		"bola_2": {},
+		"boyixi_2": {},
+		"bulaimodun_2": {},
+		"bulaimodun_4": {
+			"hx": true
+		},
+		"bulaimodun_5": {},
+		"buleisite_2": {
+			"hotspots": 3
+		},
+		"buleisite_3": {
+			"hotspots": 17
+		},
+		"bunao_3": {
+			"hotspots": 68,
+			"guide": true
+		},
+		"chaijun_3": {},
+		"chaijun_4": {
+			"hx": true
+		},
+		"chaijun_5": {
+			"hotspots": 17
+		},
+		"chaijun_6": {
+			"hotspots": 93,
+			"guide": true
+		},
+		"chicheng_5": {},
+		"chuixue_3": {},
+		"chuyue_2": {
+			"hotspots": 5
+		},
+		"dafeng_2": {
+			"hx": true
+		},
+		"dafeng_3": {
+			"hotspots": 2
+		},
+		"dafeng_4": {},
+		"dafeng_6": {
+			"hotspots": 7,
+			"guide": true
+		},
+		"dafeng_7": {
+			"hotspots": 35
+		},
+		"daofeng_4": {},
+		"daofeng_5": {
+			"hotspots": 4,
+			"hx": true
+		},
+		"dewenjun_2": {
+			"hotspots": 14
+		},
+		"deyizhi_3": {},
+		"dujiaoshou_4": {},
+		"dujiaoshou_6": {},
+		"dulianglai_2": {
+			"hotspots": 21,
+			"guide": true
+		},
+		"dunkeerke_2": {},
+		"edu_3": {
+			"hx": true
+		},
+		"edu_4": {},
+		"feiteliedadi_3": {
+			"hotspots": 12,
+			"guide": true
+		},
+		"feiteliedadi_4": {
+			"hotspots": 66
+		},
+		"feiteliekaer_3": {
+			"hotspots": 26
+		},
+		"feiteliekaer_4": {
+			"hotspots": 107,
+			"guide": true
+		},
+		"fengyun_4": {
+			"hotspots": 6
+		},
+		"fulici_2": {
+			"hotspots": 16
+		},
+		"gangyishawa_3": {
+			"hotspots": 44,
+			"guide": true
+		},
+		"gaoxiong_7": {
+			"hotspots": 82
+		},
+		"geliqiya_2": {
+			"hotspots": 3
+		},
+		"genaisennao_2": {},
+		"gezi_2": {
+			"hotspots": 34,
+			"guide": true
+		},
+		"guandao_2": {
+			"hotspots": 10,
+			"guide": true
+		},
+		"guandao_3": {
+			"hotspots": 24,
+			"guide": true
+		},
+		"guanghui_7": {
+			"hotspots": 31,
+			"guide": true
+		},
+		"guanghui_9": {
+			"hotspots": 62,
+			"guide": true
+		},
+		"guangrong_3": {},
+		"hailunna_4": {
+			"hotspots": 3,
+			"guide": true
+		},
+		"haiyinlixi_2": {},
+		"heitaizi_2": {},
+		"hemin_2": {},
+		"hemin_3": {},
+		"huangjiafangzhou_3": {},
+		"huonululu_3": {},
+		"huonululu_5": {},
+		"jialisuoniye_3": {
+			"hx": true
+		},
+		"jialisuoniye_4": {},
+		"jian_3": {
+			"hotspots": 6
+		},
+		"jianwu_2": {
+			"hotspots": 22
+		},
+		"jianye_2": {
+			"hx": true
+		},
+		"jianye_3": {},
+		"jianye_4": {
+			"hotspots": 14
+		},
+		"jiluofu_3": {},
+		"jinjiang_2": {
+			"hotspots": 51,
+			"guide": true
+		},
+		"jinluhao_2": {
+			"hotspots": 11
+		},
+		"jinluhao_3": {
+			"hotspots": 72,
+			"guide": true
+		},
+		"jinshi_2": {
+			"hotspots": 41
+		},
+		"jiuyun_2": {},
+		"junhe_4": {},
+		"junhe_5": {},
+		"junzhu_5": {
+			"hotspots": 13
+		},
+		"kalangshitade_2": {},
+		"kalvbudisi_2": {},
+		"kebensi_2": {
+			"hotspots": 29
+		},
+		"kelaimengsuo_2": {
+			"hotspots": 3
+		},
+		"kelifulan_3": {},
+		"kelifulan_8": {
+			"hotspots": 3
+		},
+		"kewei_4": {
+			"hotspots": 16
+		},
+		"kewei_6": {
+			"hotspots": 20
+		},
+		"kubo_2": {},
+		"kuersike_2": {
+			"hotspots": 2,
+			"guide": true
+		},
+		"lafei_4": {},
+		"lafeier_2": {
+			"hotspots": 22
+		},
+		"lafeiii_3": {
+			"hotspots": 22
+		},
+		"leigensibao_2": {
+			"hotspots": 2,
+			"guide": true
+		},
+		"liekexingdunii_2": {
+			"hotspots": 37
+		},
+		"lingbo_10": {},
+		"linuo_3": {
+			"hx": true
+		},
+		"lisailiu_2": {},
+		"lisailiu_3": {},
+		"longfeng_2": {
+			"hx": true
+		},
+		"longwu_2": {
+			"hotspots": 23
+		},
+		"luoen_4": {},
+		"luoma_2": {
+			"hotspots": 1
+		},
+		"lupuleixite_2": {
+			"hotspots": 1
+		},
+		"luyijiushi_2": {},
+		"luyijiushi_4": {
+			"hotspots": 19,
+			"guide": true
+		},
+		"lvzuofu_2": {},
+		"maliluosi_3_doa": {},
+		"masaina_2": {
+			"hotspots": 23,
+			"guide": true
+		},
+		"meikelunbao_2": {
+			"hotspots": 47
+		},
+		"meiyinci_3": {
+			"hotspots": 14
+		},
+		"mingji_2": {
+			"hotspots": 54,
+			"guide": true
+		},
+		"mojiaduoer_2": {
+			"hotspots": 10,
+			"guide": true
+		},
+		"mojiaduoer_3": {
+			"hotspots": 25
+		},
+		"mojiaduoer_4": {
+			"hotspots": 87,
+			"guide": true
+		},
+		"nabulesi_2": {
+			"hotspots": 43
+		},
+		"naximofu_2": {
+			"hotspots": 33
+		},
+		"nengdai_2": {},
+		"nengdai_3": {
+			"hotspots": 2
+		},
+		"ninghai_4": {},
+		"ougen_5": {},
+		"ougen_6": {
+			"hotspots": 1,
+			"hx": true
+		},
+		"ougen_8": {
+			"hotspots": 46
+		},
+		"ouruola_4": {},
+		"pinghai_4": {},
+		"pinghai_6": {},
+		"pizibao_2": {
+			"hotspots": 25,
+			"guide": true
+		},
+		"pulimaosi_3": {
+			"hotspots": 64,
+			"guide": true
+		},
+		"qianjian_2": {
+			"hotspots": 25,
+			"guide": true
+		},
+		"qianwei_2": {
+			"hotspots": 3
+		},
+		"qibolin_2": {},
+		"qiershazhi_2": {
+			"hotspots": 33
+		},
+		"qisheng_2": {
+			"hotspots": 19
+		},
+		"qiye_10": {
+			"hotspots": 33,
+			"guide": true
+		},
+		"qiye_7": {
+			"hx": true
+		},
+		"qiye_9": {
+			"hotspots": 4,
+			"guide": true
+		},
+		"rangbaer_3": {},
+		"rangbaer_4": {},
+		"rangbaer_5": {
+			"hotspots": 12
+		},
+		"sailimiye_2": {
+			"hotspots": 86,
+			"guide": true
+		},
+		"sebao_2": {
+			"hotspots": 67,
+			"guide": true
+		},
+		"shengluyisi_2": {
+			"hx": true
+		},
+		"shengluyisi_3": {},
+		"shengluyisi_4": {},
+		"shengluyisi_5": {
+			"hotspots": 54,
+			"guide": true
+		},
+		"shi_2": {
+			"hotspots": 33
+		},
+		"shi_3": {
+			"hotspots": 71,
+			"guide": true
+		},
+		"shitelasai_2": {},
+		"shuixinghao_2": {
+			"hotspots": 55,
+			"guide": true
+		},
+		"sipeibojue_5": {},
+		"sitelasibao_2": {
+			"hotspots": 22,
+			"guide": true,
+			"hx": true
+		},
+		"siwanshi_3": {
+			"hotspots": 25
+		},
+		"suweiaitongmeng_2": {
+			"hotspots": 11
+		},
+		"suweiaitongmeng_3": {
+			"hotspots": 57
+		},
+		"taiyuan_2": {},
+		"telafaerjia_2": {
+			"hotspots": 13
+		},
+		"tiancheng_3": {
+			"hotspots": 4
+		},
+		"tiancheng_cv_2": {
+			"hotspots": 20,
+			"guide": true
+		},
+		"tiancheng_cv_3": {
+			"hotspots": 44,
+			"guide": true
+		},
+		"tianlangxing_3": {},
+		"tianlangxing_5": {
+			"hotspots": 33,
+			"guide": true
+		},
+		"tierbici_2": {},
+		"u2501_2": {
+			"hotspots": 36,
+			"guide": true
+		},
+		"weineituo_2": {},
+		"weixi_2": {},
+		"weiyan_2": {},
+		"weiyan_4": {
+			"hx": true
+		},
+		"weiyan_6": {},
+		"weizhang_3": {
+			"hotspots": 11,
+			"guide": true
+		},
+		"wuerlixi_2": {
+			"hotspots": 2
+		},
+		"wuerlixi_3": {
+			"hotspots": 6,
+			"guide": true
+		},
+		"wuqi_2": {},
+		"wuqi_3": {
+			"hotspots": 33,
+			"hx": true
+		},
+		"wuzang_3": {
+			"hotspots": 33,
+			"guide": true
+		},
+		"wuzang_4": {
+			"hotspots": 86,
+			"guide": true
+		},
+		"xiafei_4": {
+			"hotspots": 34,
+			"guide": true
+		},
+		"xianghe_2": {},
+		"xingdengbao_2": {
+			"hotspots": 13
+		},
+		"xingdengbao_3": {
+			"hotspots": 34
+		},
+		"xinnong_3": {
+			"hotspots": 5,
+			"hx": true
+		},
+		"xinnong_4": {
+			"hotspots": 26,
+			"guide": true
+		},
+		"xinnong_5": {
+			"hotspots": 58
+		},
+		"xinnong_6": {
+			"hotspots": 26
+		},
+		"xinzexi_3": {
+			"hotspots": 8,
+			"guide": true
+		},
+		"xinzexi_5": {
+			"hotspots": 52
+		},
+		"xixuegui_4": {},
+		"xuefeng_3": {},
+		"xukufu_2": {},
+		"xukufu_3": {
+			"hx": true
+		},
+		"yanusi_3": {},
+		"yanusi_7": {
+			"hotspots": 71,
+			"guide": true
+		},
+		"yibei_3": {
+			"hotspots": 1
+		},
+		"yichui_2": {},
+		"yilishabai_6": {
+			"hotspots": 2
+		},
+		"yingrui_3": {},
+		"yingxianzuo_3": {
+			"hotspots": 16
+		},
+		"yuanchou_3": {
+			"hotspots": 37
+		},
+		"yuekechengii_3": {
+			"hotspots": 34,
+			"guide": true
+		},
+		"yunxian_2": {
+			"hotspots": 13,
+			"guide": true
+		},
+		"yunxian_3": {
+			"hotspots": 18,
+			"guide": true
+		},
+		"z13_2": {
+			"hotspots": 20
+		},
+		"z46_2": {},
+		"z46_3": {},
+		"z46_4": {},
+		"zengkehaijunshangjiang_2": {
+			"hotspots": 34
+		},
+		"zhala_2": {},
+		"zhangwu_2": {
+			"hotspots": 66
+		},
+		"zhaohe_3": {
+			"hotspots": 1
+		},
+		"zhenzhuhao_2": {
+			"hotspots": 37,
+			"guide": true
+		}
+	}
+}
