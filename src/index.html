@@ -12,26 +12,39 @@
   }
   #stage { position: absolute; inset: 0; display: block; }
   #hud {
-    position: absolute; left: 50%; bottom: 6px; transform: translateX(-50%);
-    display: flex; gap: 6px; align-items: center;
-    padding: 5px 10px; border-radius: 999px;
-    background: rgba(18, 20, 26, .82);
-    border: 1px solid rgba(255, 255, 255, .10);
-    box-shadow: 0 4px 16px rgba(0, 0, 0, .32);
-    color: #e9edf5; font-size: 10.5px; line-height: 1; white-space: nowrap;
-    backdrop-filter: blur(6px);
-    transition: opacity .25s ease;
-    opacity: .92;
+    position: absolute; left: 50%; bottom: 4px; transform: translateX(-50%);
+    display: flex; gap: 7px; align-items: baseline;
+    padding: 3px 10px 4px; border-radius: 10px;
+    background: linear-gradient(180deg, rgba(12,14,20,.34), rgba(12,14,20,.52));
+    border: 1px solid rgba(255, 255, 255, .07);
+    color: #f2f5fa; font-size: 10.5px; line-height: 1.15; white-space: nowrap;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, .85);
+    backdrop-filter: blur(3px);
+    transition: opacity .25s ease, transform .25s ease, background .25s ease;
+    opacity: .78;
+    letter-spacing: .2px;
   }
-  #hud:hover { opacity: 1; }
-  .sep { width: 1px; height: 9px; background: rgba(255,255,255,.14); }
-  .val { font-weight: 600; letter-spacing: .2px; }
-  .ok { color: #58d68d; }
-  .warn { color: #f5b041; }
-  .bad { color: #ec7063; }
-  .dim { color: #8b93a3; font-size: 9.5px; }
-  #dot { width: 5px; height: 5px; border-radius: 50%; background: #58d68d; box-shadow: 0 0 6px currentColor; }
-  #dot.err { background: #ec7063; }
+  #hud:hover {
+    opacity: 1;
+    transform: translateX(-50%) translateY(-2px);
+    background: linear-gradient(180deg, rgba(12,14,20,.55), rgba(12,14,20,.72));
+  }
+  /* 两侧细装饰线，像铭牌 */
+  #hud::before, #hud::after {
+    content: '';
+    position: absolute; top: 50%; width: 12px; height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,.35));
+  }
+  #hud::before { right: 100%; margin-right: 5px; }
+  #hud::after { left: 100%; margin-left: 5px; transform: scaleX(-1); }
+  .sep { width: 1px; height: 9px; background: rgba(255,255,255,.16); align-self: center; }
+  .val { font-weight: 600; }
+  .ok { color: #7ee2a8; }
+  .warn { color: #f7c46c; }
+  .bad { color: #ff9b8f; }
+  .dim { color: #a9b2c3; font-size: 9.5px; }
+  #dot { width: 4px; height: 4px; border-radius: 50%; background: #7ee2a8; box-shadow: 0 0 5px currentColor; align-self: center; }
+  #dot.err { background: #ff9b8f; }
   #calbar {
     display: none;
     position: absolute; left: 50%; top: 8px; transform: translateX(-50%);

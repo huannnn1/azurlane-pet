@@ -1,0 +1,1675 @@
+{
+ "lafei_4": {
+  "ship": "拉菲",
+  "shipEn": "Laffey",
+  "skin": "白兔迎春",
+  "skinEn": "White Rabbit Welcomes the Spring",
+  "label": "拉菲 · 白兔迎春"
+ },
+ "aierdeliqi_4": {
+  "ship": "埃尔德里奇",
+  "shipEn": "Eldridge",
+  "skin": "正月的牵手",
+  "skinEn": "New Year's Outing",
+  "label": "埃尔德里奇 · 正月的牵手"
+ },
+ "aierdeliqi_5": {
+  "ship": "埃尔德里奇",
+  "shipEn": "Eldridge",
+  "skin": "喵喵偶像团？",
+  "skinEn": "Kitty Idol",
+  "label": "埃尔德里奇 · 喵喵偶像团？"
+ },
+ "kubo_2": {
+  "ship": "库珀",
+  "shipEn": "Cooper",
+  "skin": "烈日的网球场",
+  "skinEn": "Blazing Tennis Battle",
+  "label": "库珀 · 烈日的网球场"
+ },
+ "ailunsamuna_2": {
+  "ship": "艾伦·萨姆纳",
+  "shipEn": "Allen M. Sumner",
+  "skin": "Charming Rabbit",
+  "skinEn": "Charming Rabbit",
+  "label": "艾伦·萨姆纳 · Charming Rabbit"
+ },
+ "ailunsamuna_3": {
+  "ship": "艾伦·萨姆纳",
+  "shipEn": "Allen M. Sumner",
+  "skin": "双面侠盗",
+  "skinEn": "Two Faces of Justice",
+  "label": "艾伦·萨姆纳 · 双面侠盗"
+ },
+ "lafeiii_3": {
+  "ship": "拉菲II",
+  "shipEn": "Laffey II",
+  "skin": "睡意满满忙碌DAY",
+  "skinEn": "Sleepy on a Busy Day",
+  "label": "拉菲II · 睡意满满忙碌DAY"
+ },
+ "hailunna_4": {
+  "ship": "海伦娜",
+  "shipEn": "Helena",
+  "skin": "耀眼的波纹",
+  "skinEn": "Shimmering Triangle Wave",
+  "label": "海伦娜 · 耀眼的波纹"
+ },
+ "kelifulan_3": {
+  "ship": "克利夫兰",
+  "shipEn": "Cleveland",
+  "skin": "骑士之夜",
+  "skinEn": "Gentry Knight",
+  "label": "克利夫兰 · 骑士之夜"
+ },
+ "kelifulan_8": {
+  "ship": "克利夫兰",
+  "shipEn": "Cleveland",
+  "skin": "休息室的意外邂逅？",
+  "skinEn": "Knight of the Pop-Up Shop",
+  "label": "克利夫兰 · 休息室的意外邂逅？"
+ },
+ "huonululu_3": {
+  "ship": "火奴鲁鲁",
+  "shipEn": "Honolulu",
+  "skin": "盛夏的「灾难」",
+  "skinEn": "Summer Accident?!",
+  "label": "火奴鲁鲁 · 盛夏的「灾难」"
+ },
+ "huonululu_5": {
+  "ship": "火奴鲁鲁",
+  "shipEn": "Honolulu",
+  "skin": "两人的夏日祭",
+  "skinEn": "Among the Stalls",
+  "label": "火奴鲁鲁 · 两人的夏日祭"
+ },
+ "shengluyisi_2": {
+  "ship": "圣路易斯",
+  "shipEn": "St. Louis",
+  "skin": "春之华",
+  "skinEn": "Blue and White Pottery",
+  "label": "圣路易斯 · 春之华"
+ },
+ "shengluyisi_3": {
+  "ship": "圣路易斯",
+  "shipEn": "St. Louis",
+  "skin": "雪下之饮",
+  "skinEn": "Spirits in the Snow",
+  "label": "圣路易斯 · 雪下之饮"
+ },
+ "shengluyisi_4": {
+  "ship": "圣路易斯",
+  "shipEn": "St. Louis",
+  "skin": "Luxury Handle",
+  "skinEn": "Luxurious Wheels",
+  "label": "圣路易斯 · Luxury Handle"
+ },
+ "shengluyisi_5": {
+  "ship": "圣路易斯",
+  "shipEn": "St. Louis",
+  "skin": "邮轮上的诱人午后",
+  "skinEn": "An Afternoon on the Lido Deck",
+  "label": "圣路易斯 · 邮轮上的诱人午后"
+ },
+ "linuo_3": {
+  "ship": "里诺",
+  "shipEn": "Reno",
+  "skin": "bunny·reno！",
+  "skinEn": "Reno Bunnino",
+  "label": "里诺 · bunny·reno！"
+ },
+ "boyixi_2": {
+  "ship": "博伊西",
+  "shipEn": "Boise",
+  "skin": "羞怯的蓝宝石",
+  "skinEn": "Sheepish Sapphire",
+  "label": "博伊西 · 羞怯的蓝宝石"
+ },
+ "baerdimo_5": {
+  "ship": "巴尔的摩",
+  "shipEn": "Baltimore",
+  "skin": "夜风Minuet",
+  "skinEn": "Evening Breeze Minuet",
+  "label": "巴尔的摩 · 夜风Minuet"
+ },
+ "baerdimo_6": {
+  "ship": "巴尔的摩",
+  "shipEn": "Baltimore",
+  "skin": "迅疾的蓝星",
+  "skinEn": "Finish Line Flagbearer",
+  "label": "巴尔的摩 · 迅疾的蓝星"
+ },
+ "bulaimodun_4": {
+  "ship": "布莱默顿",
+  "shipEn": "Bremerton",
+  "skin": "功夫少女！",
+  "skinEn": "Kung Fu Cruiser",
+  "label": "布莱默顿 · 功夫少女！"
+ },
+ "bulaimodun_2": {
+  "ship": "布莱默顿",
+  "shipEn": "Bremerton",
+  "skin": "Happy Dating！",
+  "skinEn": "Day-Off Date",
+  "label": "布莱默顿 · Happy Dating！"
+ },
+ "bulaimodun_5": {
+  "ship": "布莱默顿",
+  "shipEn": "Bremerton",
+  "skin": "悠然放松时光",
+  "skinEn": "Relaxation Consultation",
+  "label": "布莱默顿 · 悠然放松时光"
+ },
+ "beianpudunii_2": {
+  "ship": "北安普敦II",
+  "shipEn": "Northampton II",
+  "skin": "竞泳之星",
+  "skinEn": "Swimming Star",
+  "label": "北安普敦II · 竞泳之星"
+ },
+ "pizibao_2": {
+  "ship": "匹兹堡",
+  "shipEn": "Pittsburgh",
+  "skin": "斟酒女郎的赌局",
+  "skinEn": "The Bartender's Gambit",
+  "label": "匹兹堡 · 斟酒女郎的赌局"
+ },
+ "beikaluolaina_2": {
+  "ship": "北卡罗来纳",
+  "shipEn": "North Carolina",
+  "skin": "秘密的换装练习？",
+  "skinEn": "The Heart's Desire",
+  "label": "北卡罗来纳 · 秘密的换装练习？"
+ },
+ "xinzexi_3": {
+  "ship": "新泽西",
+  "shipEn": "New Jersey",
+  "skin": "盛夏的闲暇",
+  "skinEn": "Midsummer Leisure",
+  "label": "新泽西 · 盛夏的闲暇"
+ },
+ "xinzexi_5": {
+  "ship": "新泽西",
+  "shipEn": "New Jersey",
+  "skin": "漆黑的超极速前奏",
+  "skinEn": "Black Blur Prelude",
+  "label": "新泽西 · 漆黑的超极速前奏"
+ },
+ "qiye_7": {
+  "ship": "企业",
+  "shipEn": "Enterprise",
+  "skin": "Wind Catcher",
+  "skinEn": "Wind Catcher",
+  "label": "企业 · Wind Catcher"
+ },
+ "qiye_9": {
+  "ship": "企业",
+  "shipEn": "Enterprise",
+  "skin": "天际的潜水者",
+  "skinEn": "Diving Under Blue Skies",
+  "label": "企业 · 天际的潜水者"
+ },
+ "qiye_10": {
+  "ship": "企业",
+  "shipEn": "Enterprise",
+  "skin": "雨霁于心晴之时",
+  "skinEn": "Bathing Under Sunny Skies",
+  "label": "企业 · 雨霁于心晴之时"
+ },
+ "aisaikesi_4": {
+  "ship": "埃塞克斯",
+  "shipEn": "Essex",
+  "skin": "Craft Fairytail",
+  "skinEn": "Craft Fairytail",
+  "label": "埃塞克斯 · Craft Fairytail"
+ },
+ "yuekechengii_3": {
+  "ship": "约克城II",
+  "shipEn": "Yorktown II",
+  "skin": "交错的温柔时光",
+  "skinEn": "An Evening's Companionship",
+  "label": "约克城II · 交错的温柔时光"
+ },
+ "liekexingdunii_2": {
+  "ship": "列克星敦II",
+  "shipEn": "Lexington II",
+  "skin": "轻飘飘的拂拭时光",
+  "skinEn": "The Fluffiest of Maids",
+  "label": "列克星敦II · 轻飘飘的拂拭时光"
+ },
+ "benningdun_2": {
+  "ship": "本宁顿",
+  "shipEn": "Bennington",
+  "skin": "全速！盛夏逐光企划",
+  "skinEn": "Sunshine Chaser",
+  "label": "本宁顿 · 全速！盛夏逐光企划"
+ },
+ "kebensi_2": {
+  "ship": "科本斯",
+  "shipEn": "Cowpens",
+  "skin": "心动营养灌输中",
+  "skinEn": "Milky Ministrations",
+  "label": "科本斯 · 心动营养灌输中"
+ },
+ "guandao_2": {
+  "ship": "关岛",
+  "shipEn": "Guam",
+  "skin": "魅力舞台",
+  "skinEn": "Stage-Setting Charmer",
+  "label": "关岛 · 魅力舞台"
+ },
+ "guandao_3": {
+  "ship": "关岛",
+  "shipEn": "Guam",
+  "skin": "女忍者的危险综艺秀",
+  "skinEn": "The Kunoichi's Dangerous Variety Show",
+  "label": "关岛 · 女忍者的危险综艺秀"
+ },
+ "ankeleiqi_2": {
+  "ship": "安克雷奇",
+  "shipEn": "Anchorage",
+  "skin": "海豚、海洋、游泳课",
+  "skinEn": "Dolphins and Swim Lessons",
+  "label": "安克雷奇 · 海豚、海洋、游泳课"
+ },
+ "ankeleiqi_3": {
+  "ship": "安克雷奇",
+  "shipEn": "Anchorage",
+  "skin": "舟畔共明月",
+  "skinEn": "Moonlit Boat Ride",
+  "label": "安克雷奇 · 舟畔共明月"
+ },
+ "ankeleiqi_4": {
+  "ship": "安克雷奇",
+  "shipEn": "Anchorage",
+  "skin": "香甜牛奶味之夜",
+  "skinEn": "Sweet Evening Milk",
+  "label": "安克雷奇 · 香甜牛奶味之夜"
+ },
+ "qiershazhi_2": {
+  "ship": "奇尔沙治",
+  "shipEn": "Kearsarge",
+  "skin": "Allnight Charge",
+  "skinEn": "All-Night Charge",
+  "label": "奇尔沙治 · Allnight Charge"
+ },
+ "biaoqiang_3": {
+  "ship": "标枪",
+  "shipEn": "Javelin",
+  "skin": "沙滩野餐会",
+  "skinEn": "Beach Picnic!",
+  "label": "标枪 · 沙滩野餐会"
+ },
+ "xixuegui_4": {
+  "ship": "吸血鬼",
+  "shipEn": "Vampire",
+  "skin": "夜姬的正装?",
+  "skinEn": "Night Princess's Regalia",
+  "label": "吸血鬼 · 夜姬的正装?"
+ },
+ "yanusi_3": {
+  "ship": "雅努斯",
+  "shipEn": "Janus",
+  "skin": "万圣喵喵惊悚夜",
+  "skinEn": "Fright-Night Scaredy-Cat",
+  "label": "雅努斯 · 万圣喵喵惊悚夜"
+ },
+ "yanusi_7": {
+  "ship": "雅努斯",
+  "shipEn": "Janus",
+  "skin": "云端的水光",
+  "skinEn": "Shimmering Splashes Above the Clouds",
+  "label": "雅努斯 · 云端的水光"
+ },
+ "telafaerjia_2": {
+  "ship": "特拉法尔加",
+  "shipEn": "Trafalgar",
+  "skin": "海风与夜语",
+  "skinEn": "Sea Breeze, Moonlit Talks",
+  "label": "特拉法尔加 · 海风与夜语"
+ },
+ "beierfasite_2": {
+  "ship": "贝尔法斯特",
+  "shipEn": "Belfast",
+  "skin": "彩云之玫瑰",
+  "skinEn": "Iridescent Rosa",
+  "label": "贝尔法斯特 · 彩云之玫瑰"
+ },
+ "ouruola_4": {
+  "ship": "欧若拉",
+  "shipEn": "Aurora",
+  "skin": "渝城秘技",
+  "skinEn": "Heritage of Yu City",
+  "label": "欧若拉 · 渝城秘技"
+ },
+ "tianlangxing_3": {
+  "ship": "天狼星",
+  "shipEn": "Sirius",
+  "skin": "盛夏的Seirios ",
+  "skinEn": "Scorching-Hot Seirios",
+  "label": "天狼星 · 盛夏的Seirios "
+ },
+ "tianlangxing_5": {
+  "ship": "天狼星",
+  "shipEn": "Sirius",
+  "skin": "至高乐园的白兔",
+  "skinEn": "Rabbit of Paradise",
+  "label": "天狼星 · 至高乐园的白兔"
+ },
+ "heitaizi_2": {
+  "ship": "黑太子",
+  "shipEn": "Black Prince",
+  "skin": "White Princess",
+  "skinEn": "White Princess",
+  "label": "黑太子 · White Princess"
+ },
+ "hemin_3": {
+  "ship": "赫敏",
+  "shipEn": "Hermione ",
+  "skin": "温柔的纯白天使",
+  "skinEn": "Pure White Angel",
+  "label": "赫敏 · 温柔的纯白天使"
+ },
+ "hemin_2": {
+  "ship": "赫敏",
+  "shipEn": "Hermione ",
+  "skin": "纯白的悠闲假日",
+  "skinEn": "Pure White Holiday",
+  "label": "赫敏 · 纯白的悠闲假日"
+ },
+ "kalvbudisi_2": {
+  "ship": "卡律布狄斯",
+  "shipEn": "Charybdis",
+  "skin": "治愈的红闺",
+  "skinEn": "Red Chamber of Healing",
+  "label": "卡律布狄斯 · 治愈的红闺"
+ },
+ "dewenjun_2": {
+  "ship": "德文郡",
+  "shipEn": "Devonshire",
+  "skin": "红月下的恶魔",
+  "skinEn": "Sadistic Demon",
+  "label": "德文郡 · 红月下的恶魔"
+ },
+ "yilishabai_6": {
+  "ship": "伊丽莎白女王",
+  "shipEn": "Queen Elizabeth",
+  "skin": "Maid·My·Highness",
+  "skinEn": "Yes, Your Maidness!",
+  "label": "伊丽莎白女王 · Maid·My·Highness"
+ },
+ "qianwei_2": {
+  "ship": "前卫",
+  "shipEn": "Vanguard",
+  "skin": "摇摆不定的伪装",
+  "skinEn": "Half-Hearted Masquerade",
+  "label": "前卫 · 摇摆不定的伪装"
+ },
+ "shi_2": {
+  "ship": "狮",
+  "shipEn": "Lion",
+  "skin": "沙滩的慵懒主宰",
+  "skinEn": "The Reclining Dandelion",
+  "label": "狮 · 沙滩的慵懒主宰"
+ },
+ "shi_3": {
+  "ship": "狮",
+  "shipEn": "Lion",
+  "skin": "夜巷中的诱引者",
+  "skinEn": "Alleyway Temptress",
+  "label": "狮 · 夜巷中的诱引者"
+ },
+ "baiyanjuren_4": {
+  "ship": "百眼巨人",
+  "shipEn": "Argus",
+  "skin": "特训中的威严之人",
+  "skinEn": "Dignified Swimsuit Training",
+  "label": "百眼巨人 · 特训中的威严之人"
+ },
+ "dujiaoshou_4": {
+  "ship": "独角兽",
+  "shipEn": "Unicorn",
+  "skin": "憧憬的约会日",
+  "skinEn": "Long-Awaited Date",
+  "label": "独角兽 · 憧憬的约会日"
+ },
+ "dujiaoshou_6": {
+  "ship": "独角兽",
+  "shipEn": "Unicorn",
+  "skin": "天使的My Night",
+  "skinEn": "Angelic Night",
+  "label": "独角兽 · 天使的My Night"
+ },
+ "banrenma_2": {
+  "ship": "半人马",
+  "shipEn": "Centaur",
+  "skin": "沙滨的水之精灵",
+  "skinEn": "Beachside Undine",
+  "label": "半人马 · 沙滨的水之精灵"
+ },
+ "yingxianzuo_3": {
+  "ship": "英仙座",
+  "shipEn": "Perseus ",
+  "skin": "慵懒的春光",
+  "skinEn": "Spring's Lackadaisical Leisure",
+  "label": "英仙座 · 慵懒的春光"
+ },
+ "aerbien_3": {
+  "ship": "阿尔比恩",
+  "shipEn": "Albion",
+  "skin": "香气来朱阁",
+  "skinEn": "Scent of Spring in the Red Pavilion",
+  "label": "阿尔比恩 · 香气来朱阁"
+ },
+ "huangjiafangzhou_3": {
+  "ship": "皇家方舟",
+  "shipEn": "Ark Royal",
+  "skin": "晚会的守护者",
+  "skinEn": "Guardian of the Ball",
+  "label": "皇家方舟 · 晚会的守护者"
+ },
+ "guanghui_7": {
+  "ship": "光辉",
+  "shipEn": "Illustrious",
+  "skin": "二人的学习时间",
+  "skinEn": "Our Private \"Study\" Session",
+  "label": "光辉 · 二人的学习时间"
+ },
+ "guanghui_9": {
+  "ship": "光辉",
+  "shipEn": "Illustrious",
+  "skin": "幽影徘徊之夜",
+  "skinEn": "Wandering Glow of Midnight",
+  "label": "光辉 · 幽影徘徊之夜"
+ },
+ "kewei_4": {
+  "ship": "可畏",
+  "shipEn": "Formidable",
+  "skin": "值日时的春心萌动",
+  "skinEn": "The Lover's Heart Flutters On Duty",
+  "label": "可畏 · 值日时的春心萌动"
+ },
+ "kewei_6": {
+  "ship": "可畏",
+  "shipEn": "Formidable",
+  "skin": "纪念印记",
+  "skinEn": "Anniversary Memories",
+  "label": "可畏 · 纪念印记"
+ },
+ "guangrong_3": {
+  "ship": "光荣",
+  "shipEn": "Glorious",
+  "skin": "凉夜香雪",
+  "skinEn": "Pungent Plum",
+  "label": "光荣 · 凉夜香雪"
+ },
+ "yuanchou_3": {
+  "ship": "怨仇",
+  "shipEn": "Implacable",
+  "skin": "杯盏盈芳华",
+  "skinEn": "Her Beauty Runneth Over",
+  "label": "怨仇 · 杯盏盈芳华"
+ },
+ "bunao_3": {
+  "ship": "不挠",
+  "shipEn": "Indomitable",
+  "skin": "慵懒的领航员小姐",
+  "skinEn": "The Laid-Back Navigator",
+  "label": "不挠 · 慵懒的领航员小姐"
+ },
+ "abeikelongbi_3": {
+  "ship": "阿贝克隆比",
+  "shipEn": "Abercrombie",
+  "skin": "坏坏兔的恶作剧！",
+  "skinEn": "Mischief on the Rocks",
+  "label": "阿贝克隆比 · 坏坏兔的恶作剧！"
+ },
+ "junzhu_5": {
+  "ship": "君主",
+  "shipEn": "Monarch",
+  "skin": "海滩享受计划",
+  "skinEn": "Sovereign of the Beach",
+  "label": "君主 · 海滩享受计划"
+ },
+ "chaijun_3": {
+  "ship": "柴郡",
+  "shipEn": "Cheshire",
+  "skin": "音乐绚烂CaitSith",
+  "skinEn": "Cait Sith Crooner",
+  "label": "柴郡 · 音乐绚烂CaitSith"
+ },
+ "chaijun_4": {
+  "ship": "柴郡",
+  "shipEn": "Cheshire",
+  "skin": "冰雪公主",
+  "skinEn": "The Cat and the White Steed",
+  "label": "柴郡 · 冰雪公主"
+ },
+ "chaijun_5": {
+  "ship": "柴郡",
+  "shipEn": "Cheshire",
+  "skin": "绚烂夜梦",
+  "skinEn": "The Cat in the Magic Hat",
+  "label": "柴郡 · 绚烂夜梦"
+ },
+ "chaijun_6": {
+  "ship": "柴郡",
+  "shipEn": "Cheshire",
+  "skin": "柴郡猫的童话书迷宫",
+  "skinEn": "Cheshire Cat's Fairytale Maze",
+  "label": "柴郡 · 柴郡猫的童话书迷宫"
+ },
+ "pulimaosi_3": {
+  "ship": "普利茅斯",
+  "shipEn": "Plymouth",
+  "skin": "纯白天使的全身检查",
+  "skinEn": "An Angelic Physical",
+  "label": "普利茅斯 · 纯白天使的全身检查"
+ },
+ "chuixue_3": {
+  "ship": "吹雪",
+  "shipEn": "Fubuki",
+  "skin": "Music Pixy",
+  "skinEn": "Music Pixy",
+  "label": "吹雪 · Music Pixy"
+ },
+ "lingbo_10": {
+  "ship": "绫波",
+  "shipEn": "Ayanami",
+  "skin": "黯然礼装",
+  "skinEn": "Nightfall Raiment",
+  "label": "绫波 · 黯然礼装"
+ },
+ "xuefeng_3": {
+  "ship": "雪风",
+  "shipEn": "Yukikaze",
+  "skin": "冬之雪风",
+  "skinEn": "Winter's Snowy Wind",
+  "label": "雪风 · 冬之雪风"
+ },
+ "daofeng_4": {
+  "ship": "岛风",
+  "shipEn": "Shimakaze",
+  "skin": "最速兔兔的邀请函(?)",
+  "skinEn": "World's Speediest Bunny Waitress",
+  "label": "岛风 · 最速兔兔的邀请函(?)"
+ },
+ "daofeng_5": {
+  "ship": "岛风",
+  "shipEn": "Shimakaze",
+  "skin": "不思议国度的白兔",
+  "skinEn": "The White Rabbit of Wonderland",
+  "label": "岛风 · 不思议国度的白兔"
+ },
+ "fengyun_4": {
+  "ship": "风云",
+  "shipEn": "Kazagumo",
+  "skin": "热茶与女仆修行",
+  "skinEn": "Diligent Domestic Discipline",
+  "label": "风云 · 热茶与女仆修行"
+ },
+ "chuyue_2": {
+  "ship": "初月",
+  "shipEn": "Hatsuzuki",
+  "skin": "八月恋夏",
+  "skinEn": "August's First Romance",
+  "label": "初月 · 八月恋夏"
+ },
+ "nengdai_2": {
+  "ship": "能代",
+  "shipEn": "Noshiro",
+  "skin": "祭典的秘境?",
+  "skinEn": "Uncharted Festival Grounds?",
+  "label": "能代 · 祭典的秘境?"
+ },
+ "nengdai_3": {
+  "ship": "能代",
+  "shipEn": "Noshiro",
+  "skin": "阳光·沙滩·假日",
+  "skinEn": "Unwinding in the Sunshine",
+  "label": "能代 · 阳光·沙滩·假日"
+ },
+ "jiuyun_2": {
+  "ship": "酒匂",
+  "shipEn": "Sakawa",
+  "skin": "团子的诱惑",
+  "skinEn": "The Colors of Love",
+  "label": "酒匂 · 团子的诱惑"
+ },
+ "dulianglai_2": {
+  "ship": "渡良濑",
+  "shipEn": "Watarase",
+  "skin": "不会消失的换装魔法",
+  "skinEn": "Garments of Everlasting Magic",
+  "label": "渡良濑 · 不会消失的换装魔法"
+ },
+ "mingji_2": {
+  "ship": "名寄",
+  "shipEn": "Nayoro",
+  "skin": "Electric Affection",
+  "skinEn": "Electric Affection",
+  "label": "名寄 · Electric Affection"
+ },
+ "gaoxiong_7": {
+  "ship": "高雄",
+  "shipEn": "Takao",
+  "skin": "武者的“内在”修养",
+  "skinEn": "Inner Cultivation",
+  "label": "高雄 · 武者的“内在”修养"
+ },
+ "aidang_2": {
+  "ship": "爱宕",
+  "shipEn": "Atago",
+  "skin": "盛夏进行曲",
+  "skinEn": "Summer March",
+  "label": "爱宕 · 盛夏进行曲"
+ },
+ "yunxian_2": {
+  "ship": "云仙",
+  "shipEn": "Unzen",
+  "skin": "嬉水碧海",
+  "skinEn": "Sojourn Through Clear Seas",
+  "label": "云仙 · 嬉水碧海"
+ },
+ "yunxian_3": {
+  "ship": "云仙",
+  "shipEn": "Unzen",
+  "skin": "万船集怀",
+  "skinEn": "Arcane Ninja Knowledge",
+  "label": "云仙 · 万船集怀"
+ },
+ "qianjian_2": {
+  "ship": "浅间",
+  "shipEn": "Asama",
+  "skin": "绽放于至深之夜",
+  "skinEn": "Blooming Upon a Bewitching Night",
+  "label": "浅间 · 绽放于至深之夜"
+ },
+ "tiancheng_3": {
+  "ship": "天城",
+  "shipEn": "Amagi",
+  "skin": "红鸢的闲暇片刻",
+  "skinEn": "Red Kite Respite",
+  "label": "天城 · 红鸢的闲暇片刻"
+ },
+ "antu_2": {
+  "ship": "安土",
+  "shipEn": "Azuchi",
+  "skin": "午夜的瑰色电梯",
+  "skinEn": "Testing Courage in Crimson",
+  "label": "安土 · 午夜的瑰色电梯"
+ },
+ "wuzang_3": {
+  "ship": "武藏",
+  "shipEn": "Musashi",
+  "skin": "堇色兔的狙击游戏",
+  "skinEn": "The Purple Rabbit's Marksmanship",
+  "label": "武藏 · 堇色兔的狙击游戏"
+ },
+ "wuzang_4": {
+  "ship": "武藏",
+  "shipEn": "Musashi",
+  "skin": "只为你献上的应援",
+  "skinEn": "Cheering For You Alone",
+  "label": "武藏 · 只为你献上的应援"
+ },
+ "weizhang_3": {
+  "ship": "尾张",
+  "shipEn": "Owari",
+  "skin": "愿望为“爱”",
+  "skinEn": "My Wish is For Love",
+  "label": "尾张 · 愿望为“爱”"
+ },
+ "junhe_5": {
+  "ship": "骏河",
+  "shipEn": "Suruga",
+  "skin": "百花庆云",
+  "skinEn": "Hundred Flowers' Auspice",
+  "label": "骏河 · 百花庆云"
+ },
+ "junhe_4": {
+  "ship": "骏河",
+  "shipEn": "Suruga",
+  "skin": "“不情愿”的圣夜祭",
+  "skinEn": "Uneventful Holiday Greetings",
+  "label": "骏河 · “不情愿”的圣夜祭"
+ },
+ "jinjiang_2": {
+  "ship": "近江",
+  "shipEn": "Oumi",
+  "skin": "逃脱失败……？",
+  "skinEn": "A Failed Escape?",
+  "label": "近江 · 逃脱失败……？"
+ },
+ "longfeng_2": {
+  "ship": "龙凤",
+  "shipEn": "Ryuuhou",
+  "skin": "凤舞新年",
+  "skinEn": "Firebird's New Year Dance",
+  "label": "龙凤 · 凤舞新年"
+ },
+ "chicheng_5": {
+  "ship": "赤城",
+  "shipEn": "Akagi",
+  "skin": "朝凰来仪",
+  "skinEn": "Dawn-Phoenix's Summons",
+  "label": "赤城 · 朝凰来仪"
+ },
+ "xianghe_2": {
+  "ship": "翔鹤",
+  "shipEn": "Shoukaku",
+  "skin": "散花舞鹤",
+  "skinEn": "The Crane that Dances With the Wind",
+  "label": "翔鹤 · 散花舞鹤"
+ },
+ "dafeng_2": {
+  "ship": "大凤",
+  "shipEn": "Taihou",
+  "skin": "毒苹果",
+  "skinEn": "Forbidden Fruit",
+  "label": "大凤 · 毒苹果"
+ },
+ "dafeng_4": {
+  "ship": "大凤",
+  "shipEn": "Taihou",
+  "skin": "凤鸣春晓",
+  "skinEn": "Phoenix's Spring Song",
+  "label": "大凤 · 凤鸣春晓"
+ },
+ "dafeng_3": {
+  "ship": "大凤",
+  "shipEn": "Taihou",
+  "skin": "放学后的甜蜜时光",
+  "skinEn": "Sweet Time After School",
+  "label": "大凤 · 放学后的甜蜜时光"
+ },
+ "dafeng_6": {
+  "ship": "大凤",
+  "shipEn": "Taihou",
+  "skin": "海滨的白日美梦",
+  "skinEn": "Seaside Daydreams",
+  "label": "大凤 · 海滨的白日美梦"
+ },
+ "dafeng_7": {
+  "ship": "大凤",
+  "shipEn": "Taihou",
+  "skin": "绮愿良宵",
+  "skinEn": "Fun on the Baize",
+  "label": "大凤 · 绮愿良宵"
+ },
+ "xinnong_3": {
+  "ship": "信浓",
+  "shipEn": "Shinano ",
+  "skin": "轰鸣的银轮",
+  "skinEn": "Moonlit Chrome",
+  "label": "信浓 · 轰鸣的银轮"
+ },
+ "xinnong_4": {
+  "ship": "信浓",
+  "shipEn": "Shinano ",
+  "skin": "白沙幽梦",
+  "skinEn": "Dreamy White Sands",
+  "label": "信浓 · 白沙幽梦"
+ },
+ "xinnong_5": {
+  "ship": "信浓",
+  "shipEn": "Shinano ",
+  "skin": "幻梦奇术",
+  "skinEn": "Visions of Fantasy",
+  "label": "信浓 · 幻梦奇术"
+ },
+ "xinnong_6": {
+  "ship": "信浓",
+  "shipEn": "Shinano ",
+  "skin": "相融一梦",
+  "skinEn": "Embrace Upon A Melted Dream",
+  "label": "信浓 · 相融一梦"
+ },
+ "tiancheng_cv_2": {
+  "ship": "天城",
+  "shipEn": "Amagi(CV)",
+  "skin": "落于王座之花",
+  "skinEn": "Throne of Fallen Petals",
+  "label": "天城 · 落于王座之花"
+ },
+ "tiancheng_cv_3": {
+  "ship": "天城",
+  "shipEn": "Amagi(CV)",
+  "skin": "碧波绮尾",
+  "skinEn": "The Mermaid of the Emerald Sea",
+  "label": "天城 · 碧波绮尾"
+ },
+ "baifeng_2": {
+  "ship": "白凤",
+  "shipEn": "Hakuhou",
+  "skin": "缭乱之花的忍者游戏",
+  "skinEn": "Floral Ninja Roleplay",
+  "label": "白凤 · 缭乱之花的忍者游戏"
+ },
+ "baifeng_3": {
+  "ship": "白凤",
+  "shipEn": "Hakuhou",
+  "skin": "晴雨狐嫁",
+  "skinEn": "Sunshower Fox Bride",
+  "label": "白凤 · 晴雨狐嫁"
+ },
+ "jianye_2": {
+  "ship": "樫野",
+  "shipEn": "Kashino",
+  "skin": "温泉放松时间",
+  "skinEn": "Hot Springs Relaxation",
+  "label": "樫野 · 温泉放松时间"
+ },
+ "jianye_3": {
+  "ship": "樫野",
+  "shipEn": "Kashino",
+  "skin": "绊倒的迷糊女仆",
+  "skinEn": "Maid for Mayhem",
+  "label": "樫野 · 绊倒的迷糊女仆"
+ },
+ "jianye_4": {
+  "ship": "樫野",
+  "shipEn": "Kashino",
+  "skin": "花绽之乐章",
+  "skinEn": "Robust Floral Strings",
+  "label": "樫野 · 花绽之乐章"
+ },
+ "yichui_2": {
+  "ship": "伊吹",
+  "shipEn": "Ibuki",
+  "skin": "永梦的青女",
+  "skinEn": "Winter Sylph's Reverie",
+  "label": "伊吹 · 永梦的青女"
+ },
+ "wuqi_2": {
+  "ship": "吾妻",
+  "shipEn": "Azuma",
+  "skin": "细语春霞",
+  "skinEn": "Soft Voice of Spring",
+  "label": "吾妻 · 细语春霞"
+ },
+ "wuqi_3": {
+  "ship": "吾妻",
+  "shipEn": "Azuma",
+  "skin": "心向何方的指导课",
+  "skinEn": "Career Counseling for the Groom",
+  "label": "吾妻 · 心向何方的指导课"
+ },
+ "bailong_3": {
+  "ship": "白龙",
+  "shipEn": "Hakuryuu",
+  "skin": "丝竹喧阗",
+  "skinEn": "Flash of Silk and Strings",
+  "label": "白龙 · 丝竹喧阗"
+ },
+ "siwanshi_3": {
+  "ship": "四万十",
+  "shipEn": "Shimanto",
+  "skin": "优哉游哉的龙神大人",
+  "skinEn": "The Relaxing Dragon God",
+  "label": "四万十 · 优哉游哉的龙神大人"
+ },
+ "z13_2": {
+  "ship": "Z13",
+  "shipEn": "Z13",
+  "skin": "战略性约会进行时 ",
+  "skinEn": "Strategic Date Solution",
+  "label": "Z13 · 战略性约会进行时 "
+ },
+ "z46_2": {
+  "ship": "Z46",
+  "shipEn": "Z46",
+  "skin": "夏之初体验",
+  "skinEn": "Her First Summer",
+  "label": "Z46 · 夏之初体验"
+ },
+ "z46_3": {
+  "ship": "Z46",
+  "shipEn": "Z46",
+  "skin": "少女的借物竞赛",
+  "skinEn": "Girls' Relay",
+  "label": "Z46 · 少女的借物竞赛"
+ },
+ "z46_4": {
+  "ship": "Z46",
+  "shipEn": "Z46",
+  "skin": "未知的闪亮舞台",
+  "skinEn": "Star-Lit★Chocolate",
+  "label": "Z46 · 未知的闪亮舞台"
+ },
+ "aimudeng_2": {
+  "ship": "埃姆登",
+  "shipEn": "Emden",
+  "skin": "黑白的夜之主",
+  "skinEn": "White-Black Partita",
+  "label": "埃姆登 · 黑白的夜之主"
+ },
+ "leigensibao_2": {
+  "ship": "雷根斯堡",
+  "shipEn": "Regensburg",
+  "skin": "暗之龙，光之岸",
+  "skinEn": "Dark Dragon, Brilliant Beach",
+  "label": "雷根斯堡 · 暗之龙，光之岸"
+ },
+ "ougen_5": {
+  "ship": "欧根亲王",
+  "shipEn": "Prinz Eugen",
+  "skin": "Final Lap",
+  "skinEn": "Final Lap",
+  "label": "欧根亲王 · Final Lap"
+ },
+ "ougen_6": {
+  "ship": "欧根亲王",
+  "shipEn": "Prinz Eugen",
+  "skin": "沉醉于夜",
+  "skinEn": "Kindred Evening Spirits",
+  "label": "欧根亲王 · 沉醉于夜"
+ },
+ "ougen_8": {
+  "ship": "欧根亲王",
+  "shipEn": "Prinz Eugen",
+  "skin": "微醺与试探的距离",
+  "skinEn": "Between Tipsiness and a Wager",
+  "label": "欧根亲王 · 微醺与试探的距离"
+ },
+ "deyizhi_3": {
+  "ship": "德意志",
+  "shipEn": "Deutschland",
+  "skin": "艳阳下的“福利”时间",
+  "skinEn": "Service Time?!",
+  "label": "德意志 · 艳阳下的“福利”时间"
+ },
+ "sipeibojue_5": {
+  "ship": "斯佩伯爵海军上将",
+  "shipEn": "Admiral Graf Spee",
+  "skin": "铁血♥最可爱",
+  "skinEn": "World's♥Cutest",
+  "label": "斯佩伯爵海军上将 · 铁血♥最可爱"
+ },
+ "haiyinlixi_2": {
+  "ship": "海因里希亲王",
+  "shipEn": "Prinz Heinrich",
+  "skin": "泳池边的救生兔(?)",
+  "skinEn": "Rabbit on Watch",
+  "label": "海因里希亲王 · 泳池边的救生兔(?)"
+ },
+ "adaerbote_2": {
+  "ship": "阿达尔伯特亲王",
+  "shipEn": "Prinz Adalbert",
+  "skin": "闭店后的特别时光",
+  "skinEn": "After-Hours Service",
+  "label": "阿达尔伯特亲王 · 闭店后的特别时光"
+ },
+ "adaerbote_3": {
+  "ship": "阿达尔伯特亲王",
+  "shipEn": "Prinz Adalbert",
+  "skin": "浴室中的小小意外",
+  "skinEn": "Bathroom Slip-Up",
+  "label": "阿达尔伯特亲王 · 浴室中的小小意外"
+ },
+ "feiteliekaer_3": {
+  "ship": "腓特烈·卡尔",
+  "shipEn": "Friedrich Carl",
+  "skin": "夏日防晒计划",
+  "skinEn": "Tender Summer Care",
+  "label": "腓特烈·卡尔 · 夏日防晒计划"
+ },
+ "feiteliekaer_4": {
+  "ship": "腓特烈·卡尔",
+  "shipEn": "Friedrich Carl",
+  "skin": "午夜频道",
+  "skinEn": "The Midnight Channel",
+  "label": "腓特烈·卡尔 · 午夜频道"
+ },
+ "genaisennao_2": {
+  "ship": "格奈森瑙",
+  "shipEn": "Gneisenau",
+  "skin": "梦魇魅影",
+  "skinEn": "Nightmarish Succubus",
+  "label": "格奈森瑙 · 梦魇魅影"
+ },
+ "lvzuofu_2": {
+  "ship": "吕佐夫",
+  "shipEn": "Lützow",
+  "skin": "永夜的赤之贵族",
+  "skinEn": "Everlasting Blood Banquet",
+  "label": "吕佐夫 · 永夜的赤之贵族"
+ },
+ "zengkehaijunshangjiang_2": {
+  "ship": "曾克海军上将",
+  "shipEn": "Admiral Zenker",
+  "skin": "心动审讯练习中 ",
+  "skinEn": "Fun with...Interrogations?",
+  "label": "曾克海军上将 · 心动审讯练习中 "
+ },
+ "bisimai_2": {
+  "ship": "俾斯麦",
+  "shipEn": "Bismarck",
+  "skin": "铁血的辉光",
+  "skinEn": "Beacon of the Iron Blood",
+  "label": "俾斯麦 · 铁血的辉光"
+ },
+ "bisimai_4": {
+  "ship": "俾斯麦",
+  "shipEn": "Bismarck",
+  "skin": "未完成的圣诞惊喜",
+  "skinEn": "Unpacked Surprise",
+  "label": "俾斯麦 · 未完成的圣诞惊喜"
+ },
+ "tierbici_2": {
+  "ship": "提尔比茨",
+  "shipEn": "Tirpitz",
+  "skin": "冰雪消融的夏日",
+  "skinEn": "Snow-Melting Summer",
+  "label": "提尔比茨 · 冰雪消融的夏日"
+ },
+ "wuerlixi_2": {
+  "ship": "乌尔里希·冯·胡滕",
+  "shipEn": "Ulrich von Hutten",
+  "skin": "Mädchen Trümmer",
+  "skinEn": "Mayhem Maid",
+  "label": "乌尔里希·冯·胡滕 · Mädchen Trümmer"
+ },
+ "wuerlixi_3": {
+  "ship": "乌尔里希·冯·胡滕",
+  "shipEn": "Ulrich von Hutten",
+  "skin": "一骑绝尘",
+  "skinEn": "Ignition Matrician",
+  "label": "乌尔里希·冯·胡滕 · 一骑绝尘"
+ },
+ "gezi_2": {
+  "ship": "葛兹·冯·伯利欣根",
+  "shipEn": "Götz von Berlichingen",
+  "skin": "赤红之月的幻想",
+  "skinEn": "Rapture Beneath the Blood Moon",
+  "label": "葛兹·冯·伯利欣根 · 赤红之月的幻想"
+ },
+ "weixi_2": {
+  "ship": "威悉",
+  "shipEn": "Weser",
+  "skin": "黯调铅华",
+  "skinEn": "Urbane Onyx",
+  "label": "威悉 · 黯调铅华"
+ },
+ "yibei_3": {
+  "ship": "易北",
+  "shipEn": "Elbe",
+  "skin": "清纯的“反派小姐”？",
+  "skinEn": "Pure-Hearted Bad Girl",
+  "label": "易北 · 清纯的“反派小姐”？"
+ },
+ "qibolin_2": {
+  "ship": "齐柏林伯爵",
+  "shipEn": "Graf Zeppelin",
+  "skin": "沙滩上的乌尔德",
+  "skinEn": "Beachside Urd",
+  "label": "齐柏林伯爵 · 沙滩上的乌尔德"
+ },
+ "shitelasai_2": {
+  "ship": "彼得·史特拉塞",
+  "shipEn": "Peter Strasser",
+  "skin": "节庆的Chronos",
+  "skinEn": "Chronos's Kalendae",
+  "label": "彼得·史特拉塞 · 节庆的Chronos"
+ },
+ "fulici_2": {
+  "ship": "弗里茨·鲁梅",
+  "shipEn": "Fritz Rumey",
+  "skin": "Schwarzes Kaninchen",
+  "skinEn": "Schwarzes Kaninchen",
+  "label": "弗里茨·鲁梅 · Schwarzes Kaninchen"
+ },
+ "u2501_2": {
+  "ship": "U-2501",
+  "shipEn": "U-2501",
+  "skin": "水幕后的珍宝",
+  "skinEn": "Treasure Behind the Water Curtain",
+  "label": "U-2501 · 水幕后的珍宝"
+ },
+ "luoen_4": {
+  "ship": "罗恩",
+  "shipEn": "Roon",
+  "skin": "苍翠的安眠曲",
+  "skinEn": "Viridescent Lullaby",
+  "label": "罗恩 · 苍翠的安眠曲"
+ },
+ "feiteliedadi_3": {
+  "ship": "腓特烈大帝",
+  "shipEn": "Friedrich der Große",
+  "skin": "相会于盛夏之夜",
+  "skinEn": "One Summer Night's Intimacy",
+  "label": "腓特烈大帝 · 相会于盛夏之夜"
+ },
+ "feiteliedadi_4": {
+  "ship": "腓特烈大帝",
+  "shipEn": "Friedrich der Große",
+  "skin": "红封之礼",
+  "skinEn": "Boudoir's Lingering Flame",
+  "label": "腓特烈大帝 · 红封之礼"
+ },
+ "meiyinci_3": {
+  "ship": "美因茨",
+  "shipEn": "Mainz",
+  "skin": "静雅之所的安逸",
+  "skinEn": "A Blend of Serenity",
+  "label": "美因茨 · 静雅之所的安逸"
+ },
+ "aijier_2": {
+  "ship": "埃吉尔",
+  "shipEn": "Ägir",
+  "skin": "港区的龙女仆",
+  "skinEn": "Iron Blood's Dragon Maid",
+  "label": "埃吉尔 · 港区的龙女仆"
+ },
+ "aijier_3": {
+  "ship": "埃吉尔",
+  "shipEn": "Ägir",
+  "skin": "金龙腾祥云",
+  "skinEn": "Golden Dragon Among Auspicious Clouds",
+  "label": "埃吉尔 · 金龙腾祥云"
+ },
+ "aijier_4": {
+  "ship": "埃吉尔",
+  "shipEn": "Ägir",
+  "skin": "私密闲暇时",
+  "skinEn": "One-on-One Leisure Time",
+  "label": "埃吉尔 · 私密闲暇时"
+ },
+ "aogusite_4": {
+  "ship": "奥古斯特·冯·帕塞瓦尔",
+  "shipEn": "August von Parseval",
+  "skin": "与“魔女”的星夜之约",
+  "skinEn": "Night Rendezvous with the Unhulde",
+  "label": "奥古斯特·冯·帕塞瓦尔 · 与“魔女”的星夜之约"
+ },
+ "lupuleixite_2": {
+  "ship": "鲁普雷希特亲王",
+  "shipEn": "Prinz Rupprecht",
+  "skin": "腾龙戏春？",
+  "skinEn": "The Gate Dragon's Advent",
+  "label": "鲁普雷希特亲王 · 腾龙戏春？"
+ },
+ "xingdengbao_2": {
+  "ship": "兴登堡",
+  "shipEn": "Hindenburg",
+  "skin": "微醺胜负",
+  "skinEn": "Delirious Duel",
+  "label": "兴登堡 · 微醺胜负"
+ },
+ "xingdengbao_3": {
+  "ship": "兴登堡",
+  "shipEn": "Hindenburg",
+  "skin": "深阁舞戏",
+  "skinEn": "Dancer of the Deep Chamber",
+  "label": "兴登堡 · 深阁舞戏"
+ },
+ "meikelunbao_2": {
+  "ship": "梅克伦堡",
+  "shipEn": "Mecklenburg",
+  "skin": "作茧自缚",
+  "skinEn": "Branding Witchcraft",
+  "label": "梅克伦堡 · 作茧自缚"
+ },
+ "taiyuan_2": {
+  "ship": "太原",
+  "shipEn": "Tai Yuan",
+  "skin": "金蛇闹春",
+  "skinEn": "The Golden Dragon's Festivities",
+  "label": "太原 · 金蛇闹春"
+ },
+ "longwu_2": {
+  "ship": "龙武",
+  "shipEn": "Lung Wu",
+  "skin": "腾龙新春宴",
+  "skinEn": "Ascendant Dragon's Spring Feast",
+  "label": "龙武 · 腾龙新春宴"
+ },
+ "ninghai_4": {
+  "ship": "宁海",
+  "shipEn": "Ning Hai",
+  "skin": "东煌姐妹！·N",
+  "skinEn": "Dragon Sisters! -N",
+  "label": "宁海 · 东煌姐妹！·N"
+ },
+ "pinghai_4": {
+  "ship": "平海",
+  "shipEn": "Ping Hai",
+  "skin": "东煌姐妹！·P",
+  "skinEn": "Dragon Sisters! -P",
+  "label": "平海 · 东煌姐妹！·P"
+ },
+ "pinghai_6": {
+  "ship": "平海",
+  "shipEn": "Ping Hai",
+  "skin": "甜蜜嫣红",
+  "skinEn": "Delicious Crimson",
+  "label": "平海 · 甜蜜嫣红"
+ },
+ "yingrui_3": {
+  "ship": "应瑞",
+  "shipEn": "Ying Swei",
+  "skin": "松戏梅·其上",
+  "skinEn": "Frolicking Flowers, Verse I",
+  "label": "应瑞 · 松戏梅·其上"
+ },
+ "zhaohe_3": {
+  "ship": "肇和",
+  "shipEn": "Chao Ho",
+  "skin": "松戏梅·其下",
+  "skinEn": "Frolicking Flowers, Verse II",
+  "label": "肇和 · 松戏梅·其下"
+ },
+ "jian_3": {
+  "ship": "济安",
+  "shipEn": "Chi An",
+  "skin": "异域绮梦",
+  "skinEn": "Exotic Dreamland",
+  "label": "济安 · 异域绮梦"
+ },
+ "jianwu_2": {
+  "ship": "建武",
+  "shipEn": "Chien Wu",
+  "skin": "妆点，只为今夜",
+  "skinEn": "Dressed for Just Tonight",
+  "label": "建武 · 妆点，只为今夜"
+ },
+ "zhangwu_2": {
+  "ship": "彰武",
+  "shipEn": "Chang Wu",
+  "skin": "一枝春欲放",
+  "skinEn": "In Full Glory, Spring's Branch Blooms",
+  "label": "彰武 · 一枝春欲放"
+ },
+ "zhala_2": {
+  "ship": "扎拉",
+  "shipEn": "Zara",
+  "skin": "泳池边的“偶遇”",
+  "skinEn": "Poolside Coincidence",
+  "label": "扎拉 · 泳池边的“偶遇”"
+ },
+ "bola_2": {
+  "ship": "波拉",
+  "shipEn": "Pola ",
+  "skin": "水边的事故？",
+  "skinEn": "Seaside Coincidence",
+  "label": "波拉 · 水边的事故？"
+ },
+ "geliqiya_2": {
+  "ship": "戈里齐亚",
+  "shipEn": "Gorizia",
+  "skin": "办公室的“隔阂”",
+  "skinEn": "Unrequited Office Love?",
+  "label": "戈里齐亚 · 办公室的“隔阂”"
+ },
+ "weineituo_2": {
+  "ship": "维托里奥·维内托",
+  "shipEn": "Vittorio Veneto",
+  "skin": "拉斯佩齐亚之花",
+  "skinEn": "The Flower of La Spezia",
+  "label": "维托里奥·维内托 · 拉斯佩齐亚之花"
+ },
+ "luoma_2": {
+  "ship": "罗马",
+  "shipEn": "Roma",
+  "skin": "午夜的白天鹅",
+  "skinEn": "White Heron of Darkest Night",
+  "label": "罗马 · 午夜的白天鹅"
+ },
+ "lafeier_2": {
+  "ship": "拉斐尔",
+  "shipEn": "Raffaello",
+  "skin": "爱与美的秘密珍藏",
+  "skinEn": "Protector of Love and Beauty",
+  "label": "拉斐尔 · 爱与美的秘密珍藏"
+ },
+ "nabulesi_2": {
+  "ship": "那不勒斯",
+  "shipEn": "Napoli",
+  "skin": "Dreamy Night",
+  "skinEn": "Dreamy Night",
+  "label": "那不勒斯 · Dreamy Night"
+ },
+ "weiyan_2": {
+  "ship": "威严",
+  "shipEn": "Grozny",
+  "skin": "囚牢里的危险兔",
+  "skinEn": "Bad Bunny Behind Bars",
+  "label": "威严 · 囚牢里的危险兔"
+ },
+ "weiyan_4": {
+  "ship": "威严",
+  "shipEn": "Grozny",
+  "skin": "突袭！暗黑基地！",
+  "skinEn": "Shadowy Syndicate Showdown",
+  "label": "威严 · 突袭！暗黑基地！"
+ },
+ "weiyan_6": {
+  "ship": "威严",
+  "shipEn": "Grozny",
+  "skin": "野兔和蒸汽房",
+  "skinEn": "Bunny in the Banya",
+  "label": "威严 · 野兔和蒸汽房"
+ },
+ "jiluofu_3": {
+  "ship": "基洛夫",
+  "shipEn": "Kirov",
+  "skin": "疾速截击",
+  "skinEn": "Drifting Justice",
+  "label": "基洛夫 · 疾速截击"
+ },
+ "kuersike_2": {
+  "ship": "库尔斯克",
+  "shipEn": "Kursk",
+  "skin": "雾中雪狼",
+  "skinEn": "Lone Wolf Amid the Steam",
+  "label": "库尔斯克 · 雾中雪狼"
+ },
+ "suweiaitongmeng_2": {
+  "ship": "苏维埃同盟",
+  "shipEn": "Sovetsky Soyuz",
+  "skin": "天幕危机",
+  "skinEn": "Skyfall Agent",
+  "label": "苏维埃同盟 · 天幕危机"
+ },
+ "suweiaitongmeng_3": {
+  "ship": "苏维埃同盟",
+  "shipEn": "Sovetsky Soyuz",
+  "skin": "缠丝审讯",
+  "skinEn": "Stringed Interrogation",
+  "label": "苏维埃同盟 · 缠丝审讯"
+ },
+ "kalangshitade_2": {
+  "ship": "喀琅施塔得",
+  "shipEn": "Kronshtadt",
+  "skin": "突击行动开始！",
+  "skinEn": "Begin the Rush!",
+  "label": "喀琅施塔得 · 突击行动开始！"
+ },
+ "naximofu_2": {
+  "ship": "纳希莫夫海军上将",
+  "shipEn": "Admiral Nakhimov",
+  "skin": "聚光灯下的初体验",
+  "skinEn": "First Time in the Limelight",
+  "label": "纳希莫夫海军上将 · 聚光灯下的初体验"
+ },
+ "aimierbeierding_2": {
+  "ship": "埃米尔·贝尔汀",
+  "shipEn": "Émile Bertin",
+  "skin": "蓝色海岸",
+  "skinEn": "Côte d'Azur",
+  "label": "埃米尔·贝尔汀 · 蓝色海岸"
+ },
+ "aimierbeierding_3": {
+  "ship": "埃米尔·贝尔汀",
+  "shipEn": "Émile Bertin",
+  "skin": "「女仆」浪漫",
+  "skinEn": "Maid Fantastique",
+  "label": "埃米尔·贝尔汀 · 「女仆」浪漫"
+ },
+ "masaina_2": {
+  "ship": "马塞纳",
+  "shipEn": "Masséna",
+  "skin": "醉甜之泉",
+  "skinEn": "Sweetly Intoxicating Spring",
+  "label": "马塞纳 · 醉甜之泉"
+ },
+ "lisailiu_2": {
+  "ship": "黎塞留",
+  "shipEn": "Richelieu",
+  "skin": "潮风的Fleuron",
+  "skinEn": "Fleuron of the Waves",
+  "label": "黎塞留 · 潮风的Fleuron"
+ },
+ "lisailiu_3": {
+  "ship": "黎塞留",
+  "shipEn": "Richelieu",
+  "skin": "常緑Rêve prophétique",
+  "skinEn": "Evergreen Prophecy",
+  "label": "黎塞留 · 常緑Rêve prophétique"
+ },
+ "aersasi_2": {
+  "ship": "阿尔萨斯",
+  "shipEn": "Alsace",
+  "skin": "盛夏的圣迹",
+  "skinEn": "Heat-Beating Summer Sacrament",
+  "label": "阿尔萨斯 · 盛夏的圣迹"
+ },
+ "aersasi_3": {
+  "ship": "阿尔萨斯",
+  "shipEn": "Alsace",
+  "skin": "圣宵之鬼的微醺",
+  "skinEn": "Tipsy Oni on a Sacred Night",
+  "label": "阿尔萨斯 · 圣宵之鬼的微醺"
+ },
+ "beilaosenlin_2": {
+  "ship": "贝劳森林",
+  "shipEn": "Bois Belleau",
+  "skin": "水色疗愈",
+  "skinEn": "Steamy Therapy",
+  "label": "贝劳森林 · 水色疗愈"
+ },
+ "banerwei_3": {
+  "ship": "伴尔维",
+  "shipEn": "Painlevé",
+  "skin": "清凉的甜蜜滋味",
+  "skinEn": "Fresh and Fortunate",
+  "label": "伴尔维 · 清凉的甜蜜滋味"
+ },
+ "xukufu_2": {
+  "ship": "絮库夫",
+  "shipEn": "Surcouf",
+  "skin": "购物时光！",
+  "skinEn": "Shopping Time!",
+  "label": "絮库夫 · 购物时光！"
+ },
+ "xukufu_3": {
+  "ship": "絮库夫",
+  "shipEn": "Surcouf",
+  "skin": "Loisirs balnéaires",
+  "skinEn": "Loisirs Balnéaires",
+  "label": "絮库夫 · Loisirs balnéaires"
+ },
+ "sebao_2": {
+  "ship": "瑟堡",
+  "shipEn": "Cherbourg",
+  "skin": "布偶熊里面的是……？",
+  "skinEn": "What's Inside the Bear",
+  "label": "瑟堡 · 布偶熊里面的是……？"
+ },
+ "luyijiushi_2": {
+  "ship": "路易九世",
+  "shipEn": "Saint Louis",
+  "skin": "华服的圣骑士",
+  "skinEn": "Holy Knight's Resplendence",
+  "label": "路易九世 · 华服的圣骑士"
+ },
+ "luyijiushi_4": {
+  "ship": "路易九世",
+  "shipEn": "Saint Louis",
+  "skin": "微醺的静谧时光",
+  "skinEn": "Holiness to Haziness",
+  "label": "路易九世 · 微醺的静谧时光"
+ },
+ "buleisite_2": {
+  "ship": "布雷斯特",
+  "shipEn": "Brest",
+  "skin": "苍海织歌",
+  "skinEn": "Marine Muse",
+  "label": "布雷斯特 · 苍海织歌"
+ },
+ "buleisite_3": {
+  "ship": "布雷斯特",
+  "shipEn": "Brest",
+  "skin": "良夜春景",
+  "skinEn": "Moonlit Night's Spring Vista",
+  "label": "布雷斯特 · 良夜春景"
+ },
+ "mojiaduoer_2": {
+  "ship": "莫加多尔",
+  "shipEn": "Mogador",
+  "skin": "静谧一隅的燥热",
+  "skinEn": "Locker Room Lechery",
+  "label": "莫加多尔 · 静谧一隅的燥热"
+ },
+ "mojiaduoer_3": {
+  "ship": "莫加多尔",
+  "shipEn": "Mogador",
+  "skin": "嗅诊的护理天使",
+  "skinEn": "Olfactory Nursery Call",
+  "label": "莫加多尔 · 嗅诊的护理天使"
+ },
+ "mojiaduoer_4": {
+  "ship": "莫加多尔",
+  "shipEn": "Mogador",
+  "skin": "共坠的渴慕",
+  "skinEn": "Diving for Desire",
+  "label": "莫加多尔 · 共坠的渴慕"
+ },
+ "edu_3": {
+  "ship": "恶毒",
+  "shipEn": "Le Malin",
+  "skin": "秘密基地的Mercredi",
+  "skinEn": "Mercredi at the Secret Base",
+  "label": "恶毒 · 秘密基地的Mercredi"
+ },
+ "edu_4": {
+  "ship": "恶毒",
+  "shipEn": "Le Malin",
+  "skin": "懒懒的白兔",
+  "skinEn": "Listless Lapin",
+  "label": "恶毒 · 懒懒的白兔"
+ },
+ "jialisuoniye_4": {
+  "ship": "拉·加利索尼埃",
+  "shipEn": "La Galissonnière",
+  "skin": "春晓醉梦",
+  "skinEn": "Lush Spring Dreams",
+  "label": "拉·加利索尼埃 · 春晓醉梦"
+ },
+ "jialisuoniye_3": {
+  "ship": "拉·加利索尼埃",
+  "shipEn": "La Galissonnière",
+  "skin": "黑猫与南瓜之夜",
+  "skinEn": "Black Cat of All Hallows' Eve",
+  "label": "拉·加利索尼埃 · 黑猫与南瓜之夜"
+ },
+ "dunkeerke_2": {
+  "ship": "敦刻尔克",
+  "shipEn": "Dunkerque",
+  "skin": "“甜蜜”夏日",
+  "skinEn": "Summer Sucré",
+  "label": "敦刻尔克 · “甜蜜”夏日"
+ },
+ "sitelasibao_2": {
+  "ship": "斯特拉斯堡",
+  "shipEn": "Strasbourg",
+  "skin": "赛场上的电子妖精",
+  "skinEn": "Faerie of the Race Circuit",
+  "label": "斯特拉斯堡 · 赛场上的电子妖精"
+ },
+ "rangbaer_3": {
+  "ship": "让·巴尔",
+  "shipEn": "Jean Bart",
+  "skin": "秘密的Après midi",
+  "skinEn": "Private Après Midi",
+  "label": "让·巴尔 · 秘密的Après midi"
+ },
+ "rangbaer_4": {
+  "ship": "让·巴尔",
+  "shipEn": "Jean Bart",
+  "skin": "舶刀Première neige",
+  "skinEn": "First Snow Upon the Cutlass's Edge",
+  "label": "让·巴尔 · 舶刀Première neige"
+ },
+ "rangbaer_5": {
+  "ship": "让·巴尔",
+  "shipEn": "Jean Bart",
+  "skin": "灯映星展",
+  "skinEn": "Springlight Étoiles",
+  "label": "让·巴尔 · 灯映星展"
+ },
+ "kelaimengsuo_2": {
+  "ship": "克莱蒙梭",
+  "shipEn": "Clemenceau",
+  "skin": "金日煦风",
+  "skinEn": "Splendid Breeze",
+  "label": "克莱蒙梭 · 金日煦风"
+ },
+ "xiafei_4": {
+  "ship": "霞飞",
+  "shipEn": "Joffre",
+  "skin": "祝福的起步冲刺",
+  "skinEn": "Blessings' First Flight",
+  "label": "霞飞 · 祝福的起步冲刺"
+ },
+ "qisheng_2": {
+  "ship": "七省",
+  "shipEn": "De Zeven Provinciën",
+  "skin": "相依偎的温度",
+  "skinEn": "Snuggling for Warmth",
+  "label": "七省 · 相依偎的温度"
+ },
+ "jinshi_2": {
+  "ship": "金狮",
+  "shipEn": "Gouden Leeuw",
+  "skin": "朦胧的宠溺时刻",
+  "skinEn": "An Intimate Cleaning",
+  "label": "金狮 · 朦胧的宠溺时刻"
+ },
+ "jinluhao_2": {
+  "ship": "金鹿号",
+  "shipEn": "Golden Hind",
+  "skin": "古堡中的恐怖淑女",
+  "skinEn": "Forlorn Femme Fatale",
+  "label": "金鹿号 · 古堡中的恐怖淑女"
+ },
+ "jinluhao_3": {
+  "ship": "金鹿号",
+  "shipEn": "Golden Hind",
+  "skin": "微笑的白色魅影",
+  "skinEn": "The Pale Phantom's Smile",
+  "label": "金鹿号 · 微笑的白色魅影"
+ },
+ "gangyishawa_3": {
+  "ship": "冈依沙瓦号",
+  "shipEn": "Ganj-i-Sawai",
+  "skin": "真我的显影",
+  "skinEn": "My Innermost Self",
+  "label": "冈依沙瓦号 · 真我的显影"
+ },
+ "anninvwang_2": {
+  "ship": "安妮女王复仇号",
+  "shipEn": "Queen Anne's Revenge",
+  "skin": "隐秘之拥的呼唤",
+  "skinEn": "Call of the Creeping Embrace",
+  "label": "安妮女王复仇号 · 隐秘之拥的呼唤"
+ },
+ "zhenzhuhao_2": {
+  "ship": "珍珠号",
+  "shipEn": "Pearl",
+  "skin": "魔堡中的堕天使",
+  "skinEn": "Fallen Angel in the Dark Castle",
+  "label": "珍珠号 · 魔堡中的堕天使"
+ },
+ "shuixinghao_2": {
+  "ship": "水星号",
+  "shipEn": "Merkuriy",
+  "skin": "天使降临之日",
+  "skinEn": "Envoy Angel of Love",
+  "label": "水星号 · 天使降临之日"
+ },
+ "sailimiye_2": {
+  "ship": "塞利米耶号",
+  "shipEn": "Selimiye",
+  "skin": "自投罗网的预言家？",
+  "skinEn": "Seer in a Bind",
+  "label": "塞利米耶号 · 自投罗网的预言家？"
+ },
+ "maliluosi_3_doa": {
+  "ship": "玛莉萝丝",
+  "shipEn": "Marie Rose",
+  "skin": "热气蒸腾的女神",
+  "skinEn": "Steamy Venus",
+  "label": "玛莉萝丝 · 热气蒸腾的女神"
+ }
+}

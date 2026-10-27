@@ -5,8 +5,14 @@ const https = require('node:https')
 const { execFile } = require('node:child_process')
 
 const ROOT = __dirname
-const USAGE_SCRIPT = path.join(ROOT, 'tools', 'dsh_usage.mjs')
-const CONFIG_FILE = path.join(ROOT, 'config.json')
+const USAGE_SCRIPT = app.isPackaged
+  ? path.join(process.resourcesPath, 'app.asar.unpacked', 'tools', 'dsh_usage.mjs')
+  : path.join(ROOT, 'tools', 'dsh_usage.mjs')
+
+// 打包后 __dirname 在 asar 内部（只读），配置必须落到 userData
+const CONFIG_FILE = app.isPackaged
+  ? path.join(app.getPath('userData'), 'config.json')
+  : path.join(ROOT, 'config.json')
 
 // --snapshot 用独立 userData，避免和正在运行的桌宠抢缓存锁
 if (process.argv.includes('--snapshot')) {
@@ -27,7 +33,20 @@ const DEFAULT_CONFIG = {
   usage: { refreshMinutes: 5, sessionOnly: false },
 }
 
-const ASSETS = path.join(__dirname, 'assets')
+const ASSETS = resolveAssetsRoot()
+
+/** assets 目录：打包后优先找 exe 同级的 assets，开发时用项目里的 */
+function resolveAssetsRoot() {
+  if (process.env.PET_ASSETS) return process.env.PET_ASSETS
+  if (app.isPackaged) {
+    const exeDir = path.dirname(app.getPath('exe'))
+    for (const c of [path.join(exeDir, 'assets'), path.join(exeDir, '..', 'assets')]) {
+      if (fs.existsSync(c)) return c
+    }
+    return path.join(exeDir, 'assets')
+  }
+  return path.join(__dirname, 'assets')
+}
 
 /** 扫描 assets 下所有 <skin>/<skin>.model3.json */
 function scanSkins() {
@@ -40,8 +59,30 @@ function scanSkins() {
     .sort()
 }
 
+/** 中文名映射：tools/skin_names.json */
+let SKIN_NAMES = {}
+try {
+  const p = app.isPackaged
+    ? path.join(process.resourcesPath, 'app.asar.unpacked', 'tools', 'skin_names.json')
+    : path.join(ROOT, 'tools', 'skin_names.json')
+  SKIN_NAMES = JSON.parse(fs.readFileSync(p, 'utf8'))
+} catch { SKIN_NAMES = {} }
+console.log('[names] 中文名映射条数 =', Object.keys(SKIN_NAMES).length)
+
+function skinLabel(prefab) {
+  const n = SKIN_NAMES[prefab]
+  return n?.label ? `${n.label}  (${prefab})` : prefab
+}
+
+function rememberRecent(prefab) {
+  const list = Array.isArray(config.recent) ? config.recent.filter((s) => s !== prefab) : []
+  list.unshift(prefab)
+  config.recent = list.slice(0, 8)
+}
+
 function skinRelPath(skin) {
-  return `../assets/${skin}/${skin}.model3.json`
+  // 返回 file:// 绝对 URL，开发和打包后都能直接加载
+  return require('node:url').pathToFileURL(path.join(ASSETS, skin, `${skin}.model3.json`)).href
 }
 
 function saveConfig() {
@@ -93,7 +134,12 @@ function loadConfig() {
   try {
     return { ...DEFAULT_CONFIG, ...JSON.parse(fs.readFileSync(CONFIG_FILE, 'utf8')) }
   } catch {
-    fs.writeFileSync(CONFIG_FILE, JSON.stringify(DEFAULT_CONFIG, null, 2))
+    try {
+      fs.mkdirSync(path.dirname(CONFIG_FILE), { recursive: true })
+      fs.writeFileSync(CONFIG_FILE, JSON.stringify(DEFAULT_CONFIG, null, 2), 'utf8')
+    } catch (e) {
+      console.warn('[config] 无法写入配置文件，使用内存默认值:', e.message)
+    }
     return DEFAULT_CONFIG
   }
 }
@@ -232,8 +278,12 @@ function createWindow() {
       setTimeout(async () => {
         try {
           const img = await win.webContents.capturePage()
-          fs.writeFileSync(path.join(ROOT, 'snapshot.png'), img.toPNG())
-          console.log('[snapshot] saved')
+          const out = app.isPackaged
+            ? path.join(app.getPath('userData'), 'snapshot.png')
+            : path.join(ROOT, 'snapshot.png')
+          fs.mkdirSync(path.dirname(out), { recursive: true })
+          fs.writeFileSync(out, img.toPNG())
+          console.log('[snapshot] saved ->', out)
         } catch (e) {
           console.error('[snapshot] failed', e)
         }
@@ -292,17 +342,35 @@ ipcMain.on('pet:menu', () => {
   const skinMenu = Object.keys(groups).sort().map((k) => ({
     label: `${k}  (${groups[k].length})`,
     submenu: groups[k].map((s) => ({
-      label: s + (s === current ? '  ✓' : ''),
+      label: skinLabel(s) + (s === current ? '  ✓' : ''),
       click: () => {
         config.skin = s
+        rememberRecent(s)
         saveConfig()
         if (win) win.webContents.send('pet:skin-changed', skinRelPath(s))
       },
     })),
   }))
 
+  // 最近用过的放最上面，省得每次都翻字母
+  const recent = (Array.isArray(config.recent) ? config.recent : []).filter((s) => skins.includes(s))
+  const recentMenu = recent.length
+    ? [{
+        label: '最近使用',
+        submenu: recent.map((s) => ({
+          label: skinLabel(s) + (s === current ? '  ✓' : ''),
+          click: () => {
+            config.skin = s
+            rememberRecent(s)
+            saveConfig()
+            if (win) win.webContents.send('pet:skin-changed', skinRelPath(s))
+          },
+        })),
+      }, { type: 'separator' }]
+    : []
+
   Menu.buildFromTemplate([
-    { label: `切换皮肤（${skins.length} 个）`, submenu: skinMenu.length ? skinMenu : [{ label: '（无）', enabled: false }] },
+    { label: `切换皮肤（${skins.length} 个）`, submenu: [...recentMenu, ...(skinMenu.length ? skinMenu : [{ label: '（无）', enabled: false }])] },
     {
       label: '显示模式',
       submenu: ['auto', 'contain', 'cover'].map((m) => ({

@@ -1,0 +1,4876 @@
+{
+  "10117": {
+    "names": {
+      "EN": "Laffey",
+      "CN": "拉菲",
+      "JP": "ラフィー"
+    },
+    "skins": [
+      {
+        "prefab": "lafei_4",
+        "names": {
+          "EN": "White Rabbit Welcomes the Spring",
+          "CN": "白兔迎春",
+          "JP": "春待ちウサギ"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "102"
+      }
+    ]
+  },
+  "10126": {
+    "names": {
+      "EN": "Eldridge",
+      "CN": "埃尔德里奇",
+      "JP": "エルドリッジ"
+    },
+    "skins": [
+      {
+        "prefab": "aierdeliqi_4",
+        "names": {
+          "EN": "New Year's Outing",
+          "CN": "正月的牵手",
+          "JP": "正月のおてて"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "101"
+      },
+      {
+        "prefab": "aierdeliqi_5",
+        "names": {
+          "EN": "Kitty Idol",
+          "CN": "喵喵偶像团？",
+          "JP": "ニャンニャンアイドル？"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "120"
+      }
+    ]
+  },
+  "10144": {
+    "names": {
+      "EN": "Cooper",
+      "CN": "库珀",
+      "JP": "クーパー"
+    },
+    "skins": [
+      {
+        "prefab": "kubo_2",
+        "names": {
+          "EN": "Blazing Tennis Battle",
+          "CN": "烈日的网球场",
+          "JP": "烈日のテニスバトル"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "132"
+      }
+    ]
+  },
+  "10145": {
+    "names": {
+      "EN": "Allen M. Sumner",
+      "CN": "艾伦·萨姆纳",
+      "JP": "アレン・M・サムナー"
+    },
+    "skins": [
+      {
+        "prefab": "ailunsamuna_2",
+        "names": {
+          "EN": "Charming Rabbit",
+          "CN": "Charming Rabbit",
+          "JP": "チャーミングラビット"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "145",
+        "hx": true
+      },
+      {
+        "prefab": "ailunsamuna_3",
+        "names": {
+          "EN": "Two Faces of Justice",
+          "CN": "双面侠盗",
+          "JP": "ツインフェイス・ミスティック"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "154"
+      }
+    ]
+  },
+  "10151": {
+    "names": {
+      "EN": "Laffey II",
+      "CN": "拉菲II",
+      "JP": "ラフィーⅡ"
+    },
+    "skins": [
+      {
+        "prefab": "lafeiii_3",
+        "names": {
+          "EN": "Sleepy on a Busy Day",
+          "CN": "睡意满满忙碌DAY",
+          "JP": "うとうとビジーデー"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "145"
+      }
+    ]
+  },
+  "10205": {
+    "names": {
+      "EN": "Helena",
+      "CN": "海伦娜",
+      "JP": "ヘレナ"
+    },
+    "skins": [
+      {
+        "prefab": "hailunna_4",
+        "names": {
+          "EN": "Shimmering Triangle Wave",
+          "CN": "耀眼的波纹",
+          "JP": "光輝のトライアングルウェーブ"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "133"
+      }
+    ]
+  },
+  "10209": {
+    "names": {
+      "EN": "Cleveland",
+      "CN": "克利夫兰",
+      "JP": "クリーブランド"
+    },
+    "skins": [
+      {
+        "prefab": "kelifulan_3",
+        "names": {
+          "EN": "Gentry Knight",
+          "CN": "骑士之夜",
+          "JP": "ジェントリーナイト"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "107"
+      },
+      {
+        "prefab": "kelifulan_8",
+        "names": {
+          "EN": "Knight of the Pop-Up Shop",
+          "CN": "休息室的意外邂逅？",
+          "JP": "模擬店の騎士"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "145"
+      }
+    ]
+  },
+  "10212": {
+    "names": {
+      "EN": "Honolulu",
+      "CN": "火奴鲁鲁",
+      "JP": "ホノルル"
+    },
+    "skins": [
+      {
+        "prefab": "huonululu_3",
+        "names": {
+          "EN": "Summer Accident?!",
+          "CN": "盛夏的「灾难」",
+          "JP": "夏の災難！？"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "106"
+      },
+      {
+        "prefab": "huonululu_5",
+        "names": {
+          "EN": "Among the Stalls",
+          "CN": "两人的夏日祭",
+          "JP": "二人のお祭り"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "1102"
+      }
+    ]
+  },
+  "10213": {
+    "names": {
+      "EN": "St. Louis",
+      "CN": "圣路易斯",
+      "JP": "セントルイス"
+    },
+    "skins": [
+      {
+        "prefab": "shengluyisi_2",
+        "names": {
+          "EN": "Blue and White Pottery",
+          "CN": "春之华",
+          "JP": "春の華"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "102",
+        "hx": true
+      },
+      {
+        "prefab": "shengluyisi_3",
+        "names": {
+          "EN": "Spirits in the Snow",
+          "CN": "雪下之饮",
+          "JP": "ティプシースノー"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "101"
+      },
+      {
+        "prefab": "shengluyisi_4",
+        "names": {
+          "EN": "Luxurious Wheels",
+          "CN": "Luxury Handle",
+          "JP": "Luxury Handle"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "137"
+      },
+      {
+        "prefab": "shengluyisi_5",
+        "names": {
+          "EN": "An Afternoon on the Lido Deck",
+          "CN": "邮轮上的诱人午后",
+          "JP": "プールデッキ・アフタヌーン"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "539"
+      }
+    ]
+  },
+  "10226": {
+    "names": {
+      "EN": "Reno",
+      "CN": "里诺",
+      "JP": "リノ"
+    },
+    "skins": [
+      {
+        "prefab": "linuo_3",
+        "names": {
+          "EN": "Reno Bunnino",
+          "CN": "bunny·reno！",
+          "JP": "バニーリノ！"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "145",
+        "hx": true
+      }
+    ]
+  },
+  "10229": {
+    "names": {
+      "EN": "Boise",
+      "CN": "{namecode:197}",
+      "JP": "ボイシ"
+    },
+    "skins": [
+      {
+        "prefab": "boyixi_2",
+        "names": {
+          "EN": "Sheepish Sapphire",
+          "CN": "羞怯的蓝宝石",
+          "JP": "恥じらいのエメラルド"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "1102"
+      }
+    ]
+  },
+  "10316": {
+    "names": {
+      "EN": "Baltimore",
+      "CN": "巴尔的摩",
+      "JP": "ボルチモア"
+    },
+    "skins": [
+      {
+        "prefab": "baerdimo_5",
+        "names": {
+          "EN": "Evening Breeze Minuet",
+          "CN": "夜风Minuet",
+          "JP": "夜風Minuet"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "135"
+      },
+      {
+        "prefab": "baerdimo_6",
+        "names": {
+          "EN": "Finish Line Flagbearer",
+          "CN": "迅疾的蓝星",
+          "JP": "スプレンディッド・ギア"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "132"
+      }
+    ]
+  },
+  "10324": {
+    "names": {
+      "EN": "Bremerton",
+      "CN": "布莱默顿",
+      "JP": "ブレマートン"
+    },
+    "skins": [
+      {
+        "prefab": "bulaimodun_4",
+        "names": {
+          "EN": "Kung Fu Cruiser",
+          "CN": "功夫少女！",
+          "JP": "アクションクルーズ"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "1102",
+        "hx": true
+      },
+      {
+        "prefab": "bulaimodun_2",
+        "names": {
+          "EN": "Day-Off Date",
+          "CN": "Happy Dating！",
+          "JP": "ハッピーデーティング！"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "1102"
+      },
+      {
+        "prefab": "bulaimodun_5",
+        "names": {
+          "EN": "Relaxation Consultation",
+          "CN": "悠然放松时光",
+          "JP": "ゆったりリラックスタイム"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "109"
+      }
+    ]
+  },
+  "10326": {
+    "names": {
+      "EN": "Northampton II",
+      "CN": "北安普敦II",
+      "JP": "ノーザンプトンⅡ"
+    },
+    "skins": [
+      {
+        "prefab": "beianpudunii_2",
+        "names": {
+          "EN": "Swimming Star",
+          "CN": "竞泳之星",
+          "JP": "スター・アクアティック"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "133"
+      }
+    ]
+  },
+  "10328": {
+    "names": {
+      "EN": "Pittsburgh",
+      "CN": "匹兹堡",
+      "JP": "ピッツバーグ"
+    },
+    "skins": [
+      {
+        "prefab": "pizibao_2",
+        "names": {
+          "EN": "The Bartender's Gambit",
+          "CN": "斟酒女郎的赌局",
+          "JP": "ガールズ・カウンター"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "176"
+      }
+    ]
+  },
+  "10512": {
+    "names": {
+      "EN": "North Carolina",
+      "CN": "北卡罗来纳",
+      "JP": "ノースカロライナ"
+    },
+    "skins": [
+      {
+        "prefab": "beikaluolaina_2",
+        "names": {
+          "EN": "The Heart's Desire",
+          "CN": "秘密的换装练习？",
+          "JP": "内なる力と正義"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "145",
+        "hx": true
+      }
+    ]
+  },
+  "10517": {
+    "names": {
+      "EN": "New Jersey",
+      "CN": "{namecode:199}",
+      "JP": "ニュージャージー"
+    },
+    "skins": [
+      {
+        "prefab": "xinzexi_3",
+        "names": {
+          "EN": "Midsummer Leisure",
+          "CN": "盛夏的闲暇",
+          "JP": "盛夏のレジャータイム"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "168"
+      },
+      {
+        "prefab": "xinzexi_5",
+        "names": {
+          "EN": "Black Blur Prelude",
+          "CN": "漆黑的超极速前奏",
+          "JP": "ブラック・プレリュード"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "132"
+      }
+    ]
+  },
+  "10706": {
+    "names": {
+      "EN": "Enterprise",
+      "CN": "企业",
+      "JP": "エンタープライズ"
+    },
+    "skins": [
+      {
+        "prefab": "qiye_7",
+        "names": {
+          "EN": "Wind Catcher",
+          "CN": "Wind Catcher",
+          "JP": "ウィンド・キャッチャー"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "132",
+        "hx": true
+      },
+      {
+        "prefab": "qiye_9",
+        "names": {
+          "EN": "Diving Under Blue Skies",
+          "CN": "天际的潜水者",
+          "JP": "スカイスケープ・ダイバー"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "133"
+      },
+      {
+        "prefab": "qiye_10",
+        "names": {
+          "EN": "Bathing Under Sunny Skies",
+          "CN": "雨霁于心晴之时",
+          "JP": "晴れやかなれ湯上がりの空"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "4"
+      }
+    ]
+  },
+  "10709": {
+    "names": {
+      "EN": "Essex",
+      "CN": "埃塞克斯",
+      "JP": "エセックス"
+    },
+    "skins": [
+      {
+        "prefab": "aisaikesi_4",
+        "names": {
+          "EN": "Craft Fairytail",
+          "CN": "Craft Fairytail",
+          "JP": "Craft Fairytail"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "1102"
+      }
+    ]
+  },
+  "10710": {
+    "names": {
+      "EN": "Yorktown II",
+      "CN": "约克城II",
+      "JP": "ヨークタウンⅡ"
+    },
+    "skins": [
+      {
+        "prefab": "yuekechengii_3",
+        "names": {
+          "EN": "An Evening's Companionship",
+          "CN": "交错的温柔时光",
+          "JP": "温もり交わる宵の時"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "145"
+      }
+    ]
+  },
+  "10716": {
+    "names": {
+      "EN": "Lexington II",
+      "CN": "列克星敦II",
+      "JP": "レキシントンⅡ"
+    },
+    "skins": [
+      {
+        "prefab": "liekexingdunii_2",
+        "names": {
+          "EN": "The Fluffiest of Maids",
+          "CN": "轻飘飘的拂拭时光",
+          "JP": "ふわふわメイドさん"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "109"
+      }
+    ]
+  },
+  "10720": {
+    "names": {
+      "EN": "Bennington",
+      "CN": "本宁顿",
+      "JP": "ベニントン"
+    },
+    "skins": [
+      {
+        "prefab": "benningdun_2",
+        "names": {
+          "EN": "Sunshine Chaser",
+          "CN": "全速！盛夏逐光企划",
+          "JP": "サンシャイン・チェイシング"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "118"
+      }
+    ]
+  },
+  "10725": {
+    "names": {
+      "EN": "Cowpens",
+      "CN": "科本斯",
+      "JP": "カウペンス"
+    },
+    "skins": [
+      {
+        "prefab": "kebensi_2",
+        "names": {
+          "EN": "Milky Ministrations",
+          "CN": "心动营养灌输中",
+          "JP": "ミルキィケア"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "185"
+      }
+    ]
+  },
+  "11802": {
+    "names": {
+      "EN": "Guam",
+      "CN": "关岛",
+      "JP": "グアム"
+    },
+    "skins": [
+      {
+        "prefab": "guandao_2",
+        "names": {
+          "EN": "Stage-Setting Charmer",
+          "CN": "魅力舞台",
+          "JP": "チャーミング・ステージング"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "145"
+      },
+      {
+        "prefab": "guandao_3",
+        "names": {
+          "EN": "The Kunoichi's Dangerous Variety Show",
+          "CN": "女忍者的危险综艺秀",
+          "JP": "クノイチ・デンジャーバラエティ"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "191"
+      }
+    ]
+  },
+  "19903": {
+    "names": {
+      "EN": "Anchorage",
+      "CN": "安克雷奇",
+      "JP": "アンカレッジ"
+    },
+    "skins": [
+      {
+        "prefab": "ankeleiqi_2",
+        "names": {
+          "EN": "Dolphins and Swim Lessons",
+          "CN": "海豚、海洋、游泳课",
+          "JP": "ドルフィンブルー・レッスン"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "168",
+        "hx": true
+      },
+      {
+        "prefab": "ankeleiqi_3",
+        "names": {
+          "EN": "Moonlit Boat Ride",
+          "CN": "舟畔共明月",
+          "JP": "ふねとおつきさま"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "152"
+      },
+      {
+        "prefab": "ankeleiqi_4",
+        "names": {
+          "EN": "Sweet Evening Milk",
+          "CN": "香甜牛奶味之夜",
+          "JP": "おいしいイブニング・ミルク"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "185"
+      }
+    ]
+  },
+  "19904": {
+    "names": {
+      "EN": "Kearsarge",
+      "CN": "奇尔沙治",
+      "JP": "キアサージ"
+    },
+    "skins": [
+      {
+        "prefab": "qiershazhi_2",
+        "names": {
+          "EN": "All-Night Charge",
+          "CN": "Allnight Charge",
+          "JP": "オールナイト・チャージ"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "1102"
+      }
+    ]
+  },
+  "20121": {
+    "names": {
+      "EN": "Javelin",
+      "CN": "标枪",
+      "JP": "ジャベリン"
+    },
+    "skins": [
+      {
+        "prefab": "biaoqiang_3",
+        "names": {
+          "EN": "Beach Picnic!",
+          "CN": "沙滩野餐会",
+          "JP": "ビーチピクニック！"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "106"
+      }
+    ]
+  },
+  "20123": {
+    "names": {
+      "EN": "Vampire",
+      "CN": "吸血鬼",
+      "JP": "ヴァンパイア"
+    },
+    "skins": [
+      {
+        "prefab": "xixuegui_4",
+        "names": {
+          "EN": "Night Princess's Regalia",
+          "CN": "夜姬的正装?",
+          "JP": "夜姫の正装"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "114"
+      }
+    ]
+  },
+  "20135": {
+    "names": {
+      "EN": "Janus",
+      "CN": "雅努斯",
+      "JP": "ジェーナス"
+    },
+    "skins": [
+      {
+        "prefab": "yanusi_3",
+        "names": {
+          "EN": "Fright-Night Scaredy-Cat",
+          "CN": "万圣喵喵惊悚夜",
+          "JP": "怖がりのランタンナイト"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "156"
+      },
+      {
+        "prefab": "yanusi_7",
+        "names": {
+          "EN": "Shimmering Splashes Above the Clouds",
+          "CN": "云端的水光",
+          "JP": "雲の上の波しぶき"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "133"
+      }
+    ]
+  },
+  "20138": {
+    "names": {
+      "EN": "Trafalgar",
+      "CN": "特拉法尔加",
+      "JP": "トラファルガー"
+    },
+    "skins": [
+      {
+        "prefab": "telafaerjia_2",
+        "names": {
+          "EN": "Sea Breeze, Moonlit Talks",
+          "CN": "海风与夜语",
+          "JP": "高嶺と潮風"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "164"
+      }
+    ]
+  },
+  "20212": {
+    "names": {
+      "EN": "Belfast",
+      "CN": "贝尔法斯特",
+      "JP": "ベルファスト"
+    },
+    "skins": [
+      {
+        "prefab": "beierfasite_2",
+        "names": {
+          "EN": "Iridescent Rosa",
+          "CN": "彩云之玫瑰",
+          "JP": "彩雲の薔薇"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "102"
+      }
+    ]
+  },
+  "20215": {
+    "names": {
+      "EN": "Aurora",
+      "CN": "欧若拉",
+      "JP": "オーロラ"
+    },
+    "skins": [
+      {
+        "prefab": "ouruola_4",
+        "names": {
+          "EN": "Heritage of Yu City",
+          "CN": "渝城秘技",
+          "JP": "渝城秘技"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "128"
+      }
+    ]
+  },
+  "20220": {
+    "names": {
+      "EN": "Sirius",
+      "CN": "天狼星",
+      "JP": "シリアス"
+    },
+    "skins": [
+      {
+        "prefab": "tianlangxing_3",
+        "names": {
+          "EN": "Scorching-Hot Seirios",
+          "CN": "盛夏的Seirios ",
+          "JP": "盛夏のセイリオス"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "106"
+      },
+      {
+        "prefab": "tianlangxing_5",
+        "names": {
+          "EN": "Rabbit of Paradise",
+          "CN": "至高乐园的白兔",
+          "JP": "パラダイス・コニー"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "159"
+      }
+    ]
+  },
+  "20224": {
+    "names": {
+      "EN": "Black Prince",
+      "CN": "黑太子",
+      "JP": "ブラック・プリンス"
+    },
+    "skins": [
+      {
+        "prefab": "heitaizi_2",
+        "names": {
+          "EN": "White Princess",
+          "CN": "White Princess",
+          "JP": "ホワイトプリンセス"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "106"
+      }
+    ]
+  },
+  "20227": {
+    "names": {
+      "EN": "Hermione ",
+      "CN": "赫敏",
+      "JP": "ハーマイオニー"
+    },
+    "skins": [
+      {
+        "prefab": "hemin_3",
+        "names": {
+          "EN": "Pure White Angel",
+          "CN": "温柔的纯白天使",
+          "JP": "ピュアホワイトエンジェル"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "1101"
+      },
+      {
+        "prefab": "hemin_2",
+        "names": {
+          "EN": "Pure White Holiday",
+          "CN": "纯白的悠闲假日",
+          "JP": "ピュアホワイトホリデー"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "133"
+      }
+    ]
+  },
+  "20230": {
+    "names": {
+      "EN": "Charybdis",
+      "CN": "卡律布狄斯",
+      "JP": "カリブディス"
+    },
+    "skins": [
+      {
+        "prefab": "kalvbudisi_2",
+        "names": {
+          "EN": "Red Chamber of Healing",
+          "CN": "治愈的红闺",
+          "JP": "癒やしの紅閨"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "144"
+      }
+    ]
+  },
+  "20313": {
+    "names": {
+      "EN": "Devonshire",
+      "CN": "德文郡",
+      "JP": "デヴォンシャー"
+    },
+    "skins": [
+      {
+        "prefab": "dewenjun_2",
+        "names": {
+          "EN": "Sadistic Demon",
+          "CN": "红月下的恶魔",
+          "JP": "デーモン・サディスティック"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "156"
+      }
+    ]
+  },
+  "20501": {
+    "names": {
+      "EN": "Queen Elizabeth",
+      "CN": "伊丽莎白女王",
+      "JP": "クイーン・エリザベス"
+    },
+    "skins": [
+      {
+        "prefab": "yilishabai_6",
+        "names": {
+          "EN": "Yes, Your Maidness!",
+          "CN": "Maid·My·Highness",
+          "JP": "メイド・マイ・ハイネス"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "150"
+      }
+    ]
+  },
+  "20513": {
+    "names": {
+      "EN": "Vanguard",
+      "CN": "前卫",
+      "JP": "ヴァンガード"
+    },
+    "skins": [
+      {
+        "prefab": "qianwei_2",
+        "names": {
+          "EN": "Half-Hearted Masquerade",
+          "CN": "摇摆不定的伪装",
+          "JP": "どっちつかずマスカレード"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "150"
+      }
+    ]
+  },
+  "20516": {
+    "names": {
+      "EN": "Lion",
+      "CN": "狮",
+      "JP": "ライオン"
+    },
+    "skins": [
+      {
+        "prefab": "shi_2",
+        "names": {
+          "EN": "The Reclining Dandelion",
+          "CN": "沙滩的慵懒主宰",
+          "JP": "遊興心のダンディライオン"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "106"
+      },
+      {
+        "prefab": "shi_3",
+        "names": {
+          "EN": "Alleyway Temptress",
+          "CN": "夜巷中的诱引者",
+          "JP": "引き裂く「路地裏」"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "497"
+      }
+    ]
+  },
+  "20602": {
+    "names": {
+      "EN": "Argus",
+      "CN": "百眼巨人",
+      "JP": "アーガス"
+    },
+    "skins": [
+      {
+        "prefab": "baiyanjuren_4",
+        "names": {
+          "EN": "Dignified Swimsuit Training",
+          "CN": "特训中的威严之人",
+          "JP": "威厳ある水着特訓"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "539"
+      }
+    ]
+  },
+  "20603": {
+    "names": {
+      "EN": "Unicorn",
+      "CN": "独角兽",
+      "JP": "ユニコーン"
+    },
+    "skins": [
+      {
+        "prefab": "dujiaoshou_4",
+        "names": {
+          "EN": "Long-Awaited Date",
+          "CN": "憧憬的约会日",
+          "JP": "憧れの遊園地？"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "108"
+      },
+      {
+        "prefab": "dujiaoshou_6",
+        "names": {
+          "EN": "Angelic Night",
+          "CN": "天使的My Night",
+          "JP": "天使のMy Night"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "120"
+      }
+    ]
+  },
+  "20604": {
+    "names": {
+      "EN": "Centaur",
+      "CN": "半人马",
+      "JP": "セントー"
+    },
+    "skins": [
+      {
+        "prefab": "banrenma_2",
+        "names": {
+          "EN": "Beachside Undine",
+          "CN": "沙滨的水之精灵",
+          "JP": "砂浜のウンディーネ"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "106"
+      }
+    ]
+  },
+  "20606": {
+    "names": {
+      "EN": "Perseus ",
+      "CN": "英仙座",
+      "JP": "パーシュース"
+    },
+    "skins": [
+      {
+        "prefab": "yingxianzuo_3",
+        "names": {
+          "EN": "Spring's Lackadaisical Leisure",
+          "CN": "慵懒的春光",
+          "JP": "春光のリラクゼーション"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "175"
+      }
+    ]
+  },
+  "20607": {
+    "names": {
+      "EN": "Albion",
+      "CN": "阿尔比恩",
+      "JP": "アルビオン"
+    },
+    "skins": [
+      {
+        "prefab": "aerbien_3",
+        "names": {
+          "EN": "Scent of Spring in the Red Pavilion",
+          "CN": "香气来朱阁",
+          "JP": "春の香りは丹閣に吹き抜けて"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "152"
+      }
+    ]
+  },
+  "20702": {
+    "names": {
+      "EN": "Ark Royal",
+      "CN": "皇家方舟",
+      "JP": "アーク・ロイヤル"
+    },
+    "skins": [
+      {
+        "prefab": "huangjiafangzhou_3",
+        "names": {
+          "EN": "Guardian of the Ball",
+          "CN": "晚会的守护者",
+          "JP": "バンケットガーディアン"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "115"
+      }
+    ]
+  },
+  "20703": {
+    "names": {
+      "EN": "Illustrious",
+      "CN": "光辉",
+      "JP": "イラストリアス"
+    },
+    "skins": [
+      {
+        "prefab": "guanghui_7",
+        "names": {
+          "EN": "Our Private \"Study\" Session",
+          "CN": "二人的学习时间",
+          "JP": "2人の勉強タイム"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "109"
+      },
+      {
+        "prefab": "guanghui_9",
+        "names": {
+          "EN": "Wandering Glow of Midnight",
+          "CN": "幽影徘徊之夜",
+          "JP": "彷徨える夜の輝き"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "177"
+      }
+    ]
+  },
+  "20705": {
+    "names": {
+      "EN": "Formidable",
+      "CN": "可畏",
+      "JP": "フォーミダブル"
+    },
+    "skins": [
+      {
+        "prefab": "kewei_4",
+        "names": {
+          "EN": "The Lover's Heart Flutters On Duty",
+          "CN": "值日时的春心萌动",
+          "JP": "恋心、ときめく日直"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "519"
+      },
+      {
+        "prefab": "kewei_6",
+        "names": {
+          "EN": "Anniversary Memories",
+          "CN": "纪念印记",
+          "JP": "アニバーサリー・メモリーズ"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "107"
+      }
+    ]
+  },
+  "20706": {
+    "names": {
+      "EN": "Glorious",
+      "CN": "光荣",
+      "JP": "グロリアス"
+    },
+    "skins": [
+      {
+        "prefab": "guangrong_3",
+        "names": {
+          "EN": "Pungent Plum",
+          "CN": "凉夜香雪",
+          "JP": "とらぶるプラム"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "1102"
+      }
+    ]
+  },
+  "20707": {
+    "names": {
+      "EN": "Implacable",
+      "CN": "怨仇",
+      "JP": "インプラカブル"
+    },
+    "skins": [
+      {
+        "prefab": "yuanchou_3",
+        "names": {
+          "EN": "Her Beauty Runneth Over",
+          "CN": "杯盏盈芳华",
+          "JP": "馨香靡く盃"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "152"
+      }
+    ]
+  },
+  "20712": {
+    "names": {
+      "EN": "Indomitable",
+      "CN": "不挠",
+      "JP": "インドミタブル"
+    },
+    "skins": [
+      {
+        "prefab": "bunao_3",
+        "names": {
+          "EN": "The Laid-Back Navigator",
+          "CN": "慵懒的领航员小姐",
+          "JP": "レイジー・ナビ"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "326"
+      }
+    ]
+  },
+  "21304": {
+    "names": {
+      "EN": "Abercrombie",
+      "CN": "阿贝克隆比",
+      "JP": "アバークロンビー"
+    },
+    "skins": [
+      {
+        "prefab": "abeikelongbi_3",
+        "names": {
+          "EN": "Mischief on the Rocks",
+          "CN": "坏坏兔的恶作剧！",
+          "JP": "ミスチーフ・レッド"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "145",
+        "hx": true
+      }
+    ]
+  },
+  "29902": {
+    "names": {
+      "EN": "Monarch",
+      "CN": "君主",
+      "JP": "モナーク"
+    },
+    "skins": [
+      {
+        "prefab": "junzhu_5",
+        "names": {
+          "EN": "Sovereign of the Beach",
+          "CN": "海滩享受计划",
+          "JP": "ビーチ・アイコニック"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "106"
+      }
+    ]
+  },
+  "29903": {
+    "names": {
+      "EN": "Cheshire",
+      "CN": "柴郡",
+      "JP": "チェシャー"
+    },
+    "skins": [
+      {
+        "prefab": "chaijun_3",
+        "names": {
+          "EN": "Cait Sith Crooner",
+          "CN": "音乐绚烂CaitSith",
+          "JP": "音楽絢爛ケットシー"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "1102"
+      },
+      {
+        "prefab": "chaijun_4",
+        "names": {
+          "EN": "The Cat and the White Steed",
+          "CN": "冰雪公主",
+          "JP": "ハイネス・イン・ホワイト"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "1101",
+        "hx": true
+      },
+      {
+        "prefab": "chaijun_5",
+        "names": {
+          "EN": "The Cat in the Magic Hat",
+          "CN": "绚烂夜梦",
+          "JP": "ファンシー・ナイトドリーム"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "161"
+      },
+      {
+        "prefab": "chaijun_6",
+        "names": {
+          "EN": "Cheshire Cat's Fairytale Maze",
+          "CN": "柴郡猫的童话书迷宫",
+          "JP": "チェシャー猫のメルヘンメイズ"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "159"
+      }
+    ]
+  },
+  "29905": {
+    "names": {
+      "EN": "Plymouth",
+      "CN": "普利茅斯",
+      "JP": "プリマス"
+    },
+    "skins": [
+      {
+        "prefab": "pulimaosi_3",
+        "names": {
+          "EN": "An Angelic Physical",
+          "CN": "纯白天使的全身检查",
+          "JP": "白衣天使の全身検診"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "308"
+      }
+    ]
+  },
+  "30101": {
+    "names": {
+      "EN": "Fubuki",
+      "CN": "{namecode:2}",
+      "JP": "吹雪"
+    },
+    "skins": [
+      {
+        "prefab": "chuixue_3",
+        "names": {
+          "EN": "Music Pixy",
+          "CN": "Music Pixy",
+          "JP": "Music Pixy"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "107"
+      }
+    ]
+  },
+  "30105": {
+    "names": {
+      "EN": "Ayanami",
+      "CN": "{namecode:6}",
+      "JP": "綾波"
+    },
+    "skins": [
+      {
+        "prefab": "lingbo_10",
+        "names": {
+          "EN": "Nightfall Raiment",
+          "CN": "黯然礼装",
+          "JP": "闇然礼装"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "1102"
+      }
+    ]
+  },
+  "30116": {
+    "names": {
+      "EN": "Yukikaze",
+      "CN": "{namecode:22}",
+      "JP": "雪風"
+    },
+    "skins": [
+      {
+        "prefab": "xuefeng_3",
+        "names": {
+          "EN": "Winter's Snowy Wind",
+          "CN": "冬之雪风",
+          "JP": "冬のユキカゼ"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "127"
+      }
+    ]
+  },
+  "30129": {
+    "names": {
+      "EN": "Shimakaze",
+      "CN": "{namecode:18}",
+      "JP": "島風"
+    },
+    "skins": [
+      {
+        "prefab": "daofeng_4",
+        "names": {
+          "EN": "World's Speediest Bunny Waitress",
+          "CN": "最速兔兔的邀请函(?)",
+          "JP": "最速バニーの招待？状"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "1102"
+      },
+      {
+        "prefab": "daofeng_5",
+        "names": {
+          "EN": "The White Rabbit of Wonderland",
+          "CN": "不思议国度的白兔",
+          "JP": "不思議の国のホワイトラビット"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "158",
+        "hx": true
+      }
+    ]
+  },
+  "30186": {
+    "names": {
+      "EN": "Kazagumo",
+      "CN": "{namecode:203}",
+      "JP": "風雲"
+    },
+    "skins": [
+      {
+        "prefab": "fengyun_4",
+        "names": {
+          "EN": "Diligent Domestic Discipline",
+          "CN": "热茶与女仆修行",
+          "JP": "風雲はコツコツと修業す"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "142"
+      }
+    ]
+  },
+  "30189": {
+    "names": {
+      "EN": "Hatsuzuki",
+      "CN": "{namecode:189}",
+      "JP": "初月"
+    },
+    "skins": [
+      {
+        "prefab": "chuyue_2",
+        "names": {
+          "EN": "August's First Romance",
+          "CN": "八月恋夏",
+          "JP": "葉月の恋模様"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "117"
+      }
+    ]
+  },
+  "30221": {
+    "names": {
+      "EN": "Noshiro",
+      "CN": "{namecode:50}",
+      "JP": "能代"
+    },
+    "skins": [
+      {
+        "prefab": "nengdai_2",
+        "names": {
+          "EN": "Uncharted Festival Grounds?",
+          "CN": "祭典的秘境?",
+          "JP": "祭りの秘境？"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "126"
+      },
+      {
+        "prefab": "nengdai_3",
+        "names": {
+          "EN": "Unwinding in the Sunshine",
+          "CN": "阳光·沙滩·假日",
+          "JP": "レスト・イン・サンシャイン"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "1101"
+      }
+    ]
+  },
+  "30223": {
+    "names": {
+      "EN": "Sakawa",
+      "CN": "{namecode:226}",
+      "JP": "酒匂"
+    },
+    "skins": [
+      {
+        "prefab": "jiuyun_2",
+        "names": {
+          "EN": "The Colors of Love",
+          "CN": "团子的诱惑",
+          "JP": "恋愛一色華乙女"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "1102"
+      }
+    ]
+  },
+  "30225": {
+    "names": {
+      "EN": "Watarase",
+      "CN": "{namecode:231}",
+      "JP": "渡良瀬"
+    },
+    "skins": [
+      {
+        "prefab": "dulianglai_2",
+        "names": {
+          "EN": "Garments of Everlasting Magic",
+          "CN": "不会消失的换装魔法",
+          "JP": "灰かぶりの奇術衣裳"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "182"
+      }
+    ]
+  },
+  "30229": {
+    "names": {
+      "EN": "Nayoro",
+      "CN": "{namecode:311}",
+      "JP": "名寄"
+    },
+    "skins": [
+      {
+        "prefab": "mingji_2",
+        "names": {
+          "EN": "Electric Affection",
+          "CN": "Electric Affection",
+          "JP": "Electric Affection"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "154"
+      }
+    ]
+  },
+  "30311": {
+    "names": {
+      "EN": "Takao",
+      "CN": "{namecode:66}",
+      "JP": "高雄"
+    },
+    "skins": [
+      {
+        "prefab": "gaoxiong_7",
+        "names": {
+          "EN": "Inner Cultivation",
+          "CN": "武者的“内在”修养",
+          "JP": "武人の「心法」素養"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "319"
+      }
+    ]
+  },
+  "30312": {
+    "names": {
+      "EN": "Atago",
+      "CN": "{namecode:67}",
+      "JP": "愛宕"
+    },
+    "skins": [
+      {
+        "prefab": "aidang_2",
+        "names": {
+          "EN": "Summer March",
+          "CN": "盛夏进行曲",
+          "JP": "真夏の行進曲"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "106"
+      }
+    ]
+  },
+  "30319": {
+    "names": {
+      "EN": "Unzen",
+      "CN": "{namecode:294}",
+      "JP": "雲仙"
+    },
+    "skins": [
+      {
+        "prefab": "yunxian_2",
+        "names": {
+          "EN": "Sojourn Through Clear Seas",
+          "CN": "嬉水碧海",
+          "JP": "晴海水遊"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "168"
+      },
+      {
+        "prefab": "yunxian_3",
+        "names": {
+          "EN": "Arcane Ninja Knowledge",
+          "CN": "万船集怀",
+          "JP": "万船集懐"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "190"
+      }
+    ]
+  },
+  "30320": {
+    "names": {
+      "EN": "Asama",
+      "CN": "{namecode:305}",
+      "JP": "浅間"
+    },
+    "skins": [
+      {
+        "prefab": "qianjian_2",
+        "names": {
+          "EN": "Blooming Upon a Bewitching Night",
+          "CN": "绽放于至深之夜",
+          "JP": "あやかしの夜に咲いて"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "172"
+      }
+    ]
+  },
+  "30405": {
+    "names": {
+      "EN": "Amagi",
+      "CN": "{namecode:161}",
+      "JP": "天城"
+    },
+    "skins": [
+      {
+        "prefab": "tiancheng_3",
+        "names": {
+          "EN": "Red Kite Respite",
+          "CN": "红鸢的闲暇片刻",
+          "JP": "紅鳶の寸閑"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "1102"
+      }
+    ]
+  },
+  "30409": {
+    "names": {
+      "EN": "Azuchi",
+      "CN": "{namecode:315}",
+      "JP": "安土"
+    },
+    "skins": [
+      {
+        "prefab": "antu_2",
+        "names": {
+          "EN": "Testing Courage in Crimson",
+          "CN": "午夜的瑰色电梯",
+          "JP": "紅姫の肝試し遊戯"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "5"
+      }
+    ]
+  },
+  "30510": {
+    "names": {
+      "EN": "Musashi",
+      "CN": "{namecode:84}",
+      "JP": "武蔵"
+    },
+    "skins": [
+      {
+        "prefab": "wuzang_3",
+        "names": {
+          "EN": "The Purple Rabbit's Marksmanship",
+          "CN": "堇色兔的狙击游戏",
+          "JP": "菫兎のスナイピングゲーム"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "181"
+      },
+      {
+        "prefab": "wuzang_4",
+        "names": {
+          "EN": "Cheering For You Alone",
+          "CN": "只为你献上的应援",
+          "JP": "汝だけのために応援す"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "132"
+      }
+    ]
+  },
+  "30513": {
+    "names": {
+      "EN": "Owari",
+      "CN": "{namecode:295}",
+      "JP": "尾張"
+    },
+    "skins": [
+      {
+        "prefab": "weizhang_3",
+        "names": {
+          "EN": "My Wish is For Love",
+          "CN": "愿望为“爱”",
+          "JP": "我が願いは愛情なり"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "156"
+      }
+    ]
+  },
+  "30514": {
+    "names": {
+      "EN": "Suruga",
+      "CN": "{namecode:175}",
+      "JP": "駿河"
+    },
+    "skins": [
+      {
+        "prefab": "junhe_5",
+        "names": {
+          "EN": "Hundred Flowers' Auspice",
+          "CN": "百花庆云",
+          "JP": "百花の慶雲"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "126"
+      },
+      {
+        "prefab": "junhe_4",
+        "names": {
+          "EN": "Uneventful Holiday Greetings",
+          "CN": "“不情愿”的圣夜祭",
+          "JP": "望まぬ聖夜祭"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "151"
+      }
+    ]
+  },
+  "30516": {
+    "names": {
+      "EN": "Oumi",
+      "CN": "{namecode:304}",
+      "JP": "近江"
+    },
+    "skins": [
+      {
+        "prefab": "jinjiang_2",
+        "names": {
+          "EN": "A Failed Escape?",
+          "CN": "逃脱失败……？",
+          "JP": "脱出失敗…？"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "172"
+      }
+    ]
+  },
+  "30607": {
+    "names": {
+      "EN": "Ryuuhou",
+      "CN": "{namecode:179}",
+      "JP": "龍鳳"
+    },
+    "skins": [
+      {
+        "prefab": "longfeng_2",
+        "names": {
+          "EN": "Firebird's New Year Dance",
+          "CN": "凤舞新年",
+          "JP": "鳳舞う正月"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "126",
+        "hx": true
+      }
+    ]
+  },
+  "30701": {
+    "names": {
+      "EN": "Akagi",
+      "CN": "{namecode:91}",
+      "JP": "赤城"
+    },
+    "skins": [
+      {
+        "prefab": "chicheng_5",
+        "names": {
+          "EN": "Dawn-Phoenix's Summons",
+          "CN": "朝凰来仪",
+          "JP": "朝凰来儀"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "152"
+      }
+    ]
+  },
+  "30705": {
+    "names": {
+      "EN": "Shoukaku",
+      "CN": "{namecode:95}",
+      "JP": "翔鶴"
+    },
+    "skins": [
+      {
+        "prefab": "xianghe_2",
+        "names": {
+          "EN": "The Crane that Dances With the Wind",
+          "CN": "散花舞鹤",
+          "JP": "風と舞う鶴"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "107"
+      }
+    ]
+  },
+  "30707": {
+    "names": {
+      "EN": "Taihou",
+      "CN": "{namecode:97}",
+      "JP": "大鳳"
+    },
+    "skins": [
+      {
+        "prefab": "dafeng_2",
+        "names": {
+          "EN": "Forbidden Fruit",
+          "CN": "毒苹果",
+          "JP": "禁断の宴"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "107",
+        "hx": true
+      },
+      {
+        "prefab": "dafeng_4",
+        "names": {
+          "EN": "Phoenix's Spring Song",
+          "CN": "凤鸣春晓",
+          "JP": "春の暁に鳳歌う"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "128"
+      },
+      {
+        "prefab": "dafeng_3",
+        "names": {
+          "EN": "Sweet Time After School",
+          "CN": "放学后的甜蜜时光",
+          "JP": "下校後の甘い時間"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "1101"
+      },
+      {
+        "prefab": "dafeng_6",
+        "names": {
+          "EN": "Seaside Daydreams",
+          "CN": "海滨的白日美梦",
+          "JP": "白浜のデイドリーム"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "133"
+      },
+      {
+        "prefab": "dafeng_7",
+        "names": {
+          "EN": "Fun on the Baize",
+          "CN": "绮愿良宵",
+          "JP": "羅紗遊情"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "145"
+      }
+    ]
+  },
+  "30708": {
+    "names": {
+      "EN": "Shinano ",
+      "CN": "{namecode:182}",
+      "JP": "信濃"
+    },
+    "skins": [
+      {
+        "prefab": "xinnong_3",
+        "names": {
+          "EN": "Moonlit Chrome",
+          "CN": "轰鸣的银轮",
+          "JP": "寝待の銀輿"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "132",
+        "hx": true
+      },
+      {
+        "prefab": "xinnong_4",
+        "names": {
+          "EN": "Dreamy White Sands",
+          "CN": "白沙幽梦",
+          "JP": "雅夢の白浜"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "133"
+      },
+      {
+        "prefab": "xinnong_5",
+        "names": {
+          "EN": "Visions of Fantasy",
+          "CN": "幻梦奇术",
+          "JP": "幻夢の絡繰"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "608"
+      },
+      {
+        "prefab": "xinnong_6",
+        "names": {
+          "EN": "Embrace Upon A Melted Dream",
+          "CN": "相融一梦",
+          "JP": "溶け合う夢に相擁す"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "5"
+      }
+    ]
+  },
+  "30715": {
+    "names": {
+      "EN": "Amagi(CV)",
+      "CN": "{namecode:161}",
+      "JP": "天城(空母)"
+    },
+    "skins": [
+      {
+        "prefab": "tiancheng_cv_2",
+        "names": {
+          "EN": "Throne of Fallen Petals",
+          "CN": "落于王座之花",
+          "JP": "玉座落鸞"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "177"
+      },
+      {
+        "prefab": "tiancheng_cv_3",
+        "names": {
+          "EN": "The Mermaid of the Emerald Sea",
+          "CN": "碧波绮尾",
+          "JP": "青凪の人魚"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "134"
+      }
+    ]
+  },
+  "30716": {
+    "names": {
+      "EN": "Hakuhou",
+      "CN": "{namecode:302}",
+      "JP": "白鳳"
+    },
+    "skins": [
+      {
+        "prefab": "baifeng_2",
+        "names": {
+          "EN": "Floral Ninja Roleplay",
+          "CN": "缭乱之花的忍者游戏",
+          "JP": "繚乱あれお忍び遊興"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "172"
+      },
+      {
+        "prefab": "baifeng_3",
+        "names": {
+          "EN": "Sunshower Fox Bride",
+          "CN": "晴雨狐嫁",
+          "JP": "天気雨のキツネヨメ"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "142"
+      }
+    ]
+  },
+  "31901": {
+    "names": {
+      "EN": "Kashino",
+      "CN": "{namecode:188}",
+      "JP": "樫野"
+    },
+    "skins": [
+      {
+        "prefab": "jianye_2",
+        "names": {
+          "EN": "Hot Springs Relaxation",
+          "CN": "温泉放松时间",
+          "JP": "湯上がりプレシュアタイム"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "106",
+        "hx": true
+      },
+      {
+        "prefab": "jianye_3",
+        "names": {
+          "EN": "Maid for Mayhem",
+          "CN": "绊倒的迷糊女仆",
+          "JP": "つまずきトラブルメイド"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "160"
+      },
+      {
+        "prefab": "jianye_4",
+        "names": {
+          "EN": "Robust Floral Strings",
+          "CN": "花绽之乐章",
+          "JP": "花咲くラブリーストレイン"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "172"
+      }
+    ]
+  },
+  "39901": {
+    "names": {
+      "EN": "Ibuki",
+      "CN": "{namecode:152}",
+      "JP": "伊吹"
+    },
+    "skins": [
+      {
+        "prefab": "yichui_2",
+        "names": {
+          "EN": "Winter Sylph's Reverie",
+          "CN": "永梦的青女",
+          "JP": "冬籠の夢"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "101"
+      }
+    ]
+  },
+  "39904": {
+    "names": {
+      "EN": "Azuma",
+      "CN": "{namecode:165}",
+      "JP": "吾妻"
+    },
+    "skins": [
+      {
+        "prefab": "wuqi_2",
+        "names": {
+          "EN": "Soft Voice of Spring",
+          "CN": "细语春霞",
+          "JP": "語らいの春霞"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "128"
+      },
+      {
+        "prefab": "wuqi_3",
+        "names": {
+          "EN": "Career Counseling for the Groom",
+          "CN": "心向何方的指导课",
+          "JP": "ハナムコの進路相談"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "602",
+        "hx": true
+      }
+    ]
+  },
+  "39905": {
+    "names": {
+      "EN": "Hakuryuu",
+      "CN": "{namecode:204}",
+      "JP": "白龍"
+    },
+    "skins": [
+      {
+        "prefab": "bailong_3",
+        "names": {
+          "EN": "Flash of Silk and Strings",
+          "CN": "丝竹喧阗",
+          "JP": "急竹繁刀"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "172"
+      }
+    ]
+  },
+  "39906": {
+    "names": {
+      "EN": "Shimanto",
+      "CN": "{namecode:292}",
+      "JP": "四万十"
+    },
+    "skins": [
+      {
+        "prefab": "siwanshi_3",
+        "names": {
+          "EN": "The Relaxing Dragon God",
+          "CN": "优哉游哉的龙神大人",
+          "JP": "のんびり龍神さま"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "4_0"
+      }
+    ]
+  },
+  "40113": {
+    "names": {
+      "EN": "Z13",
+      "CN": "{namecode:498}",
+      "JP": "Z13"
+    },
+    "skins": [
+      {
+        "prefab": "z13_2",
+        "names": {
+          "EN": "Strategic Date Solution",
+          "CN": "战略性约会进行时 ",
+          "JP": "戦略的デートソリューリョン"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "185"
+      }
+    ]
+  },
+  "40146": {
+    "names": {
+      "EN": "Z46",
+      "CN": "{namecode:412}",
+      "JP": "Z46"
+    },
+    "skins": [
+      {
+        "prefab": "z46_2",
+        "names": {
+          "EN": "Her First Summer",
+          "CN": "夏之初体验",
+          "JP": "ファーストサマー"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "106"
+      },
+      {
+        "prefab": "z46_3",
+        "names": {
+          "EN": "Girls' Relay",
+          "CN": "少女的借物竞赛",
+          "JP": "スカベンジハントレス"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "112"
+      },
+      {
+        "prefab": "z46_4",
+        "names": {
+          "EN": "Star-Lit★Chocolate",
+          "CN": "未知的闪亮舞台",
+          "JP": "Schokolade★Schicksal"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "120"
+      }
+    ]
+  },
+  "40207": {
+    "names": {
+      "EN": "Emden",
+      "CN": "{namecode:448}",
+      "JP": "エムデン"
+    },
+    "skins": [
+      {
+        "prefab": "aimudeng_2",
+        "names": {
+          "EN": "White-Black Partita",
+          "CN": "黑白的夜之主",
+          "JP": "白黒のパルティータ"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "156",
+        "hx": true
+      }
+    ]
+  },
+  "40210": {
+    "names": {
+      "EN": "Regensburg",
+      "CN": "{namecode:516}",
+      "JP": "レーゲンスブルク"
+    },
+    "skins": [
+      {
+        "prefab": "leigensibao_2",
+        "names": {
+          "EN": "Dark Dragon, Brilliant Beach",
+          "CN": "暗之龙，光之岸",
+          "JP": "闇龍と光の海岸"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "168"
+      }
+    ]
+  },
+  "40303": {
+    "names": {
+      "EN": "Prinz Eugen",
+      "CN": "{namecode:427}",
+      "JP": "プリンツ・オイゲン"
+    },
+    "skins": [
+      {
+        "prefab": "ougen_5",
+        "names": {
+          "EN": "Final Lap",
+          "CN": "Final Lap",
+          "JP": "ファイナル・ラップ"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "132"
+      },
+      {
+        "prefab": "ougen_6",
+        "names": {
+          "EN": "Kindred Evening Spirits",
+          "CN": "沉醉于夜",
+          "JP": "この夜に酔いしれ"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "1102",
+        "hx": true
+      },
+      {
+        "prefab": "ougen_8",
+        "names": {
+          "EN": "Between Tipsiness and a Wager",
+          "CN": "微醺与试探的距离",
+          "JP": "ほろ酔いと駆け引きの間合い"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "145"
+      }
+    ]
+  },
+  "40304": {
+    "names": {
+      "EN": "Deutschland",
+      "CN": "{namecode:429}",
+      "JP": "ドイッチュラント"
+    },
+    "skins": [
+      {
+        "prefab": "deyizhi_3",
+        "names": {
+          "EN": "Service Time?!",
+          "CN": "艳阳下的“福利”时间",
+          "JP": "サービスタイム？"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "106"
+      }
+    ]
+  },
+  "40305": {
+    "names": {
+      "EN": "Admiral Graf Spee",
+      "CN": "{namecode:430}",
+      "JP": "アドミラル・グラーフ・シュペー"
+    },
+    "skins": [
+      {
+        "prefab": "sipeibojue_5",
+        "names": {
+          "EN": "World's♥Cutest",
+          "CN": "铁血♥最可爱",
+          "JP": "Tekketsu♥Kawaii"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "120"
+      }
+    ]
+  },
+  "40309": {
+    "names": {
+      "EN": "Prinz Heinrich",
+      "CN": "{namecode:453}",
+      "JP": "プリンツ・ハインリヒ"
+    },
+    "skins": [
+      {
+        "prefab": "haiyinlixi_2",
+        "names": {
+          "EN": "Rabbit on Watch",
+          "CN": "泳池边的救生兔(?)",
+          "JP": "セーフティラビッツ"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "164"
+      }
+    ]
+  },
+  "40310": {
+    "names": {
+      "EN": "Prinz Adalbert",
+      "CN": "{namecode:455}",
+      "JP": "プリンツ・アーダルベルト"
+    },
+    "skins": [
+      {
+        "prefab": "adaerbote_2",
+        "names": {
+          "EN": "After-Hours Service",
+          "CN": "闭店后的特别时光",
+          "JP": "閉店後の特別サービス"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "1102"
+      },
+      {
+        "prefab": "adaerbote_3",
+        "names": {
+          "EN": "Bathroom Slip-Up",
+          "CN": "浴室中的小小意外",
+          "JP": "バスルーム・アクシデント"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "109"
+      }
+    ]
+  },
+  "40314": {
+    "names": {
+      "EN": "Friedrich Carl",
+      "CN": "{namecode:531}",
+      "JP": "フリードリヒ・カール"
+    },
+    "skins": [
+      {
+        "prefab": "feiteliekaer_3",
+        "names": {
+          "EN": "Tender Summer Care",
+          "CN": "夏日防晒计划",
+          "JP": "愛のサマーケア"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "106"
+      },
+      {
+        "prefab": "feiteliekaer_4",
+        "names": {
+          "EN": "The Midnight Channel",
+          "CN": "午夜频道",
+          "JP": "ミッドナイト・チャンネル"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "310"
+      }
+    ]
+  },
+  "40402": {
+    "names": {
+      "EN": "Gneisenau",
+      "CN": "{namecode:434}",
+      "JP": "グナイゼナウ"
+    },
+    "skins": [
+      {
+        "prefab": "genaisennao_2",
+        "names": {
+          "EN": "Nightmarish Succubus",
+          "CN": "梦魇魅影",
+          "JP": "サキュバスナイトメア"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "119"
+      }
+    ]
+  },
+  "40404": {
+    "names": {
+      "EN": "Lützow",
+      "CN": "{namecode:461}",
+      "JP": "リュッツォウ"
+    },
+    "skins": [
+      {
+        "prefab": "lvzuofu_2",
+        "names": {
+          "EN": "Everlasting Blood Banquet",
+          "CN": "永夜的赤之贵族",
+          "JP": "永き夜のノーブルレッド"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "1102"
+      }
+    ]
+  },
+  "40407": {
+    "names": {
+      "EN": "Admiral Zenker",
+      "CN": "{namecode:546}",
+      "JP": "アドミラル・ツェンカー"
+    },
+    "skins": [
+      {
+        "prefab": "zengkehaijunshangjiang_2",
+        "names": {
+          "EN": "Fun with...Interrogations?",
+          "CN": "心动审讯练习中 ",
+          "JP": "ドキドキ尋問タイム"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "131"
+      }
+    ]
+  },
+  "40501": {
+    "names": {
+      "EN": "Bismarck",
+      "CN": "{namecode:435}",
+      "JP": "ビスマルク"
+    },
+    "skins": [
+      {
+        "prefab": "bisimai_2",
+        "names": {
+          "EN": "Beacon of the Iron Blood",
+          "CN": "铁血的辉光",
+          "JP": "鉄血の威光"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "115",
+        "hx": true
+      },
+      {
+        "prefab": "bisimai_4",
+        "names": {
+          "EN": "Unpacked Surprise",
+          "CN": "未完成的圣诞惊喜",
+          "JP": "アンパックド・サプライズ"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "193"
+      }
+    ]
+  },
+  "40502": {
+    "names": {
+      "EN": "Tirpitz",
+      "CN": "{namecode:436}",
+      "JP": "ティルピッツ"
+    },
+    "skins": [
+      {
+        "prefab": "tierbici_2",
+        "names": {
+          "EN": "Snow-Melting Summer",
+          "CN": "冰雪消融的夏日",
+          "JP": "氷溶ける夏"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "106"
+      }
+    ]
+  },
+  "40503": {
+    "names": {
+      "EN": "Ulrich von Hutten",
+      "CN": "{namecode:463}",
+      "JP": "ウルリッヒ・フォン・フッテン"
+    },
+    "skins": [
+      {
+        "prefab": "wuerlixi_2",
+        "names": {
+          "EN": "Mayhem Maid",
+          "CN": "Mädchen Trümmer",
+          "JP": "メドヘン・トリュンマー"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "1102"
+      },
+      {
+        "prefab": "wuerlixi_3",
+        "names": {
+          "EN": "Ignition Matrician",
+          "CN": "一骑绝尘",
+          "JP": "孤高のイグニッションタイム"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "132"
+      }
+    ]
+  },
+  "40507": {
+    "names": {
+      "EN": "Götz von Berlichingen",
+      "CN": "{namecode:557}",
+      "JP": "ゲッツ・フォン・ベルリヒンゲン"
+    },
+    "skins": [
+      {
+        "prefab": "gezi_2",
+        "names": {
+          "EN": "Rapture Beneath the Blood Moon",
+          "CN": "赤红之月的幻想",
+          "JP": "紅月が幻夢を想い耽る"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "149"
+      }
+    ]
+  },
+  "40601": {
+    "names": {
+      "EN": "Weser",
+      "CN": "{namecode:467}",
+      "JP": "ヴェーザー"
+    },
+    "skins": [
+      {
+        "prefab": "weixi_2",
+        "names": {
+          "EN": "Urbane Onyx",
+          "CN": "黯调铅华",
+          "JP": "黒曜に輝くブラックダイヤ"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "1102"
+      }
+    ]
+  },
+  "40602": {
+    "names": {
+      "EN": "Elbe",
+      "CN": "{namecode:468}",
+      "JP": "エルベ"
+    },
+    "skins": [
+      {
+        "prefab": "yibei_3",
+        "names": {
+          "EN": "Pure-Hearted Bad Girl",
+          "CN": "清纯的“反派小姐”？",
+          "JP": "清らかのヴァレンチンズターク"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "105"
+      }
+    ]
+  },
+  "40701": {
+    "names": {
+      "EN": "Graf Zeppelin",
+      "CN": "{namecode:437}",
+      "JP": "グラーフ・ツェッペリン"
+    },
+    "skins": [
+      {
+        "prefab": "qibolin_2",
+        "names": {
+          "EN": "Beachside Urd",
+          "CN": "沙滩上的乌尔德",
+          "JP": "砂浜のウルズ"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "106"
+      }
+    ]
+  },
+  "40703": {
+    "names": {
+      "EN": "Peter Strasser",
+      "CN": "{namecode:470}",
+      "JP": "ペーター・シュトラッサー"
+    },
+    "skins": [
+      {
+        "prefab": "shitelasai_2",
+        "names": {
+          "EN": "Chronos's Kalendae",
+          "CN": "节庆的Chronos",
+          "JP": "シュヴァルツ・クロノシア"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "143"
+      }
+    ]
+  },
+  "40704": {
+    "names": {
+      "EN": "Fritz Rumey",
+      "CN": "{namecode:542}",
+      "JP": "フリッツ・ルメイ"
+    },
+    "skins": [
+      {
+        "prefab": "fulici_2",
+        "names": {
+          "EN": "Schwarzes Kaninchen",
+          "CN": "Schwarzes Kaninchen",
+          "JP": "Schwarzes Kaninchen"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "145"
+      }
+    ]
+  },
+  "40815": {
+    "names": {
+      "EN": "U-2501",
+      "CN": "{namecode:558}",
+      "JP": "U-2501"
+    },
+    "skins": [
+      {
+        "prefab": "u2501_2",
+        "names": {
+          "EN": "Treasure Behind the Water Curtain",
+          "CN": "水幕后的珍宝",
+          "JP": "ウォーターカーテンのお宝"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "193"
+      }
+    ]
+  },
+  "49901": {
+    "names": {
+      "EN": "Roon",
+      "CN": "{namecode:439}",
+      "JP": "ローン"
+    },
+    "skins": [
+      {
+        "prefab": "luoen_4",
+        "names": {
+          "EN": "Viridescent Lullaby",
+          "CN": "苍翠的安眠曲",
+          "JP": "緑と蒼の安らぎ"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "1102"
+      }
+    ]
+  },
+  "49902": {
+    "names": {
+      "EN": "Friedrich der Große",
+      "CN": "{namecode:440}",
+      "JP": "フリードリヒ・デア・グローセ"
+    },
+    "skins": [
+      {
+        "prefab": "feiteliedadi_3",
+        "names": {
+          "EN": "One Summer Night's Intimacy",
+          "CN": "相会于盛夏之夜",
+          "JP": "真夏の夜の親昵"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "164"
+      },
+      {
+        "prefab": "feiteliedadi_4",
+        "names": {
+          "EN": "Boudoir's Lingering Flame",
+          "CN": "红封之礼",
+          "JP": "ほのめく閨の焔"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "175"
+      }
+    ]
+  },
+  "49903": {
+    "names": {
+      "EN": "Mainz",
+      "CN": "{namecode:479}",
+      "JP": "マインツ"
+    },
+    "skins": [
+      {
+        "prefab": "meiyinci_3",
+        "names": {
+          "EN": "A Blend of Serenity",
+          "CN": "静雅之所的安逸",
+          "JP": "セレニティ・ブレンド"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "302"
+      }
+    ]
+  },
+  "49905": {
+    "names": {
+      "EN": "Ägir",
+      "CN": "{namecode:480}",
+      "JP": "エーギル"
+    },
+    "skins": [
+      {
+        "prefab": "aijier_2",
+        "names": {
+          "EN": "Iron Blood's Dragon Maid",
+          "CN": "港区的龙女仆",
+          "JP": "鉄血母港のメイドラッへ"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "1102"
+      },
+      {
+        "prefab": "aijier_3",
+        "names": {
+          "EN": "Golden Dragon Among Auspicious Clouds",
+          "CN": "金龙腾祥云",
+          "JP": "祥雲に昇る金龍"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "157",
+        "hx": true
+      },
+      {
+        "prefab": "aijier_4",
+        "names": {
+          "EN": "One-on-One Leisure Time",
+          "CN": "私密闲暇时",
+          "JP": "閑暇の魔に憩いの時間を"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "145"
+      }
+    ]
+  },
+  "49906": {
+    "names": {
+      "EN": "August von Parseval",
+      "CN": "{namecode:481}",
+      "JP": "アウグスト・フォン・パーセヴァル"
+    },
+    "skins": [
+      {
+        "prefab": "aogusite_4",
+        "names": {
+          "EN": "Night Rendezvous with the Unhulde",
+          "CN": "与“魔女”的星夜之约",
+          "JP": "ウイッチ・スター・ランデヴー"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "135"
+      }
+    ]
+  },
+  "49907": {
+    "names": {
+      "EN": "Prinz Rupprecht",
+      "CN": "{namecode:484}",
+      "JP": "プリンツ・ループレヒト"
+    },
+    "skins": [
+      {
+        "prefab": "lupuleixite_2",
+        "names": {
+          "EN": "The Gate Dragon's Advent",
+          "CN": "腾龙戏春？",
+          "JP": "ドラゴンの龍門上り？"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "1102"
+      }
+    ]
+  },
+  "49909": {
+    "names": {
+      "EN": "Hindenburg",
+      "CN": "{namecode:521}",
+      "JP": "ヒンデンブルク"
+    },
+    "skins": [
+      {
+        "prefab": "xingdengbao_2",
+        "names": {
+          "EN": "Delirious Duel",
+          "CN": "微醺胜负",
+          "JP": "パラリティク・バーサス"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "501"
+      },
+      {
+        "prefab": "xingdengbao_3",
+        "names": {
+          "EN": "Dancer of the Deep Chamber",
+          "CN": "深阁舞戏",
+          "JP": "深閨の魅舞"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "157"
+      }
+    ]
+  },
+  "49910": {
+    "names": {
+      "EN": "Mecklenburg",
+      "CN": "{namecode:550}",
+      "JP": "メークレンブルク"
+    },
+    "skins": [
+      {
+        "prefab": "meikelunbao_2",
+        "names": {
+          "EN": "Branding Witchcraft",
+          "CN": "作茧自缚",
+          "JP": "烙印のヘクセレイ"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "156"
+      }
+    ]
+  },
+  "50104": {
+    "names": {
+      "EN": "Tai Yuan",
+      "CN": "太原",
+      "JP": "太原"
+    },
+    "skins": [
+      {
+        "prefab": "taiyuan_2",
+        "names": {
+          "EN": "The Golden Dragon's Festivities",
+          "CN": "金蛇闹春",
+          "JP": "春騒ぎの玄亀"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "102"
+      }
+    ]
+  },
+  "50105": {
+    "names": {
+      "EN": "Lung Wu",
+      "CN": "龙武",
+      "JP": "龍武"
+    },
+    "skins": [
+      {
+        "prefab": "longwu_2",
+        "names": {
+          "EN": "Ascendant Dragon's Spring Feast",
+          "CN": "腾龙新春宴",
+          "JP": "昇り龍の新春晩餉"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "144"
+      }
+    ]
+  },
+  "50202": {
+    "names": {
+      "EN": "Ning Hai",
+      "CN": "宁海",
+      "JP": "寧海"
+    },
+    "skins": [
+      {
+        "prefab": "ninghai_4",
+        "names": {
+          "EN": "Dragon Sisters! -N",
+          "CN": "东煌姐妹！·N",
+          "JP": "東煌シスターズ！・N"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "120"
+      }
+    ]
+  },
+  "50203": {
+    "names": {
+      "EN": "Ping Hai",
+      "CN": "平海",
+      "JP": "平海"
+    },
+    "skins": [
+      {
+        "prefab": "pinghai_4",
+        "names": {
+          "EN": "Dragon Sisters! -P",
+          "CN": "东煌姐妹！·P",
+          "JP": "東煌シスターズ！・P"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "120"
+      },
+      {
+        "prefab": "pinghai_6",
+        "names": {
+          "EN": "Delicious Crimson",
+          "CN": "甜蜜嫣红",
+          "JP": "デリシャス・クリムゾン"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "135"
+      }
+    ]
+  },
+  "50204": {
+    "names": {
+      "EN": "Ying Swei",
+      "CN": "应瑞",
+      "JP": "応瑞"
+    },
+    "skins": [
+      {
+        "prefab": "yingrui_3",
+        "names": {
+          "EN": "Frolicking Flowers, Verse I",
+          "CN": "松戏梅·其上",
+          "JP": "戯れる松梅・上"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "1101"
+      }
+    ]
+  },
+  "50205": {
+    "names": {
+      "EN": "Chao Ho",
+      "CN": "肇和",
+      "JP": "肇和"
+    },
+    "skins": [
+      {
+        "prefab": "zhaohe_3",
+        "names": {
+          "EN": "Frolicking Flowers, Verse II",
+          "CN": "松戏梅·其下",
+          "JP": "戯れる松梅・下"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "1101"
+      }
+    ]
+  },
+  "50209": {
+    "names": {
+      "EN": "Chi An",
+      "CN": "济安",
+      "JP": "済安"
+    },
+    "skins": [
+      {
+        "prefab": "jian_3",
+        "names": {
+          "EN": "Exotic Dreamland",
+          "CN": "异域绮梦",
+          "JP": "異域の夢想郷"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "303"
+      }
+    ]
+  },
+  "50301": {
+    "names": {
+      "EN": "Chien Wu",
+      "CN": "建武",
+      "JP": "建武"
+    },
+    "skins": [
+      {
+        "prefab": "jianwu_2",
+        "names": {
+          "EN": "Dressed for Just Tonight",
+          "CN": "妆点，只为今夜",
+          "JP": "今宵だけのおめかし"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "157"
+      }
+    ]
+  },
+  "50302": {
+    "names": {
+      "EN": "Chang Wu",
+      "CN": "彰武",
+      "JP": "彰武"
+    },
+    "skins": [
+      {
+        "prefab": "zhangwu_2",
+        "names": {
+          "EN": "In Full Glory, Spring's Branch Blooms",
+          "CN": "一枝春欲放",
+          "JP": "一枝の春、咲き誇らん"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "152"
+      }
+    ]
+  },
+  "60302": {
+    "names": {
+      "EN": "Zara",
+      "CN": "{namecode:526}",
+      "JP": "ザラ"
+    },
+    "skins": [
+      {
+        "prefab": "zhala_2",
+        "names": {
+          "EN": "Poolside Coincidence",
+          "CN": "泳池边的“偶遇”",
+          "JP": "水辺の出逢い"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "117"
+      }
+    ]
+  },
+  "60303": {
+    "names": {
+      "EN": "Pola ",
+      "CN": "波拉",
+      "JP": "ポーラ"
+    },
+    "skins": [
+      {
+        "prefab": "bola_2",
+        "names": {
+          "EN": "Seaside Coincidence",
+          "CN": "水边的事故？",
+          "JP": "水辺のハプニング？"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "117"
+      }
+    ]
+  },
+  "60306": {
+    "names": {
+      "EN": "Gorizia",
+      "CN": "戈里齐亚",
+      "JP": "ゴリツィア"
+    },
+    "skins": [
+      {
+        "prefab": "geliqiya_2",
+        "names": {
+          "EN": "Unrequited Office Love?",
+          "CN": "办公室的“隔阂”",
+          "JP": "叶わぬオフィスラブ？"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "169"
+      }
+    ]
+  },
+  "60501": {
+    "names": {
+      "EN": "Vittorio Veneto",
+      "CN": "维托里奥·维内托",
+      "JP": "ヴィットリオ・ヴェネト"
+    },
+    "skins": [
+      {
+        "prefab": "weineituo_2",
+        "names": {
+          "EN": "The Flower of La Spezia",
+          "CN": "拉斯佩齐亚之花",
+          "JP": "ラスペツィアの花"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "1101"
+      }
+    ]
+  },
+  "60503": {
+    "names": {
+      "EN": "Roma",
+      "CN": "罗马",
+      "JP": "ローマ"
+    },
+    "skins": [
+      {
+        "prefab": "luoma_2",
+        "names": {
+          "EN": "White Heron of Darkest Night",
+          "CN": "午夜的白天鹅",
+          "JP": "真夜中の白鳥"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "159"
+      }
+    ]
+  },
+  "60508": {
+    "names": {
+      "EN": "Raffaello",
+      "CN": "拉斐尔",
+      "JP": "ラファエロ"
+    },
+    "skins": [
+      {
+        "prefab": "lafeier_2",
+        "names": {
+          "EN": "Protector of Love and Beauty",
+          "CN": "爱与美的秘密珍藏",
+          "JP": "愛と美のベスト・シークレット"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "303"
+      }
+    ]
+  },
+  "69902": {
+    "names": {
+      "EN": "Napoli",
+      "CN": "那不勒斯",
+      "JP": "ナポリ"
+    },
+    "skins": [
+      {
+        "prefab": "nabulesi_2",
+        "names": {
+          "EN": "Dreamy Night",
+          "CN": "Dreamy Night",
+          "JP": "ドリーミィナイト"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "145"
+      }
+    ]
+  },
+  "70102": {
+    "names": {
+      "EN": "Grozny",
+      "CN": "威严",
+      "JP": "グロズヌイ"
+    },
+    "skins": [
+      {
+        "prefab": "weiyan_2",
+        "names": {
+          "EN": "Bad Bunny Behind Bars",
+          "CN": "囚牢里的危险兔",
+          "JP": "囚われた危険兎"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "130"
+      },
+      {
+        "prefab": "weiyan_4",
+        "names": {
+          "EN": "Shadowy Syndicate Showdown",
+          "CN": "突袭！暗黑基地！",
+          "JP": "暗黒コーポ突撃！"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "154",
+        "hx": true
+      },
+      {
+        "prefab": "weiyan_6",
+        "names": {
+          "EN": "Bunny in the Banya",
+          "CN": "野兔和蒸汽房",
+          "JP": "野ウサギと蒸し湯部屋"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "1102"
+      }
+    ]
+  },
+  "70204": {
+    "names": {
+      "EN": "Kirov",
+      "CN": "基洛夫",
+      "JP": "キーロフ"
+    },
+    "skins": [
+      {
+        "prefab": "jiluofu_3",
+        "names": {
+          "EN": "Drifting Justice",
+          "CN": "疾速截击",
+          "JP": "ピーキー・チューニング"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "154"
+      }
+    ]
+  },
+  "70302": {
+    "names": {
+      "EN": "Kursk",
+      "CN": "库尔斯克",
+      "JP": "クルスク"
+    },
+    "skins": [
+      {
+        "prefab": "kuersike_2",
+        "names": {
+          "EN": "Lone Wolf Amid the Steam",
+          "CN": "雾中雪狼",
+          "JP": "湯煙の孤狼"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "1102"
+      }
+    ]
+  },
+  "70502": {
+    "names": {
+      "EN": "Sovetsky Soyuz",
+      "CN": "{namecode:529}",
+      "JP": "ソビエツキー・ソユーズ"
+    },
+    "skins": [
+      {
+        "prefab": "suweiaitongmeng_2",
+        "names": {
+          "EN": "Skyfall Agent",
+          "CN": "天幕危机",
+          "JP": "フォールスカイ・エージェント"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "154"
+      },
+      {
+        "prefab": "suweiaitongmeng_3",
+        "names": {
+          "EN": "Stringed Interrogation",
+          "CN": "缠丝审讯",
+          "JP": "ワイヤード・イントゥロゲイト"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "172"
+      }
+    ]
+  },
+  "71801": {
+    "names": {
+      "EN": "Kronshtadt",
+      "CN": "喀琅施塔得",
+      "JP": "クロンシュタット"
+    },
+    "skins": [
+      {
+        "prefab": "kalangshitade_2",
+        "names": {
+          "EN": "Begin the Rush!",
+          "CN": "突击行动开始！",
+          "JP": "突入開始ッッ！"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "154"
+      }
+    ]
+  },
+  "79902": {
+    "names": {
+      "EN": "Admiral Nakhimov",
+      "CN": "纳希莫夫海军上将",
+      "JP": "アドミラル・ナヒーモフ"
+    },
+    "skins": [
+      {
+        "prefab": "naximofu_2",
+        "names": {
+          "EN": "First Time in the Limelight",
+          "CN": "聚光灯下的初体验",
+          "JP": "スポットライト・デビュー"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "150"
+      }
+    ]
+  },
+  "80201": {
+    "names": {
+      "EN": "Émile Bertin",
+      "CN": "埃米尔·贝尔汀",
+      "JP": "エミール・ベルタン"
+    },
+    "skins": [
+      {
+        "prefab": "aimierbeierding_2",
+        "names": {
+          "EN": "Côte d'Azur",
+          "CN": "蓝色海岸",
+          "JP": "コート・ダジュール"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "106"
+      },
+      {
+        "prefab": "aimierbeierding_3",
+        "names": {
+          "EN": "Maid Fantastique",
+          "CN": "「女仆」浪漫",
+          "JP": "Fantastiqueメイド"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "104",
+        "hx": true
+      }
+    ]
+  },
+  "80401": {
+    "names": {
+      "EN": "Masséna",
+      "CN": "马塞纳",
+      "JP": "マッセナ"
+    },
+    "skins": [
+      {
+        "prefab": "masaina_2",
+        "names": {
+          "EN": "Sweetly Intoxicating Spring",
+          "CN": "醉甜之泉",
+          "JP": "甘酔の湯"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "167"
+      }
+    ]
+  },
+  "80501": {
+    "names": {
+      "EN": "Richelieu",
+      "CN": "黎塞留",
+      "JP": "リシュリュー"
+    },
+    "skins": [
+      {
+        "prefab": "lisailiu_2",
+        "names": {
+          "EN": "Fleuron of the Waves",
+          "CN": "潮风的Fleuron",
+          "JP": "潮風のフルーロン"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "133"
+      },
+      {
+        "prefab": "lisailiu_3",
+        "names": {
+          "EN": "Evergreen Prophecy",
+          "CN": "常緑Rêve prophétique",
+          "JP": "常緑Rêve prophétique"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "126"
+      }
+    ]
+  },
+  "80503": {
+    "names": {
+      "EN": "Alsace",
+      "CN": "阿尔萨斯",
+      "JP": "アルザス"
+    },
+    "skins": [
+      {
+        "prefab": "aersasi_2",
+        "names": {
+          "EN": "Heat-Beating Summer Sacrament",
+          "CN": "盛夏的圣迹",
+          "JP": "陽差しの秘蹟、過熱す"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "539"
+      },
+      {
+        "prefab": "aersasi_3",
+        "names": {
+          "EN": "Tipsy Oni on a Sacred Night",
+          "CN": "圣宵之鬼的微醺",
+          "JP": "聖宵のオニに酩酊を"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "142"
+      }
+    ]
+  },
+  "80601": {
+    "names": {
+      "EN": "Bois Belleau",
+      "CN": "贝劳森林",
+      "JP": "ボア・ベロー"
+    },
+    "skins": [
+      {
+        "prefab": "beilaosenlin_2",
+        "names": {
+          "EN": "Steamy Therapy",
+          "CN": "水色疗愈",
+          "JP": "湯けむりセラピー"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "4"
+      }
+    ]
+  },
+  "80702": {
+    "names": {
+      "EN": "Painlevé",
+      "CN": "伴尔维",
+      "JP": "パンルヴェ"
+    },
+    "skins": [
+      {
+        "prefab": "banerwei_3",
+        "names": {
+          "EN": "Fresh and Fortunate",
+          "CN": "清凉的甜蜜滋味",
+          "JP": "フレーシュに幸あれ"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "133"
+      }
+    ]
+  },
+  "80801": {
+    "names": {
+      "EN": "Surcouf",
+      "CN": "絮库夫",
+      "JP": "シュルクーフ"
+    },
+    "skins": [
+      {
+        "prefab": "xukufu_2",
+        "names": {
+          "EN": "Shopping Time!",
+          "CN": "购物时光！",
+          "JP": "ショッピングデイズ"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "118"
+      },
+      {
+        "prefab": "xukufu_3",
+        "names": {
+          "EN": "Loisirs Balnéaires",
+          "CN": "Loisirs balnéaires",
+          "JP": "Loisirs balnéaires"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "106",
+        "hx": true
+      }
+    ]
+  },
+  "81801": {
+    "names": {
+      "EN": "Cherbourg",
+      "CN": "瑟堡",
+      "JP": "シェルブール"
+    },
+    "skins": [
+      {
+        "prefab": "sebao_2",
+        "names": {
+          "EN": "What's Inside the Bear",
+          "CN": "布偶熊里面的是……？",
+          "JP": "着ぐるみの中身は……？"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "159"
+      }
+    ]
+  },
+  "89901": {
+    "names": {
+      "EN": "Saint Louis",
+      "CN": "路易九世",
+      "JP": "サン・ルイ"
+    },
+    "skins": [
+      {
+        "prefab": "luyijiushi_2",
+        "names": {
+          "EN": "Holy Knight's Resplendence",
+          "CN": "华服的圣骑士",
+          "JP": "華麗なる聖騎士"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "135"
+      },
+      {
+        "prefab": "luyijiushi_4",
+        "names": {
+          "EN": "Holiness to Haziness",
+          "CN": "微醺的静谧时光",
+          "JP": "聖謐の時間に微酔を"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "145"
+      }
+    ]
+  },
+  "89903": {
+    "names": {
+      "EN": "Brest",
+      "CN": "布雷斯特",
+      "JP": "ブレスト"
+    },
+    "skins": [
+      {
+        "prefab": "buleisite_2",
+        "names": {
+          "EN": "Marine Muse",
+          "CN": "苍海织歌",
+          "JP": "蒼海の織歌"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "1101"
+      },
+      {
+        "prefab": "buleisite_3",
+        "names": {
+          "EN": "Moonlit Night's Spring Vista",
+          "CN": "良夜春景",
+          "JP": "良夜の春景"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "144"
+      }
+    ]
+  },
+  "90107": {
+    "names": {
+      "EN": "Mogador",
+      "CN": "莫加多尔",
+      "JP": "モガドール"
+    },
+    "skins": [
+      {
+        "prefab": "mojiaduoer_2",
+        "names": {
+          "EN": "Locker Room Lechery",
+          "CN": "静谧一隅的燥热",
+          "JP": "悶々ロッカーシークレット"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "164"
+      },
+      {
+        "prefab": "mojiaduoer_3",
+        "names": {
+          "EN": "Olfactory Nursery Call",
+          "CN": "嗅诊的护理天使",
+          "JP": "嗅診ナーサリーコール"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "308"
+      },
+      {
+        "prefab": "mojiaduoer_4",
+        "names": {
+          "EN": "Diving for Desire",
+          "CN": "共坠的渴慕",
+          "JP": "スウェティ・ダイビング"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "611"
+      }
+    ]
+  },
+  "90111": {
+    "names": {
+      "EN": "Le Malin",
+      "CN": "恶毒",
+      "JP": "ル・マラン"
+    },
+    "skins": [
+      {
+        "prefab": "edu_3",
+        "names": {
+          "EN": "Mercredi at the Secret Base",
+          "CN": "秘密基地的Mercredi",
+          "JP": "隠れ家のマルコディ"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "106",
+        "hx": true
+      },
+      {
+        "prefab": "edu_4",
+        "names": {
+          "EN": "Listless Lapin",
+          "CN": "懒懒的白兔",
+          "JP": "昼寝好きのラピヌ"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "1102"
+      }
+    ]
+  },
+  "90201": {
+    "names": {
+      "EN": "La Galissonnière",
+      "CN": "拉·加利索尼埃",
+      "JP": "ラ・ガリソニエール"
+    },
+    "skins": [
+      {
+        "prefab": "jialisuoniye_4",
+        "names": {
+          "EN": "Lush Spring Dreams",
+          "CN": "春晓醉梦",
+          "JP": "ほろよい春曙の夢"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "1102"
+      },
+      {
+        "prefab": "jialisuoniye_3",
+        "names": {
+          "EN": "Black Cat of All Hallows' Eve",
+          "CN": "黑猫与南瓜之夜",
+          "JP": "黒猫とかぼちゃの夜"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "1102",
+        "hx": true
+      }
+    ]
+  },
+  "90401": {
+    "names": {
+      "EN": "Dunkerque",
+      "CN": "敦刻尔克",
+      "JP": "ダンケルク"
+    },
+    "skins": [
+      {
+        "prefab": "dunkeerke_2",
+        "names": {
+          "EN": "Summer Sucré",
+          "CN": "“甜蜜”夏日",
+          "JP": "夏のスュクレ"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "106"
+      }
+    ]
+  },
+  "90402": {
+    "names": {
+      "EN": "Strasbourg",
+      "CN": "斯特拉斯堡",
+      "JP": "ストラスブール"
+    },
+    "skins": [
+      {
+        "prefab": "sitelasibao_2",
+        "names": {
+          "EN": "Faerie of the Race Circuit",
+          "CN": "赛场上的电子妖精",
+          "JP": "謡精舞うサーキット"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "186",
+        "hx": true
+      }
+    ]
+  },
+  "90501": {
+    "names": {
+      "EN": "Jean Bart",
+      "CN": "{namecode:523}",
+      "JP": "ジャン・バール"
+    },
+    "skins": [
+      {
+        "prefab": "rangbaer_3",
+        "names": {
+          "EN": "Private Après Midi",
+          "CN": "秘密的Après midi",
+          "JP": "秘密のAprès midi"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "133"
+      },
+      {
+        "prefab": "rangbaer_4",
+        "names": {
+          "EN": "First Snow Upon the Cutlass's Edge",
+          "CN": "舶刀Première neige",
+          "JP": "舶刀Première neige"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "126"
+      },
+      {
+        "prefab": "rangbaer_5",
+        "names": {
+          "EN": "Springlight Étoiles",
+          "CN": "灯映星展",
+          "JP": "春燈のétoiles"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "302"
+      }
+    ]
+  },
+  "90502": {
+    "names": {
+      "EN": "Clemenceau",
+      "CN": "克莱蒙梭",
+      "JP": "クレマンソー"
+    },
+    "skins": [
+      {
+        "prefab": "kelaimengsuo_2",
+        "names": {
+          "EN": "Splendid Breeze",
+          "CN": "金日煦风",
+          "JP": "ブリーズ・スプレンディド"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "118"
+      }
+    ]
+  },
+  "90701": {
+    "names": {
+      "EN": "Joffre",
+      "CN": "霞飞",
+      "JP": "ジョッフル"
+    },
+    "skins": [
+      {
+        "prefab": "xiafei_4",
+        "names": {
+          "EN": "Blessings' First Flight",
+          "CN": "祝福的起步冲刺",
+          "JP": "祝福のスタートダッシュ"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "4"
+      }
+    ]
+  },
+  "110201": {
+    "names": {
+      "EN": "De Zeven Provinciën",
+      "CN": "七省",
+      "JP": "デ・ゼーヴェン・プロヴィンシェン"
+    },
+    "skins": [
+      {
+        "prefab": "qisheng_2",
+        "names": {
+          "EN": "Snuggling for Warmth",
+          "CN": "相依偎的温度",
+          "JP": "寄り添う温もり"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "185"
+      }
+    ]
+  },
+  "119901": {
+    "names": {
+      "EN": "Gouden Leeuw",
+      "CN": "金狮",
+      "JP": "ハウデン・リーウ"
+    },
+    "skins": [
+      {
+        "prefab": "jinshi_2",
+        "names": {
+          "EN": "An Intimate Cleaning",
+          "CN": "朦胧的宠溺时刻",
+          "JP": "慈愛の清め合いっこ"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "116"
+      }
+    ]
+  },
+  "960003": {
+    "names": {
+      "EN": "Golden Hind",
+      "CN": "金鹿号",
+      "JP": "ゴールデン・ハインド"
+    },
+    "skins": [
+      {
+        "prefab": "jinluhao_2",
+        "names": {
+          "EN": "Forlorn Femme Fatale",
+          "CN": "古堡中的恐怖淑女",
+          "JP": "古城のキラーレディ"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "1102"
+      },
+      {
+        "prefab": "jinluhao_3",
+        "names": {
+          "EN": "The Pale Phantom's Smile",
+          "CN": "微笑的白色魅影",
+          "JP": "微笑む怪談の金鹿様"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "156"
+      }
+    ]
+  },
+  "960007": {
+    "names": {
+      "EN": "Ganj-i-Sawai",
+      "CN": "冈依沙瓦号",
+      "JP": "ガンズウェイ"
+    },
+    "skins": [
+      {
+        "prefab": "gangyishawa_3",
+        "names": {
+          "EN": "My Innermost Self",
+          "CN": "真我的显影",
+          "JP": "トゥルー・マイセルフ"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "670"
+      }
+    ]
+  },
+  "960012": {
+    "names": {
+      "EN": "Queen Anne's Revenge",
+      "CN": "安妮女王复仇号",
+      "JP": "クイーン・アンズ・リベンジ"
+    },
+    "skins": [
+      {
+        "prefab": "anninvwang_2",
+        "names": {
+          "EN": "Call of the Creeping Embrace",
+          "CN": "隐秘之拥的呼唤",
+          "JP": "這い寄る抱擁の呼び声"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "525"
+      }
+    ]
+  },
+  "960014": {
+    "names": {
+      "EN": "Pearl",
+      "CN": "珍珠号",
+      "JP": "パール"
+    },
+    "skins": [
+      {
+        "prefab": "zhenzhuhao_2",
+        "names": {
+          "EN": "Fallen Angel in the Dark Castle",
+          "CN": "魔堡中的堕天使",
+          "JP": "魔城の堕天使"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "156"
+      }
+    ]
+  },
+  "960017": {
+    "names": {
+      "EN": "Merkuriy",
+      "CN": "水星号",
+      "JP": "メルクーリィ"
+    },
+    "skins": [
+      {
+        "prefab": "shuixinghao_2",
+        "names": {
+          "EN": "Envoy Angel of Love",
+          "CN": "天使降临之日",
+          "JP": "愛恋天使メルクーリィ"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "156"
+      }
+    ]
+  },
+  "960019": {
+    "names": {
+      "EN": "Selimiye",
+      "CN": "塞利米耶号",
+      "JP": "セリミエ"
+    },
+    "skins": [
+      {
+        "prefab": "sailimiye_2",
+        "names": {
+          "EN": "Seer in a Bind",
+          "CN": "自投罗网的预言家？",
+          "JP": "予見者は網にずぼーんと"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "525"
+      }
+    ]
+  },
+  "1060001": {
+    "names": {
+      "EN": "Marie Rose",
+      "CN": "玛莉萝丝",
+      "JP": "マリー・ローズ"
+    },
+    "skins": [
+      {
+        "prefab": "maliluosi_3_doa",
+        "names": {
+          "EN": "Steamy Venus",
+          "CN": "热气蒸腾的女神",
+          "JP": "湯けむりのヴィーナス"
+        },
+        "servers": [
+          "EN",
+          "CN",
+          "JP"
+        ],
+        "bg": "142"
+      }
+    ]
+  }
+}
