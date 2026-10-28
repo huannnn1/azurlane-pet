@@ -354,6 +354,21 @@ ipcMain.on('pet:interactive', (_e, rects) => {
   interactive = Array.isArray(rects) ? rects : []
 })
 
+// 像素探测结果：渲染层读光标处 alpha 后回传，决定这个点能不能点
+let pixelOpaque = true
+let pixelAt = 0
+let probeSent = { x: -9999, y: -9999, at: 0 }
+let lastProbeLogAt = 0
+let hitSwitchCount = 0
+let hitSwitchLoggedAt = 0
+let pendingInside = null
+let pendingSince = 0
+
+ipcMain.on('pet:pixel-result', (_e, opaque) => {
+  pixelOpaque = !!opaque
+  pixelAt = Date.now()
+})
+
 /** 视线跟随状态：光标坐标、最后活动时间、是否已回正 */
 let lastFocus = { x: -1, y: -1, at: 0, idle: false }
 
@@ -400,11 +415,49 @@ function startHoverWatch() {
       ly = p.y - b.y
       bw = b.width
       bh = b.height
-      inside = interactive.some((r) => lx >= r.x && lx <= r.x + r.w && ly >= r.y && ly <= r.y + r.h)
+
+      const hit = interactive.find((r) => lx >= r.x && lx <= r.x + r.w && ly >= r.y && ly <= r.y + r.h)
+      if (!hit) {
+        inside = false
+      } else if (!hit.type || hit.type === 'hud' || hit.type === 'all') {
+        // HUD 是 DOM、标定是整窗，都不需要像素判定
+        inside = true
+      } else {
+        // 模型矩形：外接矩形里大把透明像素，问渲染层这个点画没画东西
+        const now = Date.now()
+        const moved = Math.abs(lx - probeSent.x) > 2 || Math.abs(ly - probeSent.y) > 2
+        const stale = now - probeSent.at > 150 || now - pixelAt > 500
+        if (moved || stale) {
+          probeSent = { x: lx, y: ly, at: now }
+          try { win.webContents.send('pet:probe-pixel', { x: Math.round(lx), y: Math.round(ly) }) } catch {}
+          if (now - lastProbeLogAt > 2000) {
+            lastProbeLogAt = now
+            console.log('[probe] 发送探测', Math.round(lx), Math.round(ly), 'moved=', moved, 'stale=', stale)
+          }
+        }
+        inside = pixelOpaque
+      }
     } catch { inside = false }
+
+    // 迟滞：判定结果要连续保持 120ms 才真正切换穿透，
+    // 否则在人物边缘来回擦过时会疯狂切换，还会被系统解释成点击
+    const now2 = Date.now()
     if (inside !== lastInside) {
-      lastInside = inside
-      try { win.setIgnoreMouseEvents(!inside, { forward: true }) } catch {}
+      if (pendingInside !== inside) {
+        pendingInside = inside
+        pendingSince = now2
+      } else if (now2 - pendingSince >= 120) {
+        lastInside = inside
+        pendingInside = null
+        hitSwitchCount++
+        try { win.setIgnoreMouseEvents(!inside, { forward: true }) } catch {}
+        if (now2 - hitSwitchLoggedAt > 5000) {
+          hitSwitchLoggedAt = now2
+          console.log('[hit] 穿透切换累计', hitSwitchCount, '次，当前', inside ? '可点' : '穿透')
+        }
+      }
+    } else {
+      pendingInside = null
     }
     updateFocus(lx, ly, bw, bh)
   }, 40)

@@ -220,21 +220,22 @@ function hitAt(x, y) {
 // 主进程轮询全局光标位置来切换穿透，避免 mousemove 丢事件时中键穿透到下层窗口
 function publishInteractive() {
   const rects = []
-  // 标定时整窗接收点击，否则只认模型矩形和气泡
+  // type 决定主进程怎么判定：all 直接可点，hud 是 DOM 直接可点，
+  // model 要走像素探测（外接矩形里大片透明区域不该挡住桌面）
   if (calibrating) {
-    rects.push({ x: 0, y: 0, w: window.innerWidth, h: window.innerHeight })
+    rects.push({ x: 0, y: 0, w: window.innerWidth, h: window.innerHeight, type: 'all' })
   } else if (modelRect) {
-    rects.push({ x: modelRect.x, y: modelRect.y, w: modelRect.w, h: modelRect.h })
+    rects.push({ x: modelRect.x, y: modelRect.y, w: modelRect.w, h: modelRect.h, type: 'model' })
   }
   // 没找到模型时，整窗可点，方便点提示卡去选目录
   const empty = el('empty')
   if (empty?.classList.contains('on')) {
-    rects.push({ x: 0, y: 0, w: window.innerWidth, h: window.innerHeight })
+    rects.push({ x: 0, y: 0, w: window.innerWidth, h: window.innerHeight, type: 'all' })
   }
   const hud = el('hud')
-  if (hud) {
+  if (hud && hud.style.display !== 'none') {
     const r = hud.getBoundingClientRect()
-    rects.push({ x: r.x, y: r.y, w: r.width, h: r.height })
+    rects.push({ x: r.x, y: r.y, w: r.width, h: r.height, type: 'hud' })
   }
   try { window.pet.interactive(rects) } catch {}
 }
@@ -248,7 +249,40 @@ function showEmpty(on) {
   publishInteractive()
 }
 
-// ---------- 触摸区标定 ----------------------------------------------------
+// ---------- 像素级穿透探测 ------------------------------------------------
+// 外接矩形里大片是透明的，按矩形判定会把桌面图标挡住。
+// 主进程问「这个点能不能点」，这里在渲染完这一帧后读 3x3 邻域的 alpha。
+let pendingProbe = null
+let lastProbeLog = 0
+
+window.pet.onProbePixel(({ x, y }) => { pendingProbe = { x, y } })
+
+app.renderer.on('postrender', () => {
+  if (!pendingProbe) return
+  const { x, y } = pendingProbe
+  pendingProbe = null
+  try {
+    const gl = app.renderer.gl
+    const res = app.renderer.resolution || 1
+    const W = app.renderer.width
+    const H = app.renderer.height
+    const rx = Math.max(1, Math.min(W - 2, Math.round(x * res)))
+    const ry = Math.max(1, Math.min(H - 2, Math.round(H - y * res)))
+    const px = new Uint8Array(3 * 3 * 4)
+    gl.readPixels(rx - 1, ry - 1, 3, 3, gl.RGBA, gl.UNSIGNED_BYTE, px)
+    let maxA = 0
+    for (let i = 3; i < px.length; i += 4) if (px[i] > maxA) maxA = px[i]
+    const opaque = maxA > 25   // alpha > 0.1 才算画了东西
+    window.pet.pixelResult(opaque)
+    const now = Date.now()
+    if (now - lastProbeLog > 1500) {
+      lastProbeLog = now
+      console.log('[pixel] alpha=', maxA, 'opaque=', opaque)
+    }
+  } catch (e) {
+    window.pet.pixelResult(true)   // 读失败就当作可点，别把交互弄没
+  }
+})
 const calBar = el('calbar')
 
 function setCalBar(text) {
