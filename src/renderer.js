@@ -517,8 +517,9 @@ function startIdle() {
 }
 
 // 空闲时随机小动作（游戏里的 main_1/2/3 就是待机轮换动作）
-// DSH 正在跑任务时节奏加快，摸鱼时放慢
+// DSH 正在跑任务时节奏加快，摸鱼时放慢，系统长时间没人动则像打盹一样更慢
 let activityActive = false
+let drowsy = false
 let idleTimer = null
 
 function playRandomMain() {
@@ -531,7 +532,7 @@ function playRandomMain() {
 
 function scheduleIdleTick() {
   if (idleTimer) clearTimeout(idleTimer)
-  const delay = activityActive ? 12_000 : 50_000
+  const delay = drowsy ? 180_000 : (activityActive ? 12_000 : 50_000)
   idleTimer = setTimeout(() => {
     playRandomMain()
     scheduleIdleTick()
@@ -608,6 +609,30 @@ function checkLowBalance(total) {
     say('余额不多了哦')
   }
 }
+
+// ---------- Ctrl + 滚轮连续调大小 ------------------------------------------
+let sizeScale = 1
+let sizeDraft = null
+let sizeSaveTimer = null
+
+window.addEventListener('wheel', (e) => {
+  if (!e.ctrlKey) return
+  e.preventDefault()
+  const base = sizeDraft ?? sizeScale
+  const next = Math.min(1.6, Math.max(0.6, base + (e.deltaY < 0 ? 0.05 : -0.05)))
+  sizeDraft = Math.round(next * 100) / 100
+  window.pet.setScale(sizeDraft, false)
+  // 停下来 350ms 才写配置，避免滚动时狂写文件
+  if (sizeSaveTimer) clearTimeout(sizeSaveTimer)
+  sizeSaveTimer = setTimeout(() => {
+    sizeSaveTimer = null
+    if (sizeDraft != null) {
+      sizeScale = sizeDraft
+      sizeDraft = null
+      window.pet.setScale(sizeScale, true)
+    }
+  }, 350)
+}, { passive: false })
 
 // ---------- HUD -----------------------------------------------------------
 const fmt = (n) => {
@@ -722,9 +747,16 @@ function boot() {
   window.pet.onBubble((on) => { bubbleOn = !!on })
   window.pet.onHud((mode) => { hudMode = mode || 'always'; applyHudMode(); layout() })
   window.pet.onHover((inside) => { hoverInside = !!inside; applyHudMode(); updateCursor() })
+  // 系统空闲时降帧 + 拉长动作间隔；人一回来立刻恢复
+  window.pet.onDrowsy((on) => {
+    drowsy = !!on
+    PIXI.Ticker.shared.maxFPS = drowsy ? 15 : 30
+    scheduleIdleTick()
+  })
   window.pet.config().then((c) => {
     bubbleOn = c?.bubble !== false
     hudMode = c?.hud ?? 'always'
+    sizeScale = c?.sizeScale ?? 1
     applyHudMode()
     layout()
   }).catch(() => {})

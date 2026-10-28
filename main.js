@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain, screen, Menu, Tray, nativeImage, dialog, globalShortcut } = require('electron')
+const { app, BrowserWindow, ipcMain, screen, Menu, Tray, nativeImage, dialog, globalShortcut, powerMonitor } = require('electron')
 const path = require('node:path')
 const fs = require('node:fs')
 const https = require('node:https')
@@ -541,7 +541,7 @@ function createTray() {
   tray = new Tray(trayIcon())
   tray.setToolTip('碧蓝桌宠 — 点我显示 / 隐藏')
   tray.on('click', togglePet)
-  tray.on('double-click', () => win?.showInactive())
+  tray.on('double-click', togglePet)
   tray.setContextMenu(Menu.buildFromTemplate([
     { label: '显示 / 隐藏', click: togglePet },
     { label: '选择皮肤…', click: () => openSkinsWindow() },
@@ -990,6 +990,14 @@ ipcMain.on('pet:menu', () => {
 
 ipcMain.handle('pet:skin', () => skinRelPath(config.skin))
 ipcMain.handle('pet:skin-label', () => SKIN_NAMES[config.skin]?.label || null)
+
+// Ctrl + 滚轮调大小：实时应用，停下来再落盘
+ipcMain.on('pet:set-scale', (_e, v, persist) => {
+  const n = Math.min(1.6, Math.max(0.6, Number(v) || 1))
+  config.sizeScale = n
+  if (persist) saveConfig()
+  applyAppearance()
+})
 ipcMain.handle('pet:skins', () => scanSkins())
 ipcMain.handle('pet:fit', () => config.fit ?? 'auto')
 
@@ -1128,6 +1136,25 @@ function startFullscreenWatch() {
       }
     }
   }, 3000)
+}
+
+// ---- 系统空闲时打盹 ------------------------------------------------------
+// 十分钟没人动就降帧、拉长动作间隔，像在打瞌睡；一有动静立刻恢复。
+const DROWSY_IDLE_SEC = Number(process.env.PET_DROWSY_SEC || 600)
+let drowsy = false
+
+function startDrowsyWatch() {
+  setInterval(() => {
+    if (!win || win.isDestroyed()) return
+    let idle = 0
+    try { idle = powerMonitor.getSystemIdleTime() } catch { return }
+    const on = idle > DROWSY_IDLE_SEC
+    if (on !== drowsy) {
+      drowsy = on
+      console.log('[drowsy]', on ? `空闲超过 ${DROWSY_IDLE_SEC}s，进入打盹` : '醒来')
+      try { win.webContents.send('pet:drowsy', on) } catch {}
+    }
+  }, 5000)
 }
 
 // ---- DSH 活动状态（用于待机动作节奏）--------------------------------------
@@ -1618,6 +1645,7 @@ app.whenReady().then(async () => {
   registerShortcuts()
   watchDisplayChanges()
   startFullscreenWatch()
+  startDrowsyWatch()
 
   // 拖动路径自检：PET_BENCH_DRAG=1 时模拟 20 次拖动移动，检查尺寸会不会漂移
   if (process.env.PET_BENCH_DRAG === '1') {
