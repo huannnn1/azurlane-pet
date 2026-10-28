@@ -50,6 +50,7 @@ contextBridge.exposeInMainWorld('pet', {
   pixelResult: (opaque) => ipcRenderer.send('pet:pixel-result', opaque),
   setScale: (v, persist) => ipcRenderer.send('pet:set-scale', v, persist),
   onDrowsy: (cb) => ipcRenderer.on('pet:drowsy', (_e, on) => cb(on)),
+  onTouchDebug: (cb) => ipcRenderer.on('pet:touch-debug', (_e, on) => cb(on)),
   onNoSkins: (cb) => ipcRenderer.on('pet:no-skins', () => cb()),
   skinOk: (skin) => ipcRenderer.send('pet:skin-ok', skin),
   skinFailed: (skin) => ipcRenderer.send('pet:skin-failed', skin),

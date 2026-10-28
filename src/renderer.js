@@ -611,6 +611,76 @@ function checkLowBalance(total) {
   }
 }
 
+// ---------- B0 调试：核实 Touch 网格 ----------
+// 只在 PET_TOUCH_DEBUG=1 时由主进程触发，只打印信息 + 描边，不改任何行为。
+function dumpTouchMeshes() {
+  const core = model?.internalModel?.coreModel
+  const cm = core?._model || core
+  if (!cm) { console.log('[touch] coreModel 不可用'); return }
+
+  const drawIds = cm.drawables?.ids ?? []
+  const paramIds = cm.parameters?.ids ?? []
+  const partIds = cm.parts?.ids ?? []
+  const isTouch = (s) => /touch/i.test(String(s))
+  const touchDraw = []
+  for (let i = 0; i < drawIds.length; i++) if (isTouch(drawIds[i])) touchDraw.push({ id: drawIds[i], i })
+  const touchParam = paramIds.filter(isTouch)
+  const touchPart = partIds.filter(isTouch)
+
+  console.log('[touch] drawable 总数', drawIds.length, '其中带 Touch:', touchDraw.length)
+  console.log('[touch] parameter 总数', paramIds.length, '其中带 Touch:', touchParam.length, touchParam.slice(0, 8))
+  console.log('[touch] part 总数', partIds.length, '其中带 Touch:', touchPart.length, touchPart.slice(0, 8))
+  console.log('[touch] drawable 里的 Touch 名:', touchDraw.slice(0, 12).map((d) => d.id))
+
+  const ops = cm.drawables?.opacities ?? []
+  const orders = cm.drawables?.renderOrders ?? []
+  const vcounts = cm.drawables?.vertexCounts ?? []
+  for (const { id, i } of touchDraw.slice(0, 24)) {
+    console.log('[touch]', id,
+      'opacity=', Number(ops[i] ?? -1).toFixed(3),
+      'order=', orders[i],
+      'verts=', vcounts[i])
+  }
+
+  // 描边：把每个 Touch 网格的顶点轮廓画出来，不同类型不同颜色
+  try {
+    const layer = new PIXI.Graphics()
+    layer.name = '__touchDebug'
+    const colors = { head: 0xff5555, body: 0x55ff88, special: 0x55aaff, idle: 0xffdd55, drag: 0xff55ff, other: 0xffffff }
+    const pos = cm.drawables?.vertexPositions ?? []
+    const vertsPer = cm.drawables?.vertexCounts ?? []
+    if (touchDraw[0]) {
+      const a = pos[touchDraw[0].i]
+      console.log('[touch] 顶点样本', touchDraw[0].id,
+        a ? Array.from(a).slice(0, 8).map((v) => Math.round(v)) : '无',
+        'modelScale=', model.scale.x.toFixed(4))
+    }
+    for (const { id, i } of touchDraw) {
+      const arr = pos[i]
+      const count = vertsPer[i]
+      if (!arr || !count) continue
+      const low = String(id).toLowerCase()
+      const color = low.includes('head') ? colors.head
+        : low.includes('body') ? colors.body
+          : low.includes('special') ? colors.special
+            : low.includes('idle') ? colors.idle
+              : low.includes('drag') ? colors.drag : colors.other
+      layer.lineStyle(1, color, 0.9)
+      layer.moveTo(arr[0], arr[1])
+      for (let v = 1; v < count; v++) layer.lineTo(arr[v * 2], arr[v * 2 + 1])
+      layer.closePath()
+    }
+    // 顶点是模型坐标系，套上 model 的变换才能对上画面
+    const m = model
+    layer.scale.copyFrom(m.scale)
+    layer.position.copyFrom(m.position)
+    app.stage.addChild(layer)
+    console.log('[touch] 描边已绘制，网格数', touchDraw.length)
+  } catch (e) {
+    console.log('[touch] 描边失败:', e.message)
+  }
+}
+
 // ---------- 视线跟随 -------------------------------------------------------
 // pixi-live2d-display 的 model.focus() 只驱动眼球（ParamEyeBallX/Y），不改头部角度。
 // 而且参数必须在 coreModel.update()（把参数应用到 drawable）之前写入才有效，
@@ -792,6 +862,8 @@ function boot() {
 
   window.pet.onHud((mode) => { hudMode = mode || 'always'; applyHudMode(); layout() })
   window.pet.onHover((inside) => { hoverInside = !!inside; applyHudMode(); updateCursor() })
+  // B0 调试入口：主进程置 PET_TOUCH_DEBUG=1 时触发
+  window.pet.onTouchDebug(() => dumpTouchMeshes())
   // 系统空闲时降帧 + 拉长动作间隔；人一回来立刻恢复
   window.pet.onDrowsy((on) => {
     drowsy = !!on
