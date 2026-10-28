@@ -53,6 +53,13 @@ let modelRect = null
 let dragging = false
 let dragMoved = false
 let downAt = null
+let hoverInside = false
+
+/** 鼠标在人物身上时显示抓取手势，拖动中换成抓紧 */
+function updateCursor() {
+  if (!canvas) return
+  canvas.style.cursor = dragging ? 'grabbing' : (hoverInside ? 'grab' : 'default')
+}
 let hasHitAreas = false
 let groups = {}
 let fitMode = 'auto'
@@ -419,6 +426,7 @@ canvas.addEventListener('pointerdown', (e) => {
   dragging = true
   dragMoved = false
   downAt = { x: e.screenX, y: e.screenY }
+  updateCursor()
   window.pet.dragStart({ x: e.screenX, y: e.screenY })
   canvas.setPointerCapture?.(e.pointerId)
 })
@@ -437,6 +445,7 @@ window.addEventListener('pointerup', (e) => {
   if (!dragging) return
   dragging = false
   window.pet.dragEnd()
+  updateCursor()
   // 松手时按总位移再复核一次：拖动途中指针事件可能丢，
   // 只看 dragMoved 会把一次真拖动误判成点击，从而播出带镜头的触摸动作
   const total = Math.hypot(e.screenX - downAt.x, e.screenY - downAt.y)
@@ -455,6 +464,7 @@ function abortDrag() {
   if (!dragging) return
   dragging = false
   window.pet.dragEnd()
+  updateCursor()
 }
 window.addEventListener('pointercancel', abortDrag)
 window.addEventListener('blur', abortDrag)
@@ -696,6 +706,7 @@ function boot() {
     console.log('[motion] 手动播放', key)
     try { model?.motion(key) } catch (e) { console.log('[motion] 播放失败', key, e.message) }
   })
+  window.pet.onHover((inside) => { hoverInside = !!inside; updateCursor() })
   window.pet.onVisible((v) => setRendering(v))
   // 视线跟随：把窗口内坐标归一化到 -1~1 交给模型
   let lastFocusLog = 0

@@ -476,6 +476,7 @@ function startHoverWatch() {
         pendingInside = null
         hitSwitchCount++
         try { win.setIgnoreMouseEvents(!inside, { forward: true }) } catch {}
+        try { win.webContents.send('pet:hover', inside) } catch {}
         if (now2 - hitSwitchLoggedAt > 5000) {
           hitSwitchLoggedAt = now2
           console.log('[hit] 穿透切换累计', hitSwitchCount, '次，当前', inside ? '可点' : '穿透')
@@ -735,7 +736,41 @@ ipcMain.on('pet:drag-end', () => {
   lastInside = null   // 强制下一轮重新判定穿透
   // 兜底：拖动期间万一窗口尺寸被系统改掉，按配置恢复一次
   applyAppearance()
+  snapToEdge()
 })
+
+/** 松手后贴近屏幕边缘 16px 内就吸过去，120ms 缓动，别让窗口卡在半路 */
+function snapToEdge() {
+  if (!win || win.isDestroyed()) return
+  const [x, y] = win.getPosition()
+  const [w, h] = win.getSize()
+  const area = workAreaAt(x + w / 2, y + h / 2)
+  const M = 16
+  let nx = x
+  let ny = y
+  if (Math.abs(x - area.x) < M) nx = area.x
+  else if (Math.abs(area.x + area.width - (x + w)) < M) nx = area.x + area.width - w
+  if (Math.abs(y - area.y) < M) ny = area.y
+  else if (Math.abs(area.y + area.height - (y + h)) < M) ny = area.y + area.height - h
+  if (nx === x && ny === y) return
+
+  const sx = x
+  const sy = y
+  const start = Date.now()
+  const timer = setInterval(() => {
+    if (!win || win.isDestroyed()) return clearInterval(timer)
+    const t = Math.min(1, (Date.now() - start) / 120)
+    const e = 1 - Math.pow(1 - t, 3)   // easeOutCubic
+    win.setBounds({
+      x: Math.round(sx + (nx - sx) * e),
+      y: Math.round(sy + (ny - sy) * e),
+      width: w,
+      height: h,
+    })
+    if (t >= 1) clearInterval(timer)
+  }, 16)
+  console.log('[drag] 吸附到边缘', nx, ny)
+}
 
 // ---- 退出 ---------------------------------------------------------------
 ipcMain.on('pet:quit', () => app.quit())

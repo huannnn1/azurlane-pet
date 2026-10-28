@@ -44,6 +44,7 @@ contextBridge.exposeInMainWorld('pet', {
   onState: (cb) => ipcRenderer.on('pet:state', (_e, type) => cb(type)),
   onVisible: (cb) => ipcRenderer.on('pet:visible', (_e, v) => cb(v)),
   onFocus: (cb) => ipcRenderer.on('pet:focus', (_e, p) => cb(p)),
+  onHover: (cb) => ipcRenderer.on('pet:hover', (_e, inside) => cb(inside)),
   onProbePixel: (cb) => ipcRenderer.on('pet:probe-pixel', (_e, p) => cb(p)),
   pixelResult: (opaque) => ipcRenderer.send('pet:pixel-result', opaque),
   onNoSkins: (cb) => ipcRenderer.on('pet:no-skins', () => cb()),
