@@ -362,10 +362,11 @@ async function refreshUsage() {
   el('calls').textContent = `${t.calls ?? 0} 次`
 
   const s = u.latestSession
-  el('hud').title = s
-    ? `今日合计 ${total.toLocaleString()} tok（含缓存读 ${fmt(t.cacheReadTokens ?? 0)}）\n` +
-      `本窗口 ${(s.totalTokens ?? 0).toLocaleString()} tok / ${s.calls} 次`
-    : ''
+  el('hud').title =
+    (s
+      ? `今日合计 ${total.toLocaleString()} tok（含缓存读 ${fmt(t.cacheReadTokens ?? 0)}）\n` +
+        `本窗口 ${(s.totalTokens ?? 0).toLocaleString()} tok / ${s.calls} 次\n`
+      : '') + '点击查看用量明细，右键打开菜单'
 }
 
 async function refreshBalance() {
@@ -407,8 +408,8 @@ function boot() {
   scheduleIdleTick()
 
   el('empty')?.addEventListener('click', () => window.pet.chooseAssets())
-  // 点 HUD 也能开菜单：余额显示「未配置」时用户有个顺手的入口
-  el('hud')?.addEventListener('click', () => window.pet.menu())
+  // 点 HUD 打开用量明细（余额未配置时也能从这里看到 token 花费）
+  el('hud')?.addEventListener('click', () => window.pet.openUsage())
 
   window.pet.onCalibrate(() => startCalibration())
   window.pet.onHitareasCleared(async () => {

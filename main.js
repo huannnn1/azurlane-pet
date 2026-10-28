@@ -648,11 +648,15 @@ function startActivityWatch() {
 }
 
 // ---- DSH token 用量 ------------------------------------------------------
-function readUsage() {
+function readUsage(opts = {}) {
+  const args = [USAGE_SCRIPT, '--json']
+  if (opts.today) args.push('--today')
+  else args.push('--days', String(opts.days ?? 14))
+
   return new Promise((resolve) => {
     execFile(
       process.execPath,
-      [USAGE_SCRIPT, '--json', '--today'],
+      args,
       {
         // 缓存落到 userData：portable 版每次解压到新临时目录，只有 userData 是持久的
         env: {
@@ -679,7 +683,44 @@ function readUsage() {
     )
   })
 }
-ipcMain.handle('pet:usage', () => readUsage())
+ipcMain.handle('pet:usage', () => readUsage({ today: true }))
+ipcMain.handle('pet:usage-detail', () => readUsage({ days: 14 }))
+
+// ---- 用量明细窗口 --------------------------------------------------------
+let usageWin = null
+
+function openUsageWindow() {
+  if (usageWin && !usageWin.isDestroyed()) {
+    usageWin.show()
+    usageWin.focus()
+    return
+  }
+  usageWin = new BrowserWindow({
+    width: 472,
+    height: 668,
+    minWidth: 420,
+    minHeight: 460,
+    frame: false,
+    resizable: true,
+    minimizable: false,
+    maximizable: false,
+    fullscreenable: false,
+    backgroundColor: '#10131b',
+    show: false,
+    alwaysOnTop: true,
+    webPreferences: {
+      preload: path.join(ROOT, 'preload.js'),
+      contextIsolation: true,
+      nodeIntegration: false,
+    },
+  })
+  usageWin.loadFile(path.join(ROOT, 'src', 'usage.html'))
+  usageWin.once('ready-to-show', () => usageWin.show())
+  usageWin.on('closed', () => { usageWin = null })
+}
+
+ipcMain.on('pet:open-usage', () => openUsageWindow())
+ipcMain.on('pet:close-usage', () => { if (usageWin && !usageWin.isDestroyed()) usageWin.close() })
 ipcMain.handle('pet:config', () => config)
 
 // 启动时预跑一次，顺便把结果打到终端，便于确认取数链路
@@ -721,6 +762,44 @@ app.whenReady().then(async () => {
   console.log('[boot] assets =', ASSETS, '皮肤数 =', scanSkins().length)
   fetchBalance().then((r) => console.log('[balance:boot]', JSON.stringify(r)))
 
+  // 截图测试用：只渲染用量明细窗口（PET_SNAP_USAGE=1 时不开桌宠窗口）
+  if (SNAPSHOT_MODE && process.env.PET_SNAP_USAGE === '1') {
+    const w = new BrowserWindow({
+      width: 472, height: 668, show: false, frame: false,
+      backgroundColor: '#10131b',
+      webPreferences: { preload: path.join(ROOT, 'preload.js'), contextIsolation: true, nodeIntegration: false },
+    })
+    let shot = false
+    const capture = async () => {
+      if (shot) return
+      shot = true
+      await new Promise((r) => setTimeout(r, Number(process.env.PET_SNAP_WAIT || 3000)))
+      try {
+        // PET_SNAP_TAB=sessions 时切到会话页再截
+        if (process.env.PET_SNAP_TAB) {
+          await w.webContents.executeJavaScript(
+            `document.querySelector('[data-tab="${process.env.PET_SNAP_TAB}"]')?.click()`,
+          )
+          await new Promise((r) => setTimeout(r, 400))
+        }
+        const img = await w.webContents.capturePage()
+        const out = path.join(require('node:os').tmpdir(), 'usage-snapshot.png')
+        fs.writeFileSync(out, img.toPNG())
+        console.log('[snapshot] usage ->', out)
+      } catch (e) { console.error('[snapshot] usage failed', e.message) }
+      app.quit()
+    }
+    // 事件可能比 loadFile 返回还早，先挂监听再加载
+    w.webContents.once('did-finish-load', capture)
+    w.webContents.once('did-fail-load', (_e, code, desc) => {
+      console.error('[snapshot] usage load failed', code, desc)
+      app.quit()
+    })
+    w.loadFile(path.join(ROOT, 'src', 'usage.html'))
+    setTimeout(capture, 30000)   // 兜底，别让截图测试挂住
+    return
+  }
+
   // 打包版第一次跑、又没找到皮肤：引导选目录（只自动打扰一次，之后走托盘菜单）
   if (!SNAPSHOT_MODE && !hasSkins(ASSETS) && !config.assetsPromptShown) {
     config.assetsPromptShown = true
@@ -730,6 +809,12 @@ app.whenReady().then(async () => {
 
   createWindow()
   createTray()
+
+  // 后台预热 14 天用量缓存：首次点 HUD 打开明细窗口时就不用干等解压
+  if (!SNAPSHOT_MODE) {
+    setTimeout(() => { readUsage({ days: 14 }).catch(() => {}) }, 15000)
+  }
+
   app.on('activate', () => { if (BrowserWindow.getAllWindows().length === 0) createWindow() })
 })
 app.on('window-all-closed', () => app.quit())

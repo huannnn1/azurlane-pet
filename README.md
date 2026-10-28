@@ -16,6 +16,7 @@
 - **外观配置**：透明度、窗口大小、始终置顶、开机自启，全部在托盘菜单里
 - **失败回退**：皮肤加载失败自动切到上次能用的那个，连续失败三次停止
 - **HUD 气泡**：DeepSeek 余额、当日 token 合计、调用次数；悬停看明细
+- **用量明细**：点 HUD 打开独立窗口，按天 / 按会话看 token 分项和按 DeepSeek 官方价折算的费用（工作日高峰时段自动按两倍价）
 
 ## 目录结构
 
@@ -24,6 +25,8 @@ main.js                 Electron 主进程（窗口、穿透、托盘、菜单�
 preload.js              contextBridge 暴露的 pet.* API
 src/index.html          页面骨架 + HUD / 标定提示 / 找不到模型时的自救卡片
 src/renderer.js         PIXI + Live2D 渲染、交互、标定、HUD 刷新
+src/usage.html          用量明细窗口（按天 / 按会话、费用折算）
+src/usage.js            明细窗口的渲染与标签页
 src/live2dcubismcore.min.js  Cubism 4 Core（Live2D 官方运行时）
 src/tray_32.png         托盘图标（打进 asar，保证打包后不依赖 assets）
 tools/dsh_usage.mjs     统计 ~/.dsh/sessions 里的 token 用量
@@ -83,6 +86,18 @@ npm run verify         # 校验完整性（查依赖、moc3 魔数、纹理头�
 | `usage.refreshMinutes` | token 刷新间隔 |
 
 打包版的 `config.json` 在 `%APPDATA%\azurlane-pet\config.json`（开发模式在项目根目录）。托盘菜单和 HUD 里的「打开配置」会直接打开它。
+
+## 费用是怎么算的
+
+按 DeepSeek 官方价（`deepseek-flash`，元 / 百万 tokens）：
+
+- 输入·缓存命中：空闲 ¥0.02，高峰 ¥0.04
+- 输入·缓存未命中：空闲 ¥1，高峰 ¥2
+- 输出：空闲 ¥4，高峰 ¥8
+
+高峰时段是北京时间周一至周五 9:00-12:00、14:00-18:00，其余时间（含周末）按空闲价。法定节假日本地判断不了，按工作日近似。
+
+每条消息按它发生的时刻各自套价，所以同一天的费用是分段累加出来的。价格写死在 `tools/dsh_usage.mjs` 的 `PRICE` 常量里，官方调价后改这里即可。
 
 ## 打包与分发
 
