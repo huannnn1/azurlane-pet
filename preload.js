@@ -26,6 +26,8 @@ contextBridge.exposeInMainWorld('pet', {
   balance: () => ipcRenderer.invoke('pet:balance'),
   config: () => ipcRenderer.invoke('pet:config'),
   skin: () => ipcRenderer.invoke('pet:skin'),
+  skinLabel: () => ipcRenderer.invoke('pet:skin-label'),
+  onBubble: (cb) => ipcRenderer.on('pet:bubble', (_e, on) => cb(on)),
   skins: () => ipcRenderer.invoke('pet:skins'),
   fit: () => ipcRenderer.invoke('pet:fit'),
   hitareas: (skin) => ipcRenderer.invoke('pet:hitareas', skin),

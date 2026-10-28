@@ -57,6 +57,7 @@ const DEFAULT_CONFIG = {
   alwaysOnTop: true,
   autoStart: false,
   hideOnFullscreen: true, // 检测到全屏应用/演示模式时自动让位
+  bubble: true, // 头顶气泡台词
   deepseek: { apiKey: '', baseUrl: 'https://api.deepseek.com' },
   usage: { refreshMinutes: 5, sessionOnly: false },
 }
@@ -853,6 +854,16 @@ ipcMain.on('pet:menu', () => {
           checked: config.alwaysOnTop !== false,
           click: (mi) => { config.alwaysOnTop = mi.checked; saveConfig(); applyAppearance() },
         },
+        {
+          label: '气泡提示',
+          type: 'checkbox',
+          checked: config.bubble !== false,
+          click: (mi) => {
+            config.bubble = mi.checked
+            saveConfig()
+            if (win) win.webContents.send('pet:bubble', mi.checked)
+          },
+        },
         { type: 'separator' },
         {
           label: '开机自启',
@@ -893,6 +904,7 @@ ipcMain.on('pet:menu', () => {
 })
 
 ipcMain.handle('pet:skin', () => skinRelPath(config.skin))
+ipcMain.handle('pet:skin-label', () => SKIN_NAMES[config.skin]?.label || null)
 ipcMain.handle('pet:skins', () => scanSkins())
 ipcMain.handle('pet:fit', () => config.fit ?? 'auto')
 

@@ -122,6 +122,10 @@ async function loadModel(url) {
   setCalBar('')
   showEmpty(false)
   showLoading(false)
+  // 换皮肤后冒一句中文名，方便确认换的是谁
+  window.pet.skinLabel()
+    .then((label) => { if (label) say(label, 2000) })
+    .catch(() => {})
   playLoginEntrance()
 }
 
@@ -244,6 +248,12 @@ function publishInteractive() {
   const hud = el('hud')
   if (hud && hud.style.display !== 'none') {
     const r = hud.getBoundingClientRect()
+    rects.push({ x: r.x, y: r.y, w: r.width, h: r.height, type: 'hud' })
+  }
+  // 气泡显示期间也占一小块可交互区，避免鼠标移上去穿透到桌面
+  const bubble = el('bubble')
+  if (bubble?.classList.contains('on')) {
+    const r = bubble.getBoundingClientRect()
     rects.push({ x: r.x, y: r.y, w: r.width, h: r.height, type: 'hud' })
   }
   try { window.pet.interactive(rects) } catch {}
@@ -510,9 +520,52 @@ const STATE_MOTION = {
 
 function onDsState(type) {
   if (!model || dragging) return
+  // 回合结束是最该有反馈的时刻，给一句台词
+  if (type === 'turn/end') {
+    say(TURN_END_LINES[Math.floor(Math.random() * TURN_END_LINES.length)])
+  }
   const candidates = STATE_MOTION[type]
   if (!candidates) return
   playOnce(candidates, { min: 3, max: 6 })
+}
+
+// ---------- 气泡台词 -------------------------------------------------------
+// 没有音效，台词是唯一的"说话"反馈，所以只在少数时机出现，别刷屏。
+const TURN_END_LINES = ['搞定啦～', '这一轮做完咯', '呼…收工', '还有别的吗？', '交给我吧']
+let bubbleOn = true
+let bubbleTimer = null
+
+function say(text, ms = 2600) {
+  if (!bubbleOn || !text) return
+  const b = el('bubble')
+  if (!b) return
+  b.textContent = text
+  if (modelRect) {
+    b.style.left = `${Math.round(modelRect.x + modelRect.w / 2)}px`
+    b.style.top = `${Math.max(30, Math.round(modelRect.y + 8))}px`
+  }
+  b.classList.add('on')
+  publishInteractive()
+  if (bubbleTimer) clearTimeout(bubbleTimer)
+  bubbleTimer = setTimeout(() => {
+    bubbleTimer = null
+    b.classList.remove('on')
+    publishInteractive()
+  }, ms)
+}
+
+/** 余额跌破阈值时提醒，每个档位当天只提醒一次 */
+let lowWarned = { level: 0, date: '' }
+function checkLowBalance(total) {
+  const today = new Date().toLocaleDateString('sv-SE')
+  if (lowWarned.date !== today) lowWarned = { level: 0, date: today }
+  if (total < 5 && lowWarned.level < 5) {
+    lowWarned.level = 5
+    say('余额快见底啦…')
+  } else if (total < 10 && lowWarned.level < 10) {
+    lowWarned.level = 10
+    say('余额不多了哦')
+  }
 }
 
 // ---------- HUD -----------------------------------------------------------
@@ -579,6 +632,7 @@ async function refreshBalance() {
   const sym = b.currency === 'CNY' ? '¥' : b.currency === 'USD' ? '$' : (b.currency + ' ')
   el('bal').textContent = `${sym}${b.total.toFixed(2)}`
   el('bal').className = 'val ' + (b.total < 5 ? 'bad' : b.total < 10 ? 'warn' : 'ok')
+  checkLowBalance(b.total)
 }
 
 function boot() {
@@ -624,6 +678,8 @@ function boot() {
   })
   window.pet.onActivity((active) => setActivity(active))
   window.pet.onState((type) => onDsState(type))
+  window.pet.onBubble((on) => { bubbleOn = !!on })
+  window.pet.config().then((c) => { bubbleOn = c?.bubble !== false }).catch(() => {})
   scheduleIdleTick()
 
   el('empty')?.addEventListener('click', () => window.pet.chooseAssets())

@@ -79,12 +79,31 @@
     pointer-events: none; transition: opacity .35s ease;
   }
   #loading.off { opacity: 0; }
+  /* 头顶气泡台词 */
+  #bubble {
+    position: absolute; left: 50%; top: 40%;
+    transform: translate(-50%, -100%) scale(.96);
+    padding: 5px 11px; border-radius: 11px;
+    background: rgba(16, 20, 30, .84);
+    border: 1px solid rgba(120, 170, 255, .28);
+    color: #e8eefc; font-size: 11px; line-height: 1.35;
+    white-space: nowrap; pointer-events: none; z-index: 8;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, .5);
+    opacity: 0; transition: opacity .18s ease, transform .18s ease;
+  }
+  #bubble.on { opacity: 1; transform: translate(-50%, -100%) scale(1); }
+  #bubble::after {
+    content: ''; position: absolute; left: 50%; top: 100%;
+    margin-left: -5px; border: 5px solid transparent;
+    border-top-color: rgba(16, 20, 30, .84);
+  }
 </style>
 </head>
 <body>
 <canvas id="stage"></canvas>
 <div id="calbar"></div>
 <div id="loading">正在唤醒…</div>
+<div id="bubble"></div>
 <div id="empty" title="点击选择模型目录">
   <b>没找到 Live2D 模型</b>
   <span>点这里选 <u>assets 皮肤目录</u>，<br>或右键菜单 → 选择皮肤目录…</span>
