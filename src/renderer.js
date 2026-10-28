@@ -171,7 +171,23 @@ async function playLoginEntrance() {
 }
 
 async function switchSkin(url) {
-  try { await loadModel(url) } catch (e) { console.log('[skin] 加载失败:', e.message) }
+  // 旧模型留在画面上，直到新模型加载完成再替换，避免换皮肤时出现空白。
+  // 这里的 old 必须是局部变量：loadModel 里会把全局 model 换成新模型，
+  // 如果异步回来再去销毁 model，很可能销毁的是刚加载好的新模型。
+  const old = model
+  if (old) model = null
+  try {
+    await loadModel(url)
+  } catch (e) {
+    console.log('[skin] 加载失败:', e.message)
+  }
+  if (old && old !== model) {
+    try {
+      app.stage.removeChild(old)
+      old.destroy({ children: true, texture: true, baseTexture: true })
+      console.log('[skin] 旧模型已卸载')
+    } catch {}
+  }
 }
 
 /** HUD 铭牌的大致高度：contain 时给底部留出来，别把脚挡住；HUD 关掉时不留 */
