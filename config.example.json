@@ -8,6 +8,7 @@
   "skin": "lafei_4",
   "fit": "auto",
   "hintShown": false,
+  "assetsDir": "",
   "deepseek": {
     "apiKey": "在这里填你的 DeepSeek API Key",
     "baseUrl": "https://api.deepseek.com"
