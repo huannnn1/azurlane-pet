@@ -68,10 +68,19 @@ const CAL_STEPS = [
 ]
 
 // ---------- 模型 ----------------------------------------------------------
-/** 加载中的轻量提示 */
+/** 加载中的轻量提示：只在一个加载超过 300ms 时才露出来，避免快的时候闪 */
+let loadingTimer = null
 function showLoading(on) {
   const e = el('loading')
-  if (e) e.classList.toggle('off', !on)
+  if (!e) return
+  if (on) {
+    if (loadingTimer) clearTimeout(loadingTimer)
+    loadingTimer = setTimeout(() => { e.classList.remove('off') }, 300)
+  } else {
+    if (loadingTimer) clearTimeout(loadingTimer)
+    loadingTimer = null
+    e.classList.add('off')
+  }
 }
 
 async function loadModel(url) {
@@ -122,6 +131,9 @@ async function loadModel(url) {
   setCalBar('')
   showEmpty(false)
   showLoading(false)
+  // 新模型从透明淡进来，配合旧模型的淡出，中间不会出现空白帧
+  model.alpha = 0
+  fadeModel(model, 0, 1, 200)
   // 换皮肤后冒一句中文名，方便确认换的是谁
   window.pet.skinLabel()
     .then((label) => { if (label) say(label, 2000) })
@@ -163,8 +175,38 @@ async function playLoginEntrance() {
   await playOnce('login', { min: 3, max: 8 })
 }
 
+/** 模型透明度渐变（换皮肤时用，避免直接闪成空白） */
+function fadeModel(m, from, to, ms) {
+  if (!m) return Promise.resolve()
+  return new Promise((resolve) => {
+    const start = Date.now()
+    const timer = setInterval(() => {
+      if (!m || m.destroyed) { clearInterval(timer); return resolve() }
+      const t = Math.min(1, (Date.now() - start) / ms)
+      try { m.alpha = from + (to - from) * t } catch {}
+      if (t >= 1) { clearInterval(timer); resolve() }
+    }, 16)
+  })
+}
+
+let fadingOut = null
+
 async function switchSkin(url) {
+  // 旧模型先淡到很淡但留在画面上，等新模型加载完再销毁，
+  // 否则加载那一两秒窗口是空的
+  if (model) {
+    fadingOut = model
+    model = null
+    await fadeModel(fadingOut, 1, 0.12, 150)
+  }
   try { await loadModel(url) } catch (e) { console.log('[skin] 加载失败:', e.message) }
+  if (fadingOut) {
+    try {
+      app.stage.removeChild(fadingOut)
+      fadingOut.destroy({ children: true, texture: true, baseTexture: true })
+    } catch {}
+    fadingOut = null
+  }
 }
 
 /** HUD 铭牌的大致高度：contain 时给底部留出来，别把脚挡住 */

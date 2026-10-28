@@ -283,10 +283,32 @@ function setupFileLog() {
 // ---- 隐藏 / 恢复（中键隐藏，托盘图标恢复）--------------------------------
 let hiddenByUser = false   // 区分「用户主动藏起来」和「全屏时自动让位」
 
-function hidePet() {
+/** 窗口透明度渐变：显隐时给一点过渡，别硬切 */
+function fadeWindowOpacity(to, ms = 200) {
+  if (!win || win.isDestroyed()) return Promise.resolve()
+  const from = win.getOpacity()
+  if (Math.abs(from - to) < 0.02) {
+    try { win.setOpacity(to) } catch {}
+    return Promise.resolve()
+  }
+  return new Promise((resolve) => {
+    const start = Date.now()
+    const timer = setInterval(() => {
+      if (!win || win.isDestroyed()) { clearInterval(timer); return resolve() }
+      const t = Math.min(1, (Date.now() - start) / ms)
+      try { win.setOpacity(from + (to - from) * t) } catch {}
+      if (t >= 1) { clearInterval(timer); resolve() }
+    }, 16)
+  })
+}
+
+async function hidePet() {
   if (!win || !win.isVisible()) return
   hiddenByUser = true
+  await fadeWindowOpacity(0, 180)
+  if (!win || win.isDestroyed()) return
   win.hide()
+  try { win.setOpacity(config.opacity ?? 1) } catch {}
   if (tray) tray.setToolTip('碧蓝桌宠（已隐藏）— 点图标或 Ctrl+Alt+Z 恢复')
   if (tray && !config.hintShown) {
     try {
@@ -305,9 +327,11 @@ function showPet() {
   hiddenByUser = false
   // 全屏期间用户主动叫她出来，这次全屏就不再自动藏了
   if (fsHidden) fsOverride = true
+  try { win.setOpacity(0) } catch {}
   win.showInactive()
   win.setAlwaysOnTop(true, 'screen-saver')
   win.setIgnoreMouseEvents(true, { forward: true })
+  fadeWindowOpacity(config.opacity ?? 1, 200)
   if (tray) tray.setToolTip('碧蓝桌宠 — 中键隐藏 / Ctrl+Alt+Z 切换')
 }
 
@@ -1025,14 +1049,21 @@ function startFullscreenWatch() {
     if (fs === fsHidden) return
     if (fs && !fsOverride) {
       fsHidden = true
-      console.log('[fullscreen] 检测到全屏应用，暂时隐藏')
-      win.hide()
+      console.log('[fullscreen] 检测到全屏应用，暂时让位')
+      fadeWindowOpacity(0, 180).then(() => {
+        if (win && !win.isDestroyed()) {
+          win.hide()
+          try { win.setOpacity(config.opacity ?? 1) } catch {}
+        }
+      })
     } else if (!fs) {
       fsHidden = false
       fsOverride = false
       if (!hiddenByUser) {
         console.log('[fullscreen] 全屏结束，恢复显示')
+        try { win.setOpacity(0) } catch {}
         win.showInactive()
+        fadeWindowOpacity(config.opacity ?? 1, 200)
       }
     }
   }, 3000)
