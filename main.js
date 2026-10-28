@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain, screen, Menu, Tray, nativeImage, dialog } = require('electron')
+const { app, BrowserWindow, ipcMain, screen, Menu, Tray, nativeImage, dialog, globalShortcut } = require('electron')
 const path = require('node:path')
 const fs = require('node:fs')
 const https = require('node:https')
@@ -263,10 +263,13 @@ function setupFileLog() {
 function hidePet() {
   if (!win || !win.isVisible()) return
   win.hide()
-  if (tray) tray.setToolTip('碧蓝桌宠（已隐藏）— 点我恢复')
+  if (tray) tray.setToolTip('碧蓝桌宠（已隐藏）— 点图标或 Ctrl+Alt+Z 恢复')
   if (tray && !config.hintShown) {
     try {
-      tray.displayBalloon({ title: '桌宠已隐藏', content: '想找回来？点一下右下角托盘区的蓝色小圆点。' })
+      tray.displayBalloon({
+        title: '桌宠已隐藏',
+        content: '点右下角托盘的小图标，或者按 Ctrl+Alt+Z 叫她回来。',
+      })
     } catch {}
     config.hintShown = true
     saveConfig()
@@ -278,7 +281,31 @@ function showPet() {
   win.showInactive()
   win.setAlwaysOnTop(true, 'screen-saver')
   win.setIgnoreMouseEvents(true, { forward: true })
-  if (tray) tray.setToolTip('碧蓝桌宠 — 中键隐藏')
+  if (tray) tray.setToolTip('碧蓝桌宠 — 中键隐藏 / Ctrl+Alt+Z 切换')
+}
+
+/** 把窗口放回主屏右下角：显示器拔掉或拖丢时的救命入口 */
+function resetPosition() {
+  if (!win || win.isDestroyed()) return
+  const area = screen.getPrimaryDisplay().workArea
+  const [w, h] = win.getSize()
+  win.setPosition(area.x + area.width - w - 32, area.y + area.height - h)
+  console.log('[window] 位置已重置')
+}
+
+// 拔掉副屏后窗口可能落在已不存在的区域，自动收回来。
+// 注意：screen 模块必须在 app ready 之后才能用，所以注册放在 whenReady 里。
+function watchDisplayChanges() {
+  screen.on('display-removed', () => {
+    if (!win || win.isDestroyed()) return
+    const [x, y] = win.getPosition()
+    const [w, h] = win.getSize()
+    const p = clampToDisplay(x, y, w, h)
+    if (p.x !== x || p.y !== y) {
+      win.setPosition(p.x, p.y)
+      console.log('[window] 显示器变更，已收回可见区域')
+    }
+  })
 }
 
 function togglePet() {
@@ -371,6 +398,9 @@ function createTray() {
   tray.on('double-click', () => win?.showInactive())
   tray.setContextMenu(Menu.buildFromTemplate([
     { label: '显示 / 隐藏', click: togglePet },
+    { label: '选择皮肤…', click: () => openSkinsWindow() },
+    { label: '用量明细…', click: () => openUsageWindow() },
+    { label: '重置位置', click: resetPosition },
     { type: 'separator' },
     { label: '选择皮肤目录…', click: () => chooseAssetsDir() },
     { label: '退出', click: () => app.quit() },
@@ -535,12 +565,7 @@ ipcMain.on('pet:menu', () => {
     label: `${k}  (${groups[k].length})`,
     submenu: groups[k].map((s) => ({
       label: skinLabel(s) + (s === current ? '  ✓' : ''),
-      click: () => {
-        config.skin = s
-        rememberRecent(s)
-        saveConfig()
-        if (win) win.webContents.send('pet:skin-changed', skinRelPath(s))
-      },
+      click: () => setSkin(s),
     })),
   }))
 
@@ -551,17 +576,14 @@ ipcMain.on('pet:menu', () => {
         label: '最近使用',
         submenu: recent.map((s) => ({
           label: skinLabel(s) + (s === current ? '  ✓' : ''),
-          click: () => {
-            config.skin = s
-            rememberRecent(s)
-            saveConfig()
-            if (win) win.webContents.send('pet:skin-changed', skinRelPath(s))
-          },
+          click: () => setSkin(s),
         })),
       }, { type: 'separator' }]
     : []
 
   Menu.buildFromTemplate([
+    { label: '搜索皮肤…', click: () => openSkinsWindow() },
+    { type: 'separator' },
     { label: `切换皮肤（${skins.length} 个）`, submenu: [...recentMenu, ...(skinMenu.length ? skinMenu : [{ label: '（无）', enabled: false }])] },
     {
       label: '显示模式',
@@ -627,6 +649,7 @@ ipcMain.on('pet:menu', () => {
     },
     { type: 'separator' },
     { label: '重新加载', click: () => win.reload() },
+    { label: '重置位置', click: resetPosition },
     { label: '打开配置', click: () => require('electron').shell.openPath(CONFIG_FILE) },
     { label: '打开日志', click: () => require('electron').shell.openPath(fs.existsSync(logPath()) ? logPath() : app.getPath('userData')) },
     { label: '打开皮肤目录', click: () => require('electron').shell.openPath(ASSETS) },
@@ -830,6 +853,79 @@ function openUsageWindow() {
 
 ipcMain.on('pet:open-usage', () => openUsageWindow())
 ipcMain.on('pet:close-usage', () => { if (usageWin && !usageWin.isDestroyed()) usageWin.close() })
+
+// ---- 皮肤选择窗口（带搜索 / 收藏）-----------------------------------------
+let skinsWin = null
+
+function skinsDetail() {
+  const favs = Array.isArray(config.favorites) ? config.favorites : []
+  const recents = Array.isArray(config.recent) ? config.recent : []
+  return scanSkins().map((dir) => ({
+    dir,
+    label: SKIN_NAMES[dir]?.label || dir,
+    fav: favs.includes(dir),
+    recent: recents.includes(dir),
+    current: dir === config.skin,
+  }))
+}
+
+/** 统一的切皮肤入口：菜单、搜索窗口、快捷键都走这里 */
+function setSkin(dir) {
+  if (!dir || !scanSkins().includes(dir)) return false
+  config.skin = dir
+  rememberRecent(dir)
+  saveConfig()
+  fallbackTried = 0
+  if (win && !win.isDestroyed()) win.webContents.send('pet:skin-changed', skinRelPath(dir))
+  console.log('[skin] 已切换 ->', dir)
+  return true
+}
+
+ipcMain.handle('pet:skins-detail', () => skinsDetail())
+ipcMain.handle('pet:set-skin', (_e, dir) => ({ ok: setSkin(dir) }))
+
+ipcMain.handle('pet:toggle-fav', (_e, dir) => {
+  const list = Array.isArray(config.favorites) ? [...config.favorites] : []
+  const i = list.indexOf(dir)
+  if (i >= 0) list.splice(i, 1)
+  else list.unshift(dir)
+  config.favorites = list.slice(0, 40)
+  saveConfig()
+  return { ok: true, fav: config.favorites.includes(dir) }
+})
+
+function openSkinsWindow() {
+  if (skinsWin && !skinsWin.isDestroyed()) {
+    skinsWin.show()
+    skinsWin.focus()
+    return
+  }
+  skinsWin = new BrowserWindow({
+    width: 560,
+    height: 640,
+    minWidth: 460,
+    minHeight: 420,
+    frame: false,
+    resizable: true,
+    minimizable: false,
+    maximizable: false,
+    fullscreenable: false,
+    backgroundColor: '#10131b',
+    show: false,
+    alwaysOnTop: true,
+    webPreferences: {
+      preload: path.join(ROOT, 'preload.js'),
+      contextIsolation: true,
+      nodeIntegration: false,
+    },
+  })
+  skinsWin.loadFile(path.join(ROOT, 'src', 'skins.html'))
+  skinsWin.once('ready-to-show', () => skinsWin.show())
+  skinsWin.on('closed', () => { skinsWin = null })
+}
+
+ipcMain.on('pet:open-skins', () => openSkinsWindow())
+ipcMain.on('pet:close-skins', () => { if (skinsWin && !skinsWin.isDestroyed()) skinsWin.close() })
 ipcMain.handle('pet:config', () => config)
 
 // 启动时预跑一次，顺便把结果打到终端，便于确认取数链路
@@ -878,6 +974,26 @@ app.on('second-instance', () => {
   win.focus()
 })
 
+/** 全局快捷键：中键隐藏之后，键盘也能把她叫回来 */
+const ACCELERATOR = 'Control+Alt+Z'
+
+function registerShortcuts() {
+  try {
+    const ok = globalShortcut.register(ACCELERATOR, () => {
+      if (!win || win.isDestroyed()) return
+      if (win.isVisible()) hidePet()
+      else showPet()
+    })
+    console.log('[shortcut]', ACCELERATOR, ok ? '已注册' : '注册失败（可能被占用）')
+  } catch (e) {
+    console.warn('[shortcut] 注册失败', e.message)
+  }
+}
+
+app.on('will-quit', () => {
+  try { globalShortcut.unregisterAll() } catch {}
+})
+
 app.whenReady().then(async () => {
   // 打包版默认落盘日志；开发版要开的话设 PET_LOG=1
   if (app.isPackaged || process.env.PET_LOG === '1') setupFileLog()
@@ -895,10 +1011,15 @@ app.whenReady().then(async () => {
     }, 3000)
   }
 
-  // 截图测试用：只渲染用量明细窗口（PET_SNAP_USAGE=1 时不开桌宠窗口）
-  if (SNAPSHOT_MODE && process.env.PET_SNAP_USAGE === '1') {
+  // 截图测试用：只渲染一个子页面（PET_SNAP_USAGE / PET_SNAP_SKINS），不开桌宠窗口
+  const snapTarget = process.env.PET_SNAP_SKINS === '1' ? 'skins'
+    : process.env.PET_SNAP_USAGE === '1' ? 'usage' : null
+  if (SNAPSHOT_MODE && snapTarget) {
+    const conf = snapTarget === 'skins'
+      ? { html: 'skins.html', out: 'skins-snapshot.png', width: 560, height: 640 }
+      : { html: 'usage.html', out: 'usage-snapshot.png', width: 472, height: 668 }
     const w = new BrowserWindow({
-      width: 472, height: 668, show: false, frame: false,
+      width: conf.width, height: conf.height, show: false, frame: false,
       backgroundColor: '#10131b',
       webPreferences: { preload: path.join(ROOT, 'preload.js'), contextIsolation: true, nodeIntegration: false },
     })
@@ -915,20 +1036,32 @@ app.whenReady().then(async () => {
           )
           await new Promise((r) => setTimeout(r, 400))
         }
+        // PET_SNAP_QUERY=拉菲 时先填搜索框再截
+        if (process.env.PET_SNAP_QUERY) {
+          await w.webContents.executeJavaScript(`
+            (() => {
+              const q = document.getElementById('q')
+              if (!q) return
+              q.value = ${JSON.stringify(process.env.PET_SNAP_QUERY)}
+              q.dispatchEvent(new Event('input'))
+            })()
+          `)
+          await new Promise((r) => setTimeout(r, 300))
+        }
         const img = await w.webContents.capturePage()
-        const out = path.join(require('node:os').tmpdir(), 'usage-snapshot.png')
+        const out = path.join(require('node:os').tmpdir(), conf.out)
         fs.writeFileSync(out, img.toPNG())
-        console.log('[snapshot] usage ->', out)
-      } catch (e) { console.error('[snapshot] usage failed', e.message) }
+        console.log('[snapshot]', snapTarget, '->', out)
+      } catch (e) { console.error('[snapshot]', snapTarget, 'failed', e.message) }
       app.quit()
     }
     // 事件可能比 loadFile 返回还早，先挂监听再加载
     w.webContents.once('did-finish-load', capture)
     w.webContents.once('did-fail-load', (_e, code, desc) => {
-      console.error('[snapshot] usage load failed', code, desc)
+      console.error('[snapshot] load failed', code, desc)
       app.quit()
     })
-    w.loadFile(path.join(ROOT, 'src', 'usage.html'))
+    w.loadFile(path.join(ROOT, 'src', conf.html))
     setTimeout(capture, 30000)   // 兜底，别让截图测试挂住
     return
   }
@@ -942,6 +1075,8 @@ app.whenReady().then(async () => {
 
   createWindow()
   createTray()
+  registerShortcuts()
+  watchDisplayChanges()
 
   // 后台预热 14 天用量缓存：首次点 HUD 打开明细窗口时就不用干等解压
   if (!SNAPSHOT_MODE) {

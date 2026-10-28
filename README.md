@@ -17,6 +17,9 @@
 - **失败回退**：皮肤加载失败自动切到上次能用的那个，连续失败三次停止
 - **HUD 气泡**：DeepSeek 余额、当日 token 合计、调用次数；悬停看明细
 - **用量明细**：点 HUD 打开独立窗口，按天 / 按会话看 token 分项和按 DeepSeek 官方价折算的费用（工作日高峰时段自动按两倍价）
+- **皮肤搜索**：右键菜单或托盘「选择皮肤…」打开搜索窗口，按中文名或目录名过滤，支持收藏和最近使用
+- **快捷键**：`Ctrl+Alt+Z` 显示 / 隐藏，中键隐藏后不用再找托盘图标
+- **单实例**：重复启动只会把已有桌宠叫到前台，不会开出第二只
 
 ## 目录结构
 
@@ -27,6 +30,8 @@ src/index.html          页面骨架 + HUD / 标定提示 / 找不到模型时�
 src/renderer.js         PIXI + Live2D 渲染、交互、标定、HUD 刷新
 src/usage.html          用量明细窗口（按天 / 按会话、费用折算）
 src/usage.js            明细窗口的渲染与标签页
+src/skins.html          皮肤选择窗口（搜索 / 收藏 / 最近使用）
+src/skins.js            皮肤列表的渲染与过滤
 src/live2dcubismcore.min.js  Cubism 4 Core（Live2D 官方运行时）
 src/tray_32.png         托盘图标（打进 asar，保证打包后不依赖 assets）
 tools/dsh_usage.mjs     统计 ~/.dsh/sessions 里的 token 用量
@@ -75,6 +80,7 @@ npm run verify         # 校验完整性（查依赖、moc3 魔数、纹理头�
 | `skin` | 当前皮肤目录名 |
 | `lastGoodSkin` | 上次成功加载的皮肤，失败时回退用 |
 | `recent` | 最近用过的皮肤，菜单置顶 |
+| `favorites` | 收藏的皮肤，搜索窗口置顶 |
 | `assetsDir` | 用户选过的模型目录，打包版靠它找 assets |
 | `fit` | `auto` / `contain` / `cover` |
 | `opacity` | 窗口不透明度 0.2~1 |
@@ -86,6 +92,17 @@ npm run verify         # 校验完整性（查依赖、moc3 魔数、纹理头�
 | `usage.refreshMinutes` | token 刷新间隔 |
 
 打包版的 `config.json` 在 `%APPDATA%\azurlane-pet\config.json`（开发模式在项目根目录）。托盘菜单和 HUD 里的「打开配置」会直接打开它。
+
+同一个目录下还有：
+
+- `pet.log` — 运行日志（打包版自动落盘，超过 1 MB 轮转），托盘菜单「打开日志」直达
+- `hitareas/` — 每个皮肤的触摸区标定，重下模型不会丢
+
+## 性能
+
+- 渲染限 30 fps，窗口隐藏时整个渲染循环会停掉（透明窗口不会因为不可见就自动停）
+- 常规占用：主进程 <1% / 渲染 2-3% 单核，内存约 230 MB（Chromium 基线 + 当前皮肤贴图）
+- 切换皮肤会显式释放旧模型纹理，连切 20 个不会持续涨内存
 
 ## 费用是怎么算的
 

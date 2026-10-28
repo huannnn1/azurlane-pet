@@ -75,12 +75,14 @@ function renderPrice(price) {
   el('pIdleOut').textContent = price.idle?.output ?? '-'
 }
 
-async function load() {
-  // 首次要多解压一些会话文件，先给个加载态
-  el('todayCost').textContent = '计算中…'
-  el('todayCost').classList.add('loading')
-  el('totalCost').textContent = '计算中…'
-  el('totalCost').classList.add('loading')
+async function load(silent) {
+  // 首次要多解压一些会话文件，先给个加载态；静默刷新时不闪
+  if (!silent) {
+    el('todayCost').textContent = '计算中…'
+    el('todayCost').classList.add('loading')
+    el('totalCost').textContent = '计算中…'
+    el('totalCost').classList.add('loading')
+  }
 
   let data
   try {
@@ -135,3 +137,7 @@ el('close').addEventListener('click', () => window.pet.closeUsage())
 window.addEventListener('keydown', (e) => { if (e.key === 'Escape') window.pet.closeUsage() })
 
 load()
+
+// 窗口开着的时候每分钟刷新，重新聚焦时也立刻拉一次
+setInterval(() => load(true), 60_000)
+window.addEventListener('focus', () => load(true))
