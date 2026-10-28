@@ -30,7 +30,11 @@ const ROOT = process.env.DSH_HOME
   ? path.join(process.env.DSH_HOME, 'sessions')
   : path.join(os.homedir(), '.dsh', 'sessions')
 
-const CACHE_FILE = path.join(path.dirname(fileURLToPath(import.meta.url)), '.usage-cache.json')
+// portable 版每次启动都会解压到新的临时目录，缓存不能写在脚本旁边，
+// 否则永远命中不了、每次都要全量解压几千个会话文件。
+const CACHE_DIR = process.env.DSH_USAGE_CACHE_DIR
+  || path.dirname(fileURLToPath(import.meta.url))
+const CACHE_FILE = path.join(CACHE_DIR, '.usage-cache.json')
 const MAGIC = Buffer.from([0x28, 0xb5, 0x2f, 0xfd])
 
 /** 按 zstd 帧魔数切片后逐帧解压，返回所有非空行 */
@@ -94,9 +98,18 @@ let cache = {}
 if (!noCache) {
   try { cache = JSON.parse(fs.readFileSync(CACHE_FILE, 'utf8')) } catch { cache = {} }
 }
-const nextCache = {}
-const files = walk(ROOT)
+const nextCache = { ...cache }   // 保留窗口期外文件的旧缓存，下次仍能复用
 let parsed = 0
+
+// 会话文件的 mtime ≈ 最后一次写入时间，据此只加载窗口期内动过的文件。
+// 否则「今日」统计也要先解压全部几千个历史会话，首次启动会卡几十秒。
+let files = walk(ROOT)
+const todayStart = new Date()
+todayStart.setHours(0, 0, 0, 0)
+const cutoff = todayOnly ? todayStart.getTime() : Date.now() - DAYS * 86400000
+files = files.filter((f) => {
+  try { return fs.statSync(f).mtimeMs >= cutoff } catch { return false }
+})
 
 for (const file of files) {
   let st
@@ -112,23 +125,29 @@ if (!noCache) {
   try { fs.writeFileSync(CACHE_FILE, JSON.stringify(nextCache)) } catch { /* 缓存失败不影响统计 */ }
 }
 
-// ---- 汇总 ---------------------------------------------------------------
+// ---- 汇总（只算本次窗口期内的文件）---------------------------------------
 const buckets = new Map()
 const sessions = []
 const grand = { inputTokens: 0, outputTokens: 0, cacheReadTokens: 0, cacheWriteTokens: 0, totalTokens: 0, calls: 0 }
 const today = new Date().toLocaleDateString('sv-SE')
 
-for (const [file, v] of Object.entries(nextCache)) {
-  if (!v.byDay) continue
+for (const file of files) {
+  const v = nextCache[file]
+  if (!v?.byDay) continue
   const acc = { inputTokens: 0, outputTokens: 0, cacheReadTokens: 0, cacheWriteTokens: 0, totalTokens: 0, calls: 0 }
   for (const [day, b] of Object.entries(v.byDay)) {
     if (todayOnly && day !== today) continue
     let bucket = buckets.get(day)
-    if (!bucket) { bucket = { inputTokens: 0, outputTokens: 0, cacheReadTokens: 0, cacheWriteTokens: 0, totalTokens: 0, calls: 0 }; buckets.set(day, bucket) }
-    for (const k of Object.keys(bucket)) { bucket[k] += b[k] ?? 0; acc[k] += b[k] ?? 0 }
-    if (!todayOnly) for (const k of Object.keys(grand)) grand[k] += b[k] ?? 0
+    if (!bucket) {
+      bucket = { inputTokens: 0, outputTokens: 0, cacheReadTokens: 0, cacheWriteTokens: 0, totalTokens: 0, calls: 0 }
+      buckets.set(day, bucket)
+    }
+    for (const k of Object.keys(bucket)) {
+      bucket[k] += b[k] ?? 0
+      acc[k] += b[k] ?? 0
+      grand[k] += b[k] ?? 0
+    }
   }
-  if (todayOnly) for (const k of Object.keys(grand)) grand[k] += acc[k]
   if (acc.calls) sessions.push({ title: v.title, last: v.last, ...acc })
 }
 
