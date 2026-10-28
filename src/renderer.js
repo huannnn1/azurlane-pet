@@ -2,8 +2,6 @@
  * 模型来自 azlassets.nagami.moe：动作按游戏原生命名分组（touch_head / touch_body / touch_special / idle / main_1..3）
  */
 
-let MODEL_URL = null
-
 /** 命中区 → 动作组名（碧蓝航线的组名就是游戏里的动作名） */
 const HIT_MOTION = {
   head: 'touch_head',
@@ -55,7 +53,6 @@ let modelRect = null
 let dragging = false
 let dragMoved = false
 let downAt = null
-let lastOver = null
 let hasHitAreas = false
 let groups = {}
 let fitMode = 'auto'
@@ -119,7 +116,6 @@ async function loadModel(url) {
 }
 
 async function switchSkin(url) {
-  MODEL_URL = url
   try { await loadModel(url) } catch (e) { console.log('[skin] 加载失败:', e.message) }
 }
 
@@ -433,7 +429,6 @@ function boot() {
   }).catch(() => {})
 
   window.pet.skin().then((url) => {
-    MODEL_URL = url
     return loadModel(url)
   }).catch((e) => {
     console.log('[boot] 模型加载失败:', e.message)
