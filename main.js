@@ -259,6 +259,8 @@ function logPath() {
 }
 
 function setupFileLog() {
+  // userData 目录可能还不存在（snapshot 模式用临时目录时尤其如此），先建出来
+  try { fs.mkdirSync(path.dirname(logPath()), { recursive: true }) } catch {}
   try {
     const st = fs.statSync(logPath())
     if (st.size > LOG_MAX_BYTES) fs.renameSync(logPath(), logPath() + '.1')
@@ -553,6 +555,21 @@ function createTray() {
       checked: config.hideOnFullscreen !== false,
       click: (mi) => { config.hideOnFullscreen = mi.checked; saveConfig() },
     },
+    {
+      label: 'HUD 显示',
+      submenu: [
+        ['always', '常显'],
+        ['hover', '悬停时显示'],
+        ['off', '隐藏'],
+      ].map(([v, label]) => ({
+        label: label + ((config.hud ?? 'always') === v ? '  ✓' : ''),
+        click: () => {
+          config.hud = v
+          saveConfig()
+          if (win) win.webContents.send('pet:hud', v)
+        },
+      })),
+    },
     { type: 'separator' },
     { label: '选择皮肤目录…', click: () => chooseAssetsDir() },
     { label: '退出', click: () => app.quit() },
@@ -667,6 +684,23 @@ function createWindow() {
       setTimeout(async () => {
         let blank = false
         try {
+          // PET_TEST_FOCUS=1,1 时截图前强制视线方向，用来验证 focus 是否真的生效
+          if (process.env.PET_TEST_FOCUS) {
+            if (process.env.PET_TEST_FOCUS === 'hard') {
+              await win.webContents.executeJavaScript('window.__focusHard = 1')
+              console.log('[test] 已开启强制角度')
+              await new Promise((r2) => setTimeout(r2, 1200))
+            } else {
+              const [fx, fy] = process.env.PET_TEST_FOCUS.split(',').map(Number)
+              const t = await win.webContents.executeJavaScript('typeof window.__petFocus')
+              console.log('[test] __petFocus 类型 =', t)
+              const r = await win.webContents.executeJavaScript(
+                `(window.__petFocus && window.__petFocus(${fx}, ${fy}), 'called')`,
+              )
+              console.log('[test] 调用结果 =', r)
+              await new Promise((r2) => setTimeout(r2, 900))
+            }
+          }
           const img = await win.webContents.capturePage()
           const out = app.isPackaged
             ? path.join(app.getPath('userData'), 'snapshot.png')

@@ -610,6 +610,30 @@ function checkLowBalance(total) {
   }
 }
 
+// ---------- 视线跟随 -------------------------------------------------------
+// pixi-live2d-display 的 model.focus() 只驱动眼球（ParamEyeBallX/Y），
+// 不改头部角度，所以看不出「转头」。这里自己写 ParamAngleX/Y，
+// 并用 LOW 优先级挂在 motion 之后，避免被动作每帧覆盖。
+let focusTarget = { x: 0, y: 0 }
+const curFocus = { x: 0, y: 0 }
+
+PIXI.Ticker.shared.add(() => {
+  if (!model || model.destroyed) return
+  const dx = focusTarget.x - curFocus.x
+  const dy = focusTarget.y - curFocus.y
+  if (Math.abs(dx) < 0.002 && Math.abs(dy) < 0.002) return
+  // 0.35 的追帧系数，几帧内就能跟上，转头看起来是"跟手"而不是"慢慢飘"
+  curFocus.x += dx * 0.35
+  curFocus.y += dy * 0.35
+  try {
+    const cm = model.internalModel.coreModel
+    cm.setParameterValueById('ParamAngleX', curFocus.x * 30)
+    cm.setParameterValueById('ParamAngleY', -curFocus.y * 30)
+    cm.setParameterValueById('ParamEyeBallX', curFocus.x)
+    cm.setParameterValueById('ParamEyeBallY', -curFocus.y)
+  } catch {}
+}, null, PIXI.UPDATE_PRIORITY.LOW)
+
 // ---------- Ctrl + 滚轮连续调大小 ------------------------------------------
 let sizeScale = 1
 let sizeDraft = null
@@ -730,6 +754,7 @@ function boot() {
     if (!W || !H) return
     const nx = Math.max(-1, Math.min(1, (x / W) * 2 - 1))
     const ny = Math.max(-1, Math.min(1, (y / H) * 2 - 1))
+    focusTarget = { x: nx, y: ny }
     try { model.focus(nx, ny) } catch {}
     const now = Date.now()
     if (now - lastFocusLog > 1500) {
@@ -745,6 +770,12 @@ function boot() {
   window.pet.onActivity((active) => setActivity(active))
   window.pet.onState((type) => onDsState(type))
   window.pet.onBubble((on) => { bubbleOn = !!on })
+  // 测试用：外部可通过 executeJavaScript 调 window.__petFocus(x,y) 强制视线
+  window.__petFocus = (x, y) => {
+    focusTarget = { x, y }
+    try { model?.focus(x, y) } catch {}
+  }
+
   window.pet.onHud((mode) => { hudMode = mode || 'always'; applyHudMode(); layout() })
   window.pet.onHover((inside) => { hoverInside = !!inside; applyHudMode(); updateCursor() })
   // 系统空闲时降帧 + 拉长动作间隔；人一回来立刻恢复

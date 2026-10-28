@@ -1,6 +1,6 @@
 {
   "name": "azurlane-pet",
-  "version": "1.5.0",
+  "version": "1.5.1",
   "private": true,
   "description": "碧蓝航线 Live2D 桌面宠物，带 DSH token 用量与 DeepSeek 余额 HUD",
   "main": "main.js",
