@@ -612,11 +612,22 @@ function checkLowBalance(total) {
 }
 
 // ---------- B0 调试：核实 Touch 网格 ----------
-// 只在 PET_TOUCH_DEBUG=1 时由主进程触发，只打印信息 + 描边，不改任何行为。
-function dumpTouchMeshes() {
-  const core = model?.internalModel?.coreModel
+// 只在 PET_TOUCH_DEBUG=1/2 时由主进程触发，只打印信息 + 描边，不改任何行为。
+function dumpTouchMeshes(activate) {
+  const im = model?.internalModel
+  const core = im?.coreModel
   const cm = core?._model || core
-  if (!cm) { console.log('[touch] coreModel 不可用'); return }
+  if (!im || !cm) { console.log('[touch] internalModel 不可用'); return }
+
+  // 可选：先把某个 touch 参数拉起来，看网格会不会从画外移进画内
+  if (activate) {
+    try {
+      cm.setParameterValueById(activate, 1)
+      console.log('[touch] 已设置参数', activate, '= 1')
+    } catch (e) {
+      console.log('[touch] 设置参数失败:', e.message)
+    }
+  }
 
   const drawIds = cm.drawables?.ids ?? []
   const paramIds = cm.parameters?.ids ?? []
@@ -630,52 +641,64 @@ function dumpTouchMeshes() {
   console.log('[touch] drawable 总数', drawIds.length, '其中带 Touch:', touchDraw.length)
   console.log('[touch] parameter 总数', paramIds.length, '其中带 Touch:', touchParam.length, touchParam.slice(0, 8))
   console.log('[touch] part 总数', partIds.length, '其中带 Touch:', touchPart.length, touchPart.slice(0, 8))
-  console.log('[touch] drawable 里的 Touch 名:', touchDraw.slice(0, 12).map((d) => d.id))
 
-  const ops = cm.drawables?.opacities ?? []
-  const orders = cm.drawables?.renderOrders ?? []
-  const vcounts = cm.drawables?.vertexCounts ?? []
-  for (const { id, i } of touchDraw.slice(0, 24)) {
-    console.log('[touch]', id,
-      'opacity=', Number(ops[i] ?? -1).toFixed(3),
-      'order=', orders[i],
-      'verts=', vcounts[i])
+  // 用库的换算：getDrawableVertices 返回画布像素空间（和 originalWidth 同一套）
+  const ow = im.originalWidth
+  const oh = im.originalHeight
+  console.log('[touch] 画布原始尺寸', ow, 'x', oh)
+
+  let outOfCanvas = 0
+  const boxes = []
+  for (const { id, i } of touchDraw) {
+    let arr
+    try { arr = im.getDrawableVertices(i) } catch { continue }
+    if (!arr || arr.length < 2) continue
+    let minX = Infinity
+    let maxX = -Infinity
+    let minY = Infinity
+    let maxY = -Infinity
+    for (let v = 0; v + 1 < arr.length; v += 2) {
+      if (arr[v] < minX) minX = arr[v]
+      if (arr[v] > maxX) maxX = arr[v]
+      if (arr[v + 1] < minY) minY = arr[v + 1]
+      if (arr[v + 1] > maxY) maxY = arr[v + 1]
+    }
+    const out = maxX < 0 || minX > ow || maxY < 0 || minY > oh
+    if (out) outOfCanvas++
+    boxes.push({ id, minX, minY, maxX, maxY, out, verts: arr.length / 2 })
   }
 
-  // 描边：把每个 Touch 网格的顶点轮廓画出来，不同类型不同颜色
+  console.log('[touch] 包围盒（画布空间，画布', ow, 'x', oh, '）：')
+  for (const b of boxes.slice(0, 20)) {
+    console.log('[touch]', b.id,
+      `[${Math.round(b.minX)},${Math.round(b.minY)} - ${Math.round(b.maxX)},${Math.round(b.maxY)}]`,
+      'verts=', b.verts, b.out ? '★停放在画外' : '')
+  }
+  console.log('[touch] 停放在画外的网格数:', outOfCanvas, '/', boxes.length)
+
+  // 描边：挂成 model 的子节点，自动继承缩放和位置
   try {
+    const old = model.getChildByName('__touchDebug')
+    if (old) model.removeChild(old)
     const layer = new PIXI.Graphics()
     layer.name = '__touchDebug'
     const colors = { head: 0xff5555, body: 0x55ff88, special: 0x55aaff, idle: 0xffdd55, drag: 0xff55ff, other: 0xffffff }
-    const pos = cm.drawables?.vertexPositions ?? []
-    const vertsPer = cm.drawables?.vertexCounts ?? []
-    if (touchDraw[0]) {
-      const a = pos[touchDraw[0].i]
-      console.log('[touch] 顶点样本', touchDraw[0].id,
-        a ? Array.from(a).slice(0, 8).map((v) => Math.round(v)) : '无',
-        'modelScale=', model.scale.x.toFixed(4))
-    }
-    for (const { id, i } of touchDraw) {
-      const arr = pos[i]
-      const count = vertsPer[i]
-      if (!arr || !count) continue
-      const low = String(id).toLowerCase()
+    for (const b of boxes) {
+      if (b.out) continue
+      const low = String(b.id).toLowerCase()
       const color = low.includes('head') ? colors.head
         : low.includes('body') ? colors.body
           : low.includes('special') ? colors.special
             : low.includes('idle') ? colors.idle
               : low.includes('drag') ? colors.drag : colors.other
-      layer.lineStyle(1, color, 0.9)
-      layer.moveTo(arr[0], arr[1])
-      for (let v = 1; v < count; v++) layer.lineTo(arr[v * 2], arr[v * 2 + 1])
-      layer.closePath()
+      // 画布空间是 7000 这种量级，缩放后线宽要够粗才看得见
+      layer.beginFill(color, 0.18)
+      layer.lineStyle(45, color, 1)
+      layer.drawRect(b.minX, b.minY, b.maxX - b.minX, b.maxY - b.minY)
+      layer.endFill()
     }
-    // 顶点是模型坐标系，套上 model 的变换才能对上画面
-    const m = model
-    layer.scale.copyFrom(m.scale)
-    layer.position.copyFrom(m.position)
-    app.stage.addChild(layer)
-    console.log('[touch] 描边已绘制，网格数', touchDraw.length)
+    model.addChild(layer)
+    console.log('[touch] 描边已绘制（model 子节点），矩形数', boxes.filter((b) => !b.out).length)
   } catch (e) {
     console.log('[touch] 描边失败:', e.message)
   }
@@ -863,7 +886,7 @@ function boot() {
   window.pet.onHud((mode) => { hudMode = mode || 'always'; applyHudMode(); layout() })
   window.pet.onHover((inside) => { hoverInside = !!inside; applyHudMode(); updateCursor() })
   // B0 调试入口：主进程置 PET_TOUCH_DEBUG=1 时触发
-  window.pet.onTouchDebug(() => dumpTouchMeshes())
+  window.pet.onTouchDebug((arg) => dumpTouchMeshes(arg))
   // 系统空闲时降帧 + 拉长动作间隔；人一回来立刻恢复
   window.pet.onDrowsy((on) => {
     drowsy = !!on

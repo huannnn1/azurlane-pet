@@ -673,22 +673,33 @@ function createWindow() {
   })
 
   // B0 调试：PET_TOUCH_DEBUG=1 时让渲染层把模型里的 Touch 网格信息打出来
-  // PET_TOUCH_DEBUG=2 时额外做一次「切到 touch_idle3 再扫一遍」的状态对比
-  if (process.env.PET_TOUCH_DEBUG === '1' || process.env.PET_TOUCH_DEBUG === '2') {
+  // PET_TOUCH_DEBUG=2 时额外做一次「播 touch_idle3 再扫一遍」的对比
+  // PET_TOUCH_DEBUG=3 时改成「把 touch_idle3 参数拉起来再扫」，验证画外网格会不会移进画内
+  const touchDebugMode = process.env.PET_TOUCH_DEBUG
+  if (touchDebugMode === '1' || touchDebugMode === '2' || touchDebugMode === '3') {
     win.webContents.once('did-finish-load', () => {
       setTimeout(() => {
         if (!win || win.isDestroyed()) return
-        win.webContents.send('pet:touch-debug', true)
-        if (process.env.PET_TOUCH_DEBUG !== '2') return
-        setTimeout(() => {
-          if (!win || win.isDestroyed()) return
-          console.log('[touch-debug] 切到 touch_idle3')
-          win.webContents.send('pet:motion', 'touch_idle3')
+        win.webContents.send('pet:touch-debug', false)
+        if (touchDebugMode === '1') return
+        if (touchDebugMode === '2') {
           setTimeout(() => {
             if (!win || win.isDestroyed()) return
-            console.log('[touch-debug] 状态切换后重新扫描')
-            win.webContents.send('pet:touch-debug', true)
+            console.log('[touch-debug] 切到 touch_idle3')
+            win.webContents.send('pet:motion', 'touch_idle3')
+            setTimeout(() => {
+              if (!win || win.isDestroyed()) return
+              console.log('[touch-debug] 状态切换后重新扫描')
+              win.webContents.send('pet:touch-debug', false)
+            }, 2500)
           }, 2500)
+          return
+        }
+        // mode 3：拉参数
+        setTimeout(() => {
+          if (!win || win.isDestroyed()) return
+          console.log('[touch-debug] 拉起 touch_idle3 参数')
+          win.webContents.send('pet:touch-debug', 'touch_idle3')
         }, 2500)
       }, 5000)
     })
