@@ -164,8 +164,7 @@ function clampToDisplay(x, y, w, h) {
   }
 }
 
-/** 把外观相关配置应用到窗口 */
-function applyAppearance() {
+/** 把外观相关配置应用到窗口 */function applyAppearance() {
   if (!win || win.isDestroyed()) return
   const [cx, cy] = win.getPosition()
   const area = workAreaAt(cx + 1, cy + 1)
@@ -226,6 +225,39 @@ let win = null
 let config = loadConfig()
 let tray = null
 ASSETS = resolveAssetsRoot()
+
+// ---- 日志落盘 -------------------------------------------------------------
+// 打包版没有控制台，出错只能靠这个文件回溯；开发版默认不打，免得多一份噪音
+const LOG_MAX_BYTES = 1024 * 1024
+let logFilePath = null
+
+function logPath() {
+  if (!logFilePath) logFilePath = path.join(app.getPath('userData'), 'pet.log')
+  return logFilePath
+}
+
+function setupFileLog() {
+  try {
+    const st = fs.statSync(logPath())
+    if (st.size > LOG_MAX_BYTES) fs.renameSync(logPath(), logPath() + '.1')
+  } catch {}
+
+  const write = (tag, args) => {
+    try {
+      const text = args.map((a) => {
+        if (typeof a === 'string') return a
+        try { return JSON.stringify(a) } catch { return String(a) }
+      }).join(' ')
+      fs.appendFileSync(logPath(), `[${new Date().toISOString()}]${tag} ${text}\n`)
+    } catch {}
+  }
+
+  const origLog = console.log.bind(console)
+  const origErr = console.error.bind(console)
+  console.log = (...a) => { origLog(...a); write('', a) }
+  console.error = (...a) => { origErr(...a); write('[err]', a) }
+  console.log('[log] 日志文件:', logPath())
+}
 
 // ---- 隐藏 / 恢复（中键隐藏，托盘图标恢复）--------------------------------
 function hidePet() {
@@ -413,6 +445,20 @@ function createWindow() {
 
   // --snapshot：后台渲染截图再退出（窗口不显示，不打扰桌面）
   if (SNAPSHOT) {
+    // PET_BENCH_SWITCH=N：每 2 秒换一个皮肤共 N 次，用来验证切换后渲染与纹理回收
+    const switchTimes = Number(process.env.PET_BENCH_SWITCH || 0)
+    if (switchTimes > 0) {
+      let i = 0
+      const timer = setInterval(() => {
+        const list = scanSkins().filter((s) => s !== config.skin)
+        const other = list[i % Math.max(1, list.length)]
+        if (other && win) {
+          console.log(`[bench] 切换 ${i + 1}/${switchTimes} ->`, other)
+          win.webContents.send('pet:skin-changed', skinRelPath(other))
+        }
+        if (++i >= switchTimes) clearInterval(timer)
+      }, 2000)
+    }
     win.webContents.once('did-finish-load', () => {
       setTimeout(async () => {
         try {
@@ -434,7 +480,7 @@ function createWindow() {
         } else {
           app.quit()
         }
-      }, 6000)
+      }, Number(process.env.PET_SNAP_DELAY || 6000))
     })
   }
 
@@ -569,8 +615,9 @@ ipcMain.on('pet:menu', () => {
           label: '清除当前皮肤标定',
           click: () => {
             try {
-              const f = hitAreasFile(config.skin)
-              if (fs.existsSync(f)) fs.unlinkSync(f)
+              for (const f of [hitAreasFile(config.skin), legacyHitAreasFile(config.skin)]) {
+                if (fs.existsSync(f)) fs.unlinkSync(f)
+              }
               console.log('[calibrate] 已清除', config.skin)
             } catch {}
             if (win) win.webContents.send('pet:hitareas-cleared')
@@ -581,6 +628,7 @@ ipcMain.on('pet:menu', () => {
     { type: 'separator' },
     { label: '重新加载', click: () => win.reload() },
     { label: '打开配置', click: () => require('electron').shell.openPath(CONFIG_FILE) },
+    { label: '打开日志', click: () => require('electron').shell.openPath(fs.existsSync(logPath()) ? logPath() : app.getPath('userData')) },
     { label: '打开皮肤目录', click: () => require('electron').shell.openPath(ASSETS) },
     { label: '选择皮肤目录…', click: () => chooseAssetsDir() },
     { type: 'separator' },
@@ -593,16 +641,31 @@ ipcMain.handle('pet:skins', () => scanSkins())
 ipcMain.handle('pet:fit', () => config.fit ?? 'auto')
 
 // ---- 触摸区标定 ----------------------------------------------------------
+// 标定数据放 userData 而不是 assets：assets 是 5 GB 资源目录，
+// 重下皮肤会连标定一起删掉，目录只读时还会写失败。
+function hitAreasDir() {
+  return path.join(app.getPath('userData'), 'hitareas')
+}
+
 function hitAreasFile(skin) {
+  return path.join(hitAreasDir(), `${skin}.json`)
+}
+
+/** 旧版本把标定写在 assets/<skin>/hitareas.json，读取时兼容一下 */
+function legacyHitAreasFile(skin) {
   return path.join(ASSETS, skin, 'hitareas.json')
 }
 
 ipcMain.handle('pet:hitareas', (_e, skin) => {
-  try { return JSON.parse(fs.readFileSync(hitAreasFile(skin), 'utf8')) } catch { return null }
+  for (const f of [hitAreasFile(skin), legacyHitAreasFile(skin)]) {
+    try { return JSON.parse(fs.readFileSync(f, 'utf8')) } catch {}
+  }
+  return null
 })
 
 ipcMain.handle('pet:save-hitareas', (_e, skin, data) => {
   try {
+    fs.mkdirSync(hitAreasDir(), { recursive: true })
     fs.writeFileSync(hitAreasFile(skin), JSON.stringify(data, null, 2), 'utf8')
     console.log('[calibrate] 已保存', skin, JSON.stringify(data.anchors))
     return { ok: true }
@@ -614,8 +677,9 @@ ipcMain.handle('pet:save-hitareas', (_e, skin, data) => {
 
 ipcMain.handle('pet:clear-hitareas', (_e, skin) => {
   try {
-    const f = hitAreasFile(skin)
-    if (fs.existsSync(f)) fs.unlinkSync(f)
+    for (const f of [hitAreasFile(skin), legacyHitAreasFile(skin)]) {
+      if (fs.existsSync(f)) fs.unlinkSync(f)
+    }
     return { ok: true }
   } catch (e) { return { ok: false, error: e.message } }
 })
@@ -815,6 +879,9 @@ app.on('second-instance', () => {
 })
 
 app.whenReady().then(async () => {
+  // 打包版默认落盘日志；开发版要开的话设 PET_LOG=1
+  if (app.isPackaged || process.env.PET_LOG === '1') setupFileLog()
+
   console.log('[boot] config.deepseek.apiKey 长度 =', (config.deepseek?.apiKey || '').length)
   console.log('[boot] assets =', ASSETS, '皮肤数 =', scanSkins().length)
   fetchBalance().then((r) => console.log('[balance:boot]', JSON.stringify(r)))
@@ -823,7 +890,7 @@ app.whenReady().then(async () => {
   if (process.env.PET_METRICS === '1') {
     setInterval(() => {
       const rows = app.getAppMetrics()
-        .map((m) => `${m.type}=${(m.cpu.percentCPUUsage ?? 0).toFixed(1)}%`)
+        .map((m) => `${m.type}=${(m.cpu.percentCPUUsage ?? 0).toFixed(1)}%/${Math.round((m.memory?.workingSetSize ?? 0) / 1024)}MB`)
       console.log('[metrics]', rows.join(' '))
     }, 3000)
   }

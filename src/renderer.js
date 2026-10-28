@@ -28,7 +28,9 @@ const app = new PIXI.Application({
   resizeTo: window,
   antialias: true,
   autoDensity: true,
-  resolution: window.devicePixelRatio || 1,
+  // 桌宠窗口只有两三百像素宽，1.25 倍渲染（系统缩放）要多占三成显存和带宽，
+  // 肉眼在这个尺寸下几乎分辨不出来，直接按 1 倍渲染
+  resolution: 1,
   // 和 Live2DModel 共用同一个 ticker，才能一处控帧、一处暂停
   sharedTicker: true,
 })
@@ -71,7 +73,16 @@ const CAL_STEPS = [
 // ---------- 模型 ----------------------------------------------------------
 async function loadModel(url) {
   if (model) {
-    try { app.stage.removeChild(model); model.destroy({ children: true }) } catch {}
+    try { app.stage.removeChild(model) } catch {}
+    // 库的 destroy 只有传 texture/baseTexture 才会释放 GPU 纹理，
+    // 不传的话切一次皮肤就泄漏一份贴图（实测切 6 次 GPU 内存 128MB→339MB）
+    try {
+      model.destroy({ children: true, texture: true, baseTexture: true })
+      console.log('[skin] 已释放旧模型', skinName)
+    } catch (e) {
+      console.log('[skin] 释放失败，退化处理', e.message)
+      try { model.destroy({ children: true }) } catch {}
+    }
     model = null
     modelRect = null
   }
@@ -112,6 +123,9 @@ async function switchSkin(url) {
   try { await loadModel(url) } catch (e) { console.log('[skin] 加载失败:', e.message) }
 }
 
+/** HUD 铭牌的大致高度：contain 时给底部留出来，别把脚挡住 */
+const HUD_RESERVE = 24
+
 function layout() {
   if (!model) return
   const W = app.screen.width
@@ -121,14 +135,16 @@ function layout() {
 
   // auto：横幅场景图（宽高比 > 1.15）铺满，竖版立绘完整显示
   const mode = fitMode === 'auto' ? (rawW / rawH > 1.15 ? 'cover' : 'contain') : fitMode
+  // 完整显示时把底部铭牌的高度让出来；铺满裁切时本来就会盖住，不额外处理
+  const usableH = mode === 'cover' ? H : Math.max(1, H - HUD_RESERVE)
   const scale = mode === 'cover'
     ? Math.max(W / rawW, H / rawH)
-    : Math.min(W / rawW, (H * 0.98) / rawH)
+    : Math.min(W / rawW, usableH / rawH)
 
   if (!Number.isFinite(scale) || scale <= 0) return
   model.scale.set(scale)
   model.x = (W - rawW * scale) / 2
-  model.y = mode === 'cover' ? (H - rawH * scale) / 2 : H - rawH * scale
+  model.y = mode === 'cover' ? (H - rawH * scale) / 2 : H - HUD_RESERVE - rawH * scale + 2
   modelRect = { x: model.x, y: model.y, w: rawW * scale, h: rawH * scale }
   publishInteractive()
 }
@@ -348,7 +364,9 @@ function setActivity(active) {
 // ---------- HUD -----------------------------------------------------------
 const fmt = (n) => {
   if (!Number.isFinite(n)) return '--'
+  // 桌宠气泡空间小，大数字优先取整，别把右边缘挤出去
   if (n >= 1e9) return (n / 1e9).toFixed(2) + 'B'
+  if (n >= 1e8) return Math.round(n / 1e6) + 'M'
   if (n >= 1e6) return (n / 1e6).toFixed(2) + 'M'
   if (n >= 1e3) return (n / 1e3).toFixed(1) + 'k'
   return String(n)
