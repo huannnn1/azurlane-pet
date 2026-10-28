@@ -296,7 +296,10 @@ canvas.addEventListener('pointerdown', (e) => {
 window.addEventListener('pointermove', (e) => {
   if (!dragging) return
   const dist = Math.hypot(e.screenX - downAt.x, e.screenY - downAt.y)
-  if (!dragMoved && dist > DRAG_THRESHOLD) dragMoved = true
+  if (!dragMoved && dist > DRAG_THRESHOLD) {
+    dragMoved = true
+    playDragReaction()   // 确认是拖动而不是点击，给一次被拎起来的反应
+  }
   if (dragMoved) window.pet.dragMove({ x: e.screenX, y: e.screenY, clamp: true })
 })
 
@@ -307,9 +310,13 @@ window.addEventListener('pointerup', (e) => {
   // 松手时按总位移再复核一次：拖动途中指针事件可能丢，
   // 只看 dragMoved 会把一次真拖动误判成点击，从而播出带镜头的触摸动作
   const total = Math.hypot(e.screenX - downAt.x, e.screenY - downAt.y)
+  console.log('[drag] 松手 位移=', Math.round(total), 'dragMoved=', dragMoved)
   if (!dragMoved && total <= DRAG_THRESHOLD) {
     const hit = hitAt(e.clientX, e.clientY)
     if (hit.length) playHit(hit[0])
+  } else if (dragMoved) {
+    // 触摸/拖动动作都是 Loop 的，不回待机会一直循环下去
+    play('idle')
   }
 })
 
@@ -334,10 +341,46 @@ function play(groupName) {
 }
 
 function playHit(area) {
+  console.log('[hit] 播放触摸动作', area, 'dragMoved=', dragMoved)
   const named = HIT_MOTION[area]
   if (named && play(named)) return
   const fallback = ['touch_head', 'touch_body', 'touch_special', 'main_1'].find(play)
   return fallback
+}
+
+/**
+ * 开始拖动时的反应：优先用游戏原生的 touch_drag*（约四成皮肤有，多的能到 26 个），
+ * 没有就退到 touch_body（被抱起来的感觉）。
+ * 多个动作按编号轮询，保证每个都能轮到，而不是随机到某几个反复播。
+ */
+let dragCursor = 0
+let dragCursorSkin = null
+
+function playDragReaction() {
+  if (!model) return false
+  const drags = Object.keys(groups)
+    .filter((k) => /^touch_drag\d*$/.test(k) && groups[k]?.length)
+    .sort((a, b) => (Number(a.replace('touch_drag', '')) || 0) - (Number(b.replace('touch_drag', '')) || 0))
+
+  if (drags.length) {
+    // 换皮肤后从头开始轮，不然游标会串到别的角色身上
+    if (dragCursorSkin !== skinName) {
+      dragCursorSkin = skinName
+      dragCursor = 0
+    }
+    const key = drags[dragCursor % drags.length]
+    dragCursor = (dragCursor + 1) % drags.length
+    try {
+      model.motion(key)
+      console.log(`[drag] 播放拖动动作 ${key}（${drags.length} 个中的第 ${dragCursor || drags.length} 个）`)
+      return true
+    } catch {}
+  }
+  if (play('touch_body')) {
+    console.log('[drag] 无专用拖动动作，退到 touch_body')
+    return true
+  }
+  return false
 }
 
 function startIdle() {
@@ -453,6 +496,11 @@ function boot() {
   })
 
   window.pet.onSkin((rel) => switchSkin(rel))
+  // 菜单里手动挑的动作：直接播，不经过命中区逻辑
+  window.pet.onMotion((key) => {
+    console.log('[motion] 手动播放', key)
+    try { model?.motion(key) } catch (e) { console.log('[motion] 播放失败', key, e.message) }
+  })
   window.pet.onVisible((v) => setRendering(v))
   window.pet.onNoSkins(() => showEmpty(true))
   window.pet.onAssetsChanged((rel) => {

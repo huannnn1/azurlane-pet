@@ -168,8 +168,10 @@ function clampToDisplay(x, y, w, h) {
   }
 }
 
-/** 把外观相关配置应用到窗口 */function applyAppearance() {
+/** 把外观相关配置应用到窗口 */
+function applyAppearance() {
   if (!win || win.isDestroyed()) return
+  const before = win.getBounds()
   const [cx, cy] = win.getPosition()
   const area = workAreaAt(cx + 1, cy + 1)
   const auto = autoSize(area)
@@ -184,6 +186,9 @@ function clampToDisplay(x, y, w, h) {
   try {
     win.setBounds({ x: cx, y: cy, width: w, height: h })
   } catch {}
+  if (before.width !== w || before.height !== h) {
+    console.log('[window] 尺寸变化', `${before.width}x${before.height}`, '->', `${w}x${h}`, 'scale=', k, 'auto=', auto.width)
+  }
 }
 
 function applyAutoStart() {
@@ -466,16 +471,35 @@ function createWindow() {
   win.setIgnoreMouseEvents(true, { forward: true })
 
   const SNAPSHOT = SNAPSHOT_MODE
-  if (!SNAPSHOT) win.once('ready-to-show', () => win.showInactive())
+  if (!SNAPSHOT) {
+    win.once('ready-to-show', () => {
+      console.log('[win] ready-to-show，显示窗口')
+      win.showInactive()
+    })
+  }
   win.on('closed', () => { win = null })
 
   // 隐藏时让渲染层停掉 ticker：透明窗口不会因为不可见就停止重绘，
   // 不显式暂停的话隐藏一晚上也在烧 CPU 和电。
   win.on('hide', () => {
+    console.log('[win] hide 事件')
     if (win && !win.isDestroyed()) win.webContents.send('pet:visible', false)
   })
   win.on('show', () => {
+    console.log('[win] show 事件，可见=', win?.isVisible())
     if (win && !win.isDestroyed()) win.webContents.send('pet:visible', true)
+  })
+  // 尺寸变化记一笔，用来抓「拖动后变大」这类问题（超过 2px 才记，避免 DPI 舍入刷屏）
+  let lastLoggedSize = ''
+  win.on('resize', () => {
+    if (!win || win.isDestroyed()) return
+    const b = win.getBounds()
+    const tag = `${b.width}x${b.height}`
+    if (tag === lastLoggedSize) return
+    const [pw, ph] = lastLoggedSize.split('x').map(Number)
+    if (lastLoggedSize && Math.abs(b.width - pw) <= 2 && Math.abs(b.height - ph) <= 2) return
+    lastLoggedSize = tag
+    console.log('[win] resize ->', tag)
   })
 
   // 把渲染进程的日志转到终端，方便排查
@@ -549,25 +573,37 @@ ipcMain.on('pet:hit', (_e, hit) => {
 
 // ---- 拖动 ---------------------------------------------------------------
 let dragOrigin = null
+let dragSize = null   // 拖动开始时锁定的尺寸
+
 ipcMain.on('pet:drag-start', (_e, { x, y }) => {
   if (!win) return
   const [wx, wy] = win.getPosition()
+  const [w, h] = win.getSize()
   dragOrigin = { mx: x, my: y, wx, wy }
+  dragSize = { w, h }
+  console.log('[drag] 开始', `${w}x${h}`, '@', wx, wy)
 })
 ipcMain.on('pet:drag-move', (_e, { x, y, clamp }) => {
-  if (!win || !dragOrigin) return
+  if (!win || !dragOrigin || !dragSize) return
   let nx = dragOrigin.wx + (x - dragOrigin.mx)
   let ny = dragOrigin.wy + (y - dragOrigin.my)
   if (clamp) {
-    const [w, h] = win.getSize()
-    const p = clampToDisplay(Math.round(nx), Math.round(ny), w, h)
+    const p = clampToDisplay(Math.round(nx), Math.round(ny), dragSize.w, dragSize.h)
     nx = p.x
     ny = p.y
   }
-  win.setPosition(Math.round(nx), Math.round(ny))
+  // 必须用 setBounds 并带上锁定的宽高：Windows + DPI 缩放下 setPosition
+  // 会让窗口尺寸每帧漂移 1px，拖几秒就从小桌宠长成半个屏幕
+  win.setBounds({
+    x: Math.round(nx),
+    y: Math.round(ny),
+    width: dragSize.w,
+    height: dragSize.h,
+  })
 })
 ipcMain.on('pet:drag-end', () => {
   dragOrigin = null
+  dragSize = null
   lastInside = null   // 强制下一轮重新判定穿透
   // 兜底：拖动期间万一窗口尺寸被系统改掉，按配置恢复一次
   applyAppearance()
@@ -575,6 +611,69 @@ ipcMain.on('pet:drag-end', () => {
 
 // ---- 退出 ---------------------------------------------------------------
 ipcMain.on('pet:quit', () => app.quit())
+// ---- 手动播放动作 --------------------------------------------------------
+/** 读当前皮肤的动作组（直接看 motions 目录，比等模型加载完更稳） */
+function scanMotionGroups(skin) {
+  try {
+    return fs.readdirSync(path.join(ASSETS, skin, 'motions'))
+      .filter((f) => f.endsWith('.motion3.json'))
+      .map((f) => f.replace('.motion3.json', ''))
+      // 按数字序号排，否则 touch_drag10 会排在 touch_drag2 前面
+      .sort((a, b) => a.localeCompare(b, undefined, { numeric: true }))
+  } catch { return [] }
+}
+
+function playMotion(key) {
+  if (!win || win.isDestroyed()) return
+  win.webContents.send('pet:motion', key)
+  console.log('[motion] 手动播放', key)
+}
+
+/** 动作菜单：常用的直接列，编号多的收进子菜单 */
+function buildMotionMenu() {
+  const all = scanMotionGroups(config.skin)
+  if (!all.length) return [{ label: '（当前皮肤没有动作文件）', enabled: false }]
+
+  const isDrag = (g) => /^touch_drag\d*$/.test(g)
+  const isTouchIdle = (g) => /^touch_idle\d+$/.test(g)
+  const isMain = (g) => /^main_\d+$/.test(g)
+  const story = ['login', 'home', 'mail', 'mission', 'mission_complete', 'complete', 'effect', 'wedding']
+
+  const drags = all.filter(isDrag)
+  const touchIdles = all.filter(isTouchIdle)
+  const mains = all.filter(isMain)
+  const stories = story.filter((s) => all.includes(s))
+
+  const item = (g) => ({ label: g, click: () => playMotion(g) })
+
+  const items = [
+    { label: '待机 idle', click: () => playMotion('idle') },
+    { label: '摸头 touch_head', click: () => playMotion('touch_head') },
+    { label: '摸身体 touch_body', click: () => playMotion('touch_body') },
+    { label: '特殊 touch_special', click: () => playMotion('touch_special') },
+  ]
+
+  if (mains.length) {
+    items.push({ type: 'separator' })
+    items.push({ label: `待机变化（${mains.length}）`, submenu: mains.map(item) })
+  }
+  if (drags.length) {
+    items.push({ type: 'separator' })
+    items.push({ label: `拖动动作（${drags.length}）`, submenu: drags.map(item) })
+  }
+  if (stories.length) {
+    items.push({ type: 'separator' })
+    items.push({ label: `剧情 / 其他（${stories.length}）`, submenu: stories.map(item) })
+  }
+  if (touchIdles.length) {
+    items.push({
+      label: `触摸待机（${touchIdles.length}）`,
+      submenu: touchIdles.map(item),
+    })
+  }
+  return items
+}
+
 ipcMain.on('pet:menu', () => {
   if (!win) return
   const skins = scanSkins()
@@ -620,6 +719,10 @@ ipcMain.on('pet:menu', () => {
           if (win) win.webContents.send('pet:fit-changed', m)
         },
       })),
+    },
+    {
+      label: '动作',
+      submenu: buildMotionMenu(),
     },
     {
       label: '外观',
@@ -1110,6 +1213,24 @@ app.whenReady().then(async () => {
   createTray()
   registerShortcuts()
   watchDisplayChanges()
+
+  // 拖动路径自检：PET_BENCH_DRAG=1 时模拟 20 次拖动移动，检查尺寸会不会漂移
+  if (process.env.PET_BENCH_DRAG === '1') {
+    setTimeout(() => {
+      if (!win || win.isDestroyed()) return
+      const b0 = win.getBounds()
+      console.log('[bench] 拖动前', `${b0.width}x${b0.height}`, `@${b0.x},${b0.y}`)
+      ipcMain.emit('pet:drag-start', {}, { x: 600, y: 600 })
+      for (let i = 1; i <= 20; i++) {
+        ipcMain.emit('pet:drag-move', {}, { x: 600 + i * 5, y: 600 + i * 5, clamp: true })
+      }
+      const bMid = win.getBounds()
+      console.log('[bench] 移动 20 次后', `${bMid.width}x${bMid.height}`)
+      ipcMain.emit('pet:drag-end', {})
+      const b1 = win.getBounds()
+      console.log('[bench] 松手后', `${b1.width}x${b1.height}`, `@${b1.x},${b1.y}`)
+    }, 6000)
+  }
 
   // 后台预热 14 天用量缓存：首次点 HUD 打开明细窗口时就不用干等解压
   if (!SNAPSHOT_MODE) {
