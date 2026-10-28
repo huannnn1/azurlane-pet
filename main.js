@@ -58,6 +58,7 @@ const DEFAULT_CONFIG = {
   autoStart: false,
   hideOnFullscreen: true, // 检测到全屏应用/演示模式时自动让位
   bubble: true, // 头顶气泡台词
+  hud: 'always', // always | hover | off
   deepseek: { apiKey: '', baseUrl: 'https://api.deepseek.com' },
   usage: { refreshMinutes: 5, sessionOnly: false },
 }
@@ -922,6 +923,21 @@ ipcMain.on('pet:menu', () => {
             saveConfig()
             if (win) win.webContents.send('pet:bubble', mi.checked)
           },
+        },
+        {
+          label: 'HUD 显示',
+          submenu: [
+            ['always', '常显'],
+            ['hover', '悬停时显示'],
+            ['off', '隐藏'],
+          ].map(([v, label]) => ({
+            label: label + ((config.hud ?? 'always') === v ? '  ✓' : ''),
+            click: () => {
+              config.hud = v
+              saveConfig()
+              if (win) win.webContents.send('pet:hud', v)
+            },
+          })),
         },
         { type: 'separator' },
         {

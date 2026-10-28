@@ -30,6 +30,8 @@
     transform: translateX(-50%) translateY(-2px);
     background: linear-gradient(180deg, rgba(12,14,20,.55), rgba(12,14,20,.72));
   }
+  /* hud=hover 时鼠标不在人物上就藏起来 */
+  #hud.hud-hidden { opacity: 0; pointer-events: none; }
   /* 两侧细装饰线，像铭牌 */
   #hud::before, #hud::after {
     content: '';

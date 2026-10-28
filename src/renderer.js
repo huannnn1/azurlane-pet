@@ -53,6 +53,7 @@ let modelRect = null
 let dragging = false
 let dragMoved = false
 let downAt = null
+let hoverInside = false   // 光标是否在人物上（穿透判定回传，HUD hover 模式与抓取手势都用它）
 let hasHitAreas = false
 let groups = {}
 let fitMode = 'auto'
@@ -167,8 +168,22 @@ async function switchSkin(url) {
   try { await loadModel(url) } catch (e) { console.log('[skin] 加载失败:', e.message) }
 }
 
-/** HUD 铭牌的大致高度：contain 时给底部留出来，别把脚挡住 */
-const HUD_RESERVE = 24
+/** HUD 铭牌的大致高度：contain 时给底部留出来，别把脚挡住；HUD 关掉时不留 */
+const HUD_RESERVE_BASE = 24
+let hudMode = 'always'
+
+function hudReserve() {
+  return hudMode === 'off' ? 0 : HUD_RESERVE_BASE
+}
+
+/** 按 hud 模式切换铭牌显示：常显 / 悬停才显示 / 隐藏 */
+function applyHudMode() {
+  const hud = el('hud')
+  if (!hud) return
+  hud.style.display = hudMode === 'off' ? 'none' : ''
+  hud.classList.toggle('hud-hidden', hudMode === 'hover' && !hoverInside)
+  publishInteractive()
+}
 
 function layout() {
   if (!model) return
@@ -179,8 +194,9 @@ function layout() {
 
   // auto：横幅场景图（宽高比 > 1.15）铺满，竖版立绘完整显示
   const mode = fitMode === 'auto' ? (rawW / rawH > 1.15 ? 'cover' : 'contain') : fitMode
+  const reserve = hudReserve()
   // 完整显示时把底部铭牌的高度让出来；铺满裁切时本来就会盖住，不额外处理
-  const usableH = mode === 'cover' ? H : Math.max(1, H - HUD_RESERVE)
+  const usableH = mode === 'cover' ? H : Math.max(1, H - reserve)
   const scale = mode === 'cover'
     ? Math.max(W / rawW, H / rawH)
     : Math.min(W / rawW, usableH / rawH)
@@ -188,7 +204,7 @@ function layout() {
   if (!Number.isFinite(scale) || scale <= 0) return
   model.scale.set(scale)
   model.x = (W - rawW * scale) / 2
-  model.y = mode === 'cover' ? (H - rawH * scale) / 2 : H - HUD_RESERVE - rawH * scale + 2
+  model.y = mode === 'cover' ? (H - rawH * scale) / 2 : H - reserve - rawH * scale + 2
   modelRect = { x: model.x, y: model.y, w: rawW * scale, h: rawH * scale }
   publishInteractive()
 }
@@ -679,7 +695,14 @@ function boot() {
   window.pet.onActivity((active) => setActivity(active))
   window.pet.onState((type) => onDsState(type))
   window.pet.onBubble((on) => { bubbleOn = !!on })
-  window.pet.config().then((c) => { bubbleOn = c?.bubble !== false }).catch(() => {})
+  window.pet.onHud((mode) => { hudMode = mode || 'always'; applyHudMode(); layout() })
+  window.pet.onHover((inside) => { hoverInside = !!inside; applyHudMode() })
+  window.pet.config().then((c) => {
+    bubbleOn = c?.bubble !== false
+    hudMode = c?.hud ?? 'always'
+    applyHudMode()
+    layout()
+  }).catch(() => {})
   scheduleIdleTick()
 
   el('empty')?.addEventListener('click', () => window.pet.chooseAssets())
