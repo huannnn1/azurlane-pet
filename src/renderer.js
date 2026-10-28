@@ -275,6 +275,9 @@ window.addEventListener('pointerdown', (e) => {
 window.addEventListener('auxclick', (e) => { if (e.button === 1) e.preventDefault() })
 
 // ---------- 拖动 / 点击 ---------------------------------------------------
+/** 超过这个像素就算拖动，不再当作点击去播动作 */
+const DRAG_THRESHOLD = 5
+
 canvas.addEventListener('pointerdown', (e) => {
   if (calibrating) {
     e.preventDefault()
@@ -292,7 +295,8 @@ canvas.addEventListener('pointerdown', (e) => {
 
 window.addEventListener('pointermove', (e) => {
   if (!dragging) return
-  if (!dragMoved && Math.hypot(e.screenX - downAt.x, e.screenY - downAt.y) > 4) dragMoved = true
+  const dist = Math.hypot(e.screenX - downAt.x, e.screenY - downAt.y)
+  if (!dragMoved && dist > DRAG_THRESHOLD) dragMoved = true
   if (dragMoved) window.pet.dragMove({ x: e.screenX, y: e.screenY, clamp: true })
 })
 
@@ -300,11 +304,23 @@ window.addEventListener('pointerup', (e) => {
   if (!dragging) return
   dragging = false
   window.pet.dragEnd()
-  if (!dragMoved) {
+  // 松手时按总位移再复核一次：拖动途中指针事件可能丢，
+  // 只看 dragMoved 会把一次真拖动误判成点击，从而播出带镜头的触摸动作
+  const total = Math.hypot(e.screenX - downAt.x, e.screenY - downAt.y)
+  if (!dragMoved && total <= DRAG_THRESHOLD) {
     const hit = hitAt(e.clientX, e.clientY)
     if (hit.length) playHit(hit[0])
   }
 })
+
+/** 拖动被系统打断（指针被抢走、窗口失焦）时复位，别卡在拖动状态 */
+function abortDrag() {
+  if (!dragging) return
+  dragging = false
+  window.pet.dragEnd()
+}
+window.addEventListener('pointercancel', abortDrag)
+window.addEventListener('blur', abortDrag)
 
 window.addEventListener('contextmenu', (e) => {
   e.preventDefault()

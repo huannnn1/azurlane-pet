@@ -346,6 +346,9 @@ function startHoverWatch() {
   if (hoverTimer) clearInterval(hoverTimer)
   hoverTimer = setInterval(() => {
     if (!win || !win.isVisible() || win.isDestroyed()) return
+    // 拖动过程中绝不能切换穿透：一旦切成忽略鼠标，pointermove 就断流，
+    // 窗口会卡在原地，松手还可能被当成一次点击去播动作（看起来像突然放大）
+    if (dragOrigin) return
     let inside = false
     try {
       const p = screen.getCursorScreenPoint()
@@ -563,7 +566,12 @@ ipcMain.on('pet:drag-move', (_e, { x, y, clamp }) => {
   }
   win.setPosition(Math.round(nx), Math.round(ny))
 })
-ipcMain.on('pet:drag-end', () => { dragOrigin = null })
+ipcMain.on('pet:drag-end', () => {
+  dragOrigin = null
+  lastInside = null   // 强制下一轮重新判定穿透
+  // 兜底：拖动期间万一窗口尺寸被系统改掉，按配置恢复一次
+  applyAppearance()
+})
 
 // ---- 退出 ---------------------------------------------------------------
 ipcMain.on('pet:quit', () => app.quit())

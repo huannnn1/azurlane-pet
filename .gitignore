@@ -6,6 +6,8 @@ assets/
 
 # 个人配置（含 API Key）
 config.json
+# 解析失败时的备份、以及各类临时副本同样含 Key，别误提交
+config.json.*
 
 # 运行时产物
 snapshot.png
