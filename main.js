@@ -663,18 +663,12 @@ function buildMotionMenu() {
   const item = (g) => ({ label: g, click: () => playMotion(g) })
 
   const items = [
+    { label: '选择动作…', click: () => openMotionsWindow() },
+    { type: 'separator' },
     { label: '待机 idle', click: () => playMotion('idle') },
     { label: '摸头 touch_head', click: () => playMotion('touch_head') },
     { label: '摸身体 touch_body', click: () => playMotion('touch_body') },
     { label: '特殊 touch_special', click: () => playMotion('touch_special') },
-    { type: 'separator' },
-    {
-      label: '随机播一个',
-      click: () => {
-        const pick = all[Math.floor(Math.random() * all.length)]
-        if (pick) playMotion(pick)
-      },
-    },
   ]
 
   if (mains.length) {
@@ -1190,6 +1184,79 @@ function openSkinsWindow() {
 
 ipcMain.on('pet:open-skins', () => openSkinsWindow())
 ipcMain.on('pet:close-skins', () => { if (skinsWin && !skinsWin.isDestroyed()) skinsWin.close() })
+
+// ---- 动作选择窗口 --------------------------------------------------------
+let motionsWin = null
+
+const MOTION_LABELS = {
+  idle: '待机',
+  touch_head: '摸头',
+  touch_body: '摸身体',
+  touch_special: '特殊触摸',
+  main_1: '待机动作 1',
+  main_2: '待机动作 2',
+  main_3: '待机动作 3',
+  login: '登场 / 登录',
+  home: '主页',
+  mail: '邮件',
+  mission: '任务',
+  mission_complete: '任务完成',
+  complete: '完成',
+  effect: '特效',
+  wedding: '誓约',
+}
+
+function motionKind(key) {
+  if (/^touch_drag/.test(key)) return 'drag'
+  if (/^touch_idle\d/.test(key)) return 'touchIdle'
+  if (/^main_\d/.test(key)) return 'main'
+  if (['login', 'home', 'mail', 'mission', 'mission_complete', 'complete', 'effect', 'wedding'].includes(key)) return 'story'
+  return 'common'
+}
+
+function motionsDetail() {
+  return scanMotionGroups(config.skin).map((key) => ({
+    key,
+    label: MOTION_LABELS[key] || key,
+    kind: motionKind(key),
+  }))
+}
+
+ipcMain.handle('pet:motions-detail', () => motionsDetail())
+ipcMain.on('pet:play-motion', (_e, key) => playMotion(key))
+
+function openMotionsWindow() {
+  if (motionsWin && !motionsWin.isDestroyed()) {
+    motionsWin.show()
+    motionsWin.focus()
+    return
+  }
+  motionsWin = new BrowserWindow({
+    width: 520,
+    height: 620,
+    minWidth: 420,
+    minHeight: 380,
+    frame: false,
+    resizable: true,
+    minimizable: false,
+    maximizable: false,
+    fullscreenable: false,
+    backgroundColor: '#10131b',
+    show: false,
+    alwaysOnTop: true,
+    webPreferences: {
+      preload: path.join(ROOT, 'preload.js'),
+      contextIsolation: true,
+      nodeIntegration: false,
+    },
+  })
+  motionsWin.loadFile(path.join(ROOT, 'src', 'motions.html'))
+  motionsWin.once('ready-to-show', () => motionsWin.show())
+  motionsWin.on('closed', () => { motionsWin = null })
+}
+
+ipcMain.on('pet:open-motions', () => openMotionsWindow())
+ipcMain.on('pet:close-motions', () => { if (motionsWin && !motionsWin.isDestroyed()) motionsWin.close() })
 ipcMain.handle('pet:config', () => config)
 
 // 启动时预跑一次，顺便把结果打到终端，便于确认取数链路
@@ -1286,11 +1353,14 @@ app.whenReady().then(async () => {
 
   // 截图测试用：只渲染一个子页面（PET_SNAP_USAGE / PET_SNAP_SKINS），不开桌宠窗口
   const snapTarget = process.env.PET_SNAP_SKINS === '1' ? 'skins'
-    : process.env.PET_SNAP_USAGE === '1' ? 'usage' : null
+    : process.env.PET_SNAP_MOTIONS === '1' ? 'motions'
+      : process.env.PET_SNAP_USAGE === '1' ? 'usage' : null
   if (SNAPSHOT_MODE && snapTarget) {
     const conf = snapTarget === 'skins'
       ? { html: 'skins.html', out: 'skins-snapshot.png', width: 560, height: 640 }
-      : { html: 'usage.html', out: 'usage-snapshot.png', width: 472, height: 668 }
+      : snapTarget === 'motions'
+        ? { html: 'motions.html', out: 'motions-snapshot.png', width: 520, height: 620 }
+        : { html: 'usage.html', out: 'usage-snapshot.png', width: 472, height: 668 }
     const w = new BrowserWindow({
       width: conf.width, height: conf.height, show: false, frame: false,
       backgroundColor: '#10131b',
