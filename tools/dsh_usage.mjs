@@ -37,6 +37,36 @@ const CACHE_DIR = process.env.DSH_USAGE_CACHE_DIR
 const CACHE_FILE = path.join(CACHE_DIR, '.usage-cache.json')
 const MAGIC = Buffer.from([0x28, 0xb5, 0x2f, 0xfd])
 
+// ---- 计价 ----------------------------------------------------------------
+// DeepSeek 官方定价（元 / 百万 tokens），来源：
+// https://api-docs.deepseek.com/zh-cn/quick_start/pricing
+// 高峰时段是空闲时段的两倍：北京时间周一至周五 9:00-12:00、14:00-18:00；
+// 周末与其余时段按空闲价。法定节假日无法从本地时区判断，这里按工作日近似。
+const PRICE = {
+  model: 'deepseek-flash',
+  peak: { cacheHit: 0.04, cacheMiss: 2, output: 8 },
+  idle: { cacheHit: 0.02, cacheMiss: 1, output: 4 },
+}
+
+/** 该时刻是否落在工作日高峰时段 */
+function isPeakHour(ts) {
+  const d = new Date(ts)
+  const wd = d.getDay()
+  if (wd === 0 || wd === 6) return false
+  const h = d.getHours() + d.getMinutes() / 60
+  return (h >= 9 && h < 12) || (h >= 14 && h < 18)
+}
+
+/** 单条 usage 的费用（元）：未命中输入 + 缓存命中输入 + 输出，三段各自计价 */
+function tokenCost(u, ts) {
+  const p = isPeakHour(ts) ? PRICE.peak : PRICE.idle
+  return (
+    (u.inputTokens ?? 0) * p.cacheMiss +
+    (u.cacheReadTokens ?? 0) * p.cacheHit +
+    (u.outputTokens ?? 0) * p.output
+  ) / 1e6
+}
+
 /** 按 zstd 帧魔数切片后逐帧解压，返回所有非空行 */
 function readFrames(file) {
   let buf
@@ -82,12 +112,13 @@ function parseSession(file) {
     const t = o.time ?? 0
     if (t > last) last = t
     const day = new Date(t).toLocaleDateString('sv-SE') // YYYY-MM-DD（本地时区）
-    const b = (byDay[day] ??= { inputTokens: 0, outputTokens: 0, cacheReadTokens: 0, cacheWriteTokens: 0, totalTokens: 0, calls: 0 })
+    const b = (byDay[day] ??= { inputTokens: 0, outputTokens: 0, cacheReadTokens: 0, cacheWriteTokens: 0, totalTokens: 0, calls: 0, cost: 0 })
     b.inputTokens += u.inputTokens ?? 0
     b.outputTokens += u.outputTokens ?? 0
     b.cacheReadTokens += u.cacheReadTokens ?? 0
     b.cacheWriteTokens += u.cacheWriteTokens ?? 0
     b.totalTokens += u.totalTokens ?? 0
+    b.cost += tokenCost(u, t)
     b.calls++
   }
   return { title, byDay, last }
@@ -114,7 +145,7 @@ files = files.filter((f) => {
 for (const file of files) {
   let st
   try { st = fs.statSync(file) } catch { continue }
-  const key = `${st.mtimeMs}:${st.size}`
+  const key = `v2:${st.mtimeMs}:${st.size}`
   const hit = cache[file]
   if (hit && hit.key === key) { nextCache[file] = hit; continue }   // 命中，跳过解压
   nextCache[file] = { key, ...parseSession(file) }
@@ -126,20 +157,29 @@ if (!noCache) {
 }
 
 // ---- 汇总（只算本次窗口期内的文件）---------------------------------------
+const ZERO = () => ({ inputTokens: 0, outputTokens: 0, cacheReadTokens: 0, cacheWriteTokens: 0, totalTokens: 0, calls: 0, cost: 0 })
 const buckets = new Map()
 const sessions = []
-const grand = { inputTokens: 0, outputTokens: 0, cacheReadTokens: 0, cacheWriteTokens: 0, totalTokens: 0, calls: 0 }
+const grand = ZERO()
 const today = new Date().toLocaleDateString('sv-SE')
+// 自然日窗口的起点（含今天）。文件 mtime 过滤只能挡住整体太旧的文件，
+// 一个近期还在写的会话文件里可能带着几十天前的数据，这里再按日期收一次口。
+const cutoffDay = (() => {
+  const d = new Date()
+  d.setHours(0, 0, 0, 0)
+  d.setDate(d.getDate() - (DAYS - 1))
+  return d.toLocaleDateString('sv-SE')
+})()
 
 for (const file of files) {
   const v = nextCache[file]
   if (!v?.byDay) continue
-  const acc = { inputTokens: 0, outputTokens: 0, cacheReadTokens: 0, cacheWriteTokens: 0, totalTokens: 0, calls: 0 }
+  const acc = ZERO()
   for (const [day, b] of Object.entries(v.byDay)) {
-    if (todayOnly && day !== today) continue
+    if (todayOnly ? day !== today : day < cutoffDay) continue
     let bucket = buckets.get(day)
     if (!bucket) {
-      bucket = { inputTokens: 0, outputTokens: 0, cacheReadTokens: 0, cacheWriteTokens: 0, totalTokens: 0, calls: 0 }
+      bucket = ZERO()
       buckets.set(day, bucket)
     }
     for (const k of Object.keys(bucket)) {
@@ -158,30 +198,37 @@ if (asJson) {
   const latest = sessions.find(s => s.last > 0) ?? null
   console.log(JSON.stringify({
     generatedAt: new Date().toISOString(),
+    price: PRICE,
     today: daily[0]?.[1] ?? null,
     todayDate: daily[0]?.[0] ?? today,
-    daily: Object.fromEntries(daily),
+    daily: daily.map(([date, b]) => ({ date, ...b })),
     grand,
     parsed,
     latestSession: latest
       ? { title: latest.title, calls: latest.calls, totalTokens: latest.totalTokens,
           inputTokens: latest.inputTokens, outputTokens: latest.outputTokens,
-          cacheReadTokens: latest.cacheReadTokens, last: latest.last }
+          cacheReadTokens: latest.cacheReadTokens, last: latest.last, cost: latest.cost }
       : null,
-    sessions: sessions.slice(0, 10).map(s => ({ title: s.title, calls: s.calls, totalTokens: s.totalTokens, last: s.last })),
+    sessions: sessions.map((s) => ({
+      title: s.title, last: s.last, calls: s.calls, totalTokens: s.totalTokens,
+      inputTokens: s.inputTokens, outputTokens: s.outputTokens,
+      cacheReadTokens: s.cacheReadTokens, cost: s.cost,
+    })),
   }, null, 2))
 } else {
   const fmt = n => n >= 1e6 ? (n / 1e6).toFixed(2) + 'M' : n >= 1e3 ? (n / 1e3).toFixed(1) + 'k' : String(n)
+  const yuan = c => '¥' + (c ?? 0).toFixed(2)
   console.log(`数据源: ${ROOT}`)
-  console.log(`范围: ${todayOnly ? '今天' : `最近 ${DAYS} 天`}  调用: ${grand.calls}  本次解析文件: ${parsed}/${files.length}\n`)
-  console.log('日期          输入      输出      缓存读     缓存写     合计      调用')
+  console.log(`范围: ${todayOnly ? '今天' : `最近 ${DAYS} 天`}  调用: ${grand.calls}  本次解析文件: ${parsed}/${files.length}`)
+  console.log(`计价: ${PRICE.model}（空闲 缓存${PRICE.idle.cacheHit}/未命中${PRICE.idle.cacheMiss}/输出${PRICE.idle.output} 元每百万）\n`)
+  console.log('日期          输入      输出      缓存读     合计      调用     费用')
   for (const [day, b] of daily) {
-    console.log(`${day}  ${fmt(b.inputTokens).padStart(9)}  ${fmt(b.outputTokens).padStart(8)}  ${fmt(b.cacheReadTokens).padStart(9)}  ${fmt(b.cacheWriteTokens).padStart(8)}  ${fmt(b.totalTokens).padStart(8)}  ${String(b.calls).padStart(5)}`)
+    console.log(`${day}  ${fmt(b.inputTokens).padStart(9)}  ${fmt(b.outputTokens).padStart(8)}  ${fmt(b.cacheReadTokens).padStart(9)}  ${fmt(b.totalTokens).padStart(8)}  ${String(b.calls).padStart(5)}  ${yuan(b.cost).padStart(9)}`)
   }
-  console.log(`\n合计: 输入 ${fmt(grand.inputTokens)} / 输出 ${fmt(grand.outputTokens)} / 缓存命中 ${fmt(grand.cacheReadTokens)} / 总计 ${fmt(grand.totalTokens)}`)
+  console.log(`\n合计: 输入 ${fmt(grand.inputTokens)} / 输出 ${fmt(grand.outputTokens)} / 缓存命中 ${fmt(grand.cacheReadTokens)} / 总计 ${fmt(grand.totalTokens)} / 费用 ${yuan(grand.cost)}`)
   console.log('\n最近会话:')
-  for (const s of sessions.slice(0, 5)) {
+  for (const s of sessions.slice(0, 8)) {
     const when = s.last ? new Date(s.last).toLocaleString('zh-CN') : '-'
-    console.log(`  ${fmt(s.totalTokens).padStart(8)}  ${String(s.calls).padStart(3)}次  ${when}  ${s.title ?? '-'}`)
+    console.log(`  ${fmt(s.totalTokens).padStart(8)}  ${String(s.calls).padStart(3)}次  ${yuan(s.cost).padStart(8)}  ${when}  ${s.title ?? '-'}`)
   }
 }
