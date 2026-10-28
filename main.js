@@ -138,10 +138,37 @@ function saveConfig() {
   try { fs.writeFileSync(CONFIG_FILE, JSON.stringify(config, null, 2), 'utf8') } catch {}
 }
 
+/** 取某点所在显示器的可用区域（副屏拖动、按屏算尺寸都靠它） */
+function workAreaAt(x, y) {
+  return screen.getDisplayNearestPoint({ x: Math.round(x), y: Math.round(y) }).workArea
+}
+
+/** 把窗口夹到「中心所在那块屏」的边界内，这样能跨屏拖，但不会拖丢 */
+function clampToDisplay(x, y, w, h) {
+  const displays = screen.getAllDisplays()
+  const cx = x + w / 2
+  const cy = y + h / 2
+  let best = displays[0]
+  let bestD = Infinity
+  for (const d of displays) {
+    const a = d.workArea
+    const dx = Math.max(a.x - cx, 0, cx - (a.x + a.width))
+    const dy = Math.max(a.y - cy, 0, cy - (a.y + a.height))
+    const dist = dx * dx + dy * dy
+    if (dist < bestD) { bestD = dist; best = d }
+  }
+  const a = best.workArea
+  return {
+    x: Math.max(a.x, Math.min(x, a.x + a.width - w)),
+    y: Math.max(a.y, Math.min(y, a.y + a.height - h)),
+  }
+}
+
 /** 把外观相关配置应用到窗口 */
 function applyAppearance() {
   if (!win || win.isDestroyed()) return
-  const area = screen.getPrimaryDisplay().workArea
+  const [cx, cy] = win.getPosition()
+  const area = workAreaAt(cx + 1, cy + 1)
   const auto = autoSize(area)
   const baseW = config.window?.width || auto.width
   const baseH = config.window?.height || auto.height
@@ -152,7 +179,6 @@ function applyAppearance() {
   try { win.setOpacity(Math.max(0.2, Math.min(1, config.opacity ?? 1))) } catch {}
   try { win.setAlwaysOnTop(!!config.alwaysOnTop, 'screen-saver') } catch {}
   try {
-    const [cx, cy] = win.getPosition()
     win.setBounds({ x: cx, y: cy, width: w, height: h })
   } catch {}
 }
@@ -160,7 +186,10 @@ function applyAppearance() {
 function applyAutoStart() {
   try {
     if (app.isPackaged) {
-      app.setLoginItemSettings({ openAtLogin: !!config.autoStart, path: process.execPath })
+      // portable 版 process.execPath 指向临时解压目录，重启就失效，
+      // 必须用 electron-builder 给出的「用户双击的那个 exe」
+      const exe = process.env.PORTABLE_EXECUTABLE_FILE || process.execPath
+      app.setLoginItemSettings({ openAtLogin: !!config.autoStart, path: exe })
     } else {
       // 开发模式指向 electron.exe + 项目目录
       app.setLoginItemSettings({
@@ -358,6 +387,15 @@ function createWindow() {
   if (!SNAPSHOT) win.once('ready-to-show', () => win.showInactive())
   win.on('closed', () => { win = null })
 
+  // 隐藏时让渲染层停掉 ticker：透明窗口不会因为不可见就停止重绘，
+  // 不显式暂停的话隐藏一晚上也在烧 CPU 和电。
+  win.on('hide', () => {
+    if (win && !win.isDestroyed()) win.webContents.send('pet:visible', false)
+  })
+  win.on('show', () => {
+    if (win && !win.isDestroyed()) win.webContents.send('pet:visible', true)
+  })
+
   // 把渲染进程的日志转到终端，方便排查
   // Electron 45+ 回调是 (event, params)；旧版是 (event, level, message, line, source)
   win.webContents.on('console-message', (_e, ...args) => {
@@ -388,7 +426,14 @@ function createWindow() {
         } catch (e) {
           console.error('[snapshot] failed', e)
         }
-        app.quit()
+        // PET_BENCH_HIDE=1：截图后隐藏窗口再观察 9 秒，用来量隐藏态是否真的停渲染
+        if (process.env.PET_BENCH_HIDE === '1') {
+          console.log('[bench] 隐藏窗口，观察 9 秒')
+          win.hide()
+          setTimeout(() => app.quit(), 9000)
+        } else {
+          app.quit()
+        }
       }, 6000)
     })
   }
@@ -418,10 +463,10 @@ ipcMain.on('pet:drag-move', (_e, { x, y, clamp }) => {
   let nx = dragOrigin.wx + (x - dragOrigin.mx)
   let ny = dragOrigin.wy + (y - dragOrigin.my)
   if (clamp) {
-    const area = screen.getPrimaryDisplay().workArea
     const [w, h] = win.getSize()
-    nx = Math.max(area.x, Math.min(nx, area.x + area.width - w))
-    ny = Math.max(area.y, Math.min(ny, area.y + area.height - h))
+    const p = clampToDisplay(Math.round(nx), Math.round(ny), w, h)
+    nx = p.x
+    ny = p.y
   }
   win.setPosition(Math.round(nx), Math.round(ny))
 })
@@ -757,10 +802,31 @@ function fetchBalance() {
 ipcMain.handle('pet:balance', () => fetchBalance())
 
 // ---- 生命周期 -----------------------------------------------------------
+/** 单实例：第二次双击直接把已有桌宠叫出来，避免开出两只各烧一份资源。
+ *  SNAPSHOT/测试要并行跑时用 PET_ALLOW_MULTI=1 放行。 */
+const ALLOW_MULTI = process.env.PET_ALLOW_MULTI === '1'
+if (!ALLOW_MULTI && !app.requestSingleInstanceLock()) {
+  app.quit()
+}
+app.on('second-instance', () => {
+  if (!win || win.isDestroyed()) return
+  showPet()
+  win.focus()
+})
+
 app.whenReady().then(async () => {
   console.log('[boot] config.deepseek.apiKey 长度 =', (config.deepseek?.apiKey || '').length)
   console.log('[boot] assets =', ASSETS, '皮肤数 =', scanSkins().length)
   fetchBalance().then((r) => console.log('[balance:boot]', JSON.stringify(r)))
+
+  // 性能观测：PET_METRICS=1 时每 3 秒打印各进程 CPU（百分比，单核为 100）
+  if (process.env.PET_METRICS === '1') {
+    setInterval(() => {
+      const rows = app.getAppMetrics()
+        .map((m) => `${m.type}=${(m.cpu.percentCPUUsage ?? 0).toFixed(1)}%`)
+      console.log('[metrics]', rows.join(' '))
+    }, 3000)
+  }
 
   // 截图测试用：只渲染用量明细窗口（PET_SNAP_USAGE=1 时不开桌宠窗口）
   if (SNAPSHOT_MODE && process.env.PET_SNAP_USAGE === '1') {

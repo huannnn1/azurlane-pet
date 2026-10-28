@@ -29,7 +29,24 @@ const app = new PIXI.Application({
   antialias: true,
   autoDensity: true,
   resolution: window.devicePixelRatio || 1,
+  // 和 Live2DModel 共用同一个 ticker，才能一处控帧、一处暂停
+  sharedTicker: true,
 })
+
+// 桌宠是静态陪伴场景，30fps 视觉上足够，功耗能砍掉近一半
+PIXI.Ticker.shared.autoStart = false
+PIXI.Ticker.shared.maxFPS = 30
+PIXI.Ticker.shared.start()
+
+/** 窗口隐藏时把渲染彻底停掉，别在后台空转 */
+let rendering = true
+function setRendering(on) {
+  if (on === rendering) return
+  rendering = on
+  if (on) PIXI.Ticker.shared.start()
+  else PIXI.Ticker.shared.stop()
+  console.log('[render]', on ? '恢复' : '暂停')
+}
 
 let model = null
 let modelRect = null
@@ -400,6 +417,7 @@ function boot() {
   })
 
   window.pet.onSkin((rel) => switchSkin(rel))
+  window.pet.onVisible((v) => setRendering(v))
   window.pet.onAssetsChanged((rel) => {
     showEmpty(false)
     if (rel) switchSkin(rel)
