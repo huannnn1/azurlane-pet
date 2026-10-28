@@ -496,7 +496,10 @@ canvas.addEventListener('pointerdown', (e) => {
   }
   if (e.button !== 0) return
   const hits = hitAt(e.clientX, e.clientY)
-  if (!hits.length) return
+  // 注意：这里不能因为 hits 为空就 return。
+  // 拖动窗口只需要「按在人物不透明像素上」——穿透判定已经保证能收到 pointerdown 就说明
+  // 光标在人物上；触摸区只决定点击时播哪个动作。否则腿、手臂这些没被矩形覆盖的地方
+  // 会变成点了没反应、也拖不动。
   // TouchDrag 区：按下只播拖拽动作，不移动窗口（Alt+左键强制拖窗口作为退路）
   const dragArea = hits.find((h) => /drag/i.test(h))
   if (dragArea && !e.altKey) {
