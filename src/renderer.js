@@ -372,10 +372,14 @@ const fmt = (n) => {
   return String(n)
 }
 
+let usageLoaded = false
+
 async function refreshUsage() {
-  // 首次要全量解压几千个会话文件，给个「统计中」的反馈，别让 HUD 干晾着
-  el('tok').textContent = '统计中'
-  el('tok').className = 'val dim'
+  // 只有第一次才显示「统计中」：定时刷新时也闪一下会很烦
+  if (!usageLoaded) {
+    el('tok').textContent = '统计中'
+    el('tok').className = 'val dim'
+  }
   let u
   try {
     u = await window.pet.usage()
@@ -391,6 +395,7 @@ async function refreshUsage() {
     return
   }
   const t = u.today ?? {}
+  usageLoaded = true
   const total = t.totalTokens ?? ((t.inputTokens ?? 0) + (t.outputTokens ?? 0) + (t.cacheReadTokens ?? 0))
   el('tok').textContent = fmt(total)
   el('tok').className = 'val'
@@ -409,8 +414,10 @@ async function refreshBalance() {
   const dot = el('dot')
   if (!b || b.error) {
     dot.classList.add('err')
-    el('bal').textContent = '未配置'
-    el('bal').className = 'val dim'
+    // 没填 Key 和网络请求失败要分开说，别都显示「未配置」误导人
+    const noKey = /apiKey/i.test(b?.error ?? '')
+    el('bal').textContent = noKey ? '未配置' : '读取失败'
+    el('bal').className = 'val ' + (noKey ? 'dim' : 'bad')
     el('bal').title = b?.error ?? ''
     return
   }
@@ -436,6 +443,7 @@ function boot() {
 
   window.pet.onSkin((rel) => switchSkin(rel))
   window.pet.onVisible((v) => setRendering(v))
+  window.pet.onNoSkins(() => showEmpty(true))
   window.pet.onAssetsChanged((rel) => {
     showEmpty(false)
     if (rel) switchSkin(rel)

@@ -725,6 +725,8 @@ ipcMain.on('pet:skin-failed', (_e, skin) => {
   }
   if (fallbackTried >= 3) {
     console.warn('[fallback] 连续失败，停止自动切换')
+    // 兜底也失败（多半是 assets 目录被移走了），让渲染层把自救卡片亮出来
+    try { win.webContents.send('pet:no-skins') } catch {}
     return
   }
   fallbackTried++

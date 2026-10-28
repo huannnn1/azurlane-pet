@@ -34,6 +34,7 @@ contextBridge.exposeInMainWorld('pet', {
   onHitareasCleared: (cb) => ipcRenderer.on('pet:hitareas-cleared', () => cb()),
   onActivity: (cb) => ipcRenderer.on('pet:activity', (_e, active) => cb(active)),
   onVisible: (cb) => ipcRenderer.on('pet:visible', (_e, v) => cb(v)),
+  onNoSkins: (cb) => ipcRenderer.on('pet:no-skins', () => cb()),
   skinOk: (skin) => ipcRenderer.send('pet:skin-ok', skin),
   skinFailed: (skin) => ipcRenderer.send('pet:skin-failed', skin),
 })
