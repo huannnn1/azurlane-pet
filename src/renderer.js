@@ -129,6 +129,7 @@ async function loadModel(url) {
   setCalBar('')
   showEmpty(false)
   showLoading(false)
+  installFocusPatch()   // 给新模型的 coreModel.update 打上视线补丁
   // 换皮肤后冒一句中文名，方便确认换的是谁
   window.pet.skinLabel()
     .then((label) => { if (label) say(label, 2000) })
@@ -611,27 +612,40 @@ function checkLowBalance(total) {
 }
 
 // ---------- 视线跟随 -------------------------------------------------------
-// pixi-live2d-display 的 model.focus() 只驱动眼球（ParamEyeBallX/Y），
-// 不改头部角度，所以看不出「转头」。这里自己写 ParamAngleX/Y，
-// 并用 LOW 优先级挂在 motion 之后，避免被动作每帧覆盖。
-let focusTarget = { x: 0, y: 0 }
+// pixi-live2d-display 的 model.focus() 只驱动眼球（ParamEyeBallX/Y），不改头部角度。
+// 而且参数必须在 coreModel.update()（把参数应用到 drawable）之前写入才有效，
+// 排在 ticker 的 LOW 里太晚了——那一帧已经用旧参数渲染完，下一帧又被动作覆盖。
+// 所以这里给 coreModel.update 打补丁，在它执行前写入。
 const curFocus = { x: 0, y: 0 }
+let focusTarget = { x: 0, y: 0 }
+let focusPatched = false
 
+function installFocusPatch() {
+  const cm = model?.internalModel?.coreModel
+  if (!cm || cm.__focusPatched) return
+  const origUpdate = cm.update.bind(cm)
+  cm.update = function patchedUpdate() {
+    if (Math.abs(focusTarget.x - curFocus.x) > 0.002 || Math.abs(focusTarget.y - curFocus.y) > 0.002 ||
+        Math.abs(curFocus.x) > 0.002 || Math.abs(curFocus.y) > 0.002) {
+      try {
+        cm.setParameterValueById('ParamAngleX', curFocus.x * 30)
+        cm.setParameterValueById('ParamAngleY', -curFocus.y * 30)
+        cm.setParameterValueById('ParamEyeBallX', curFocus.x)
+        cm.setParameterValueById('ParamEyeBallY', -curFocus.y)
+      } catch {}
+    }
+    return origUpdate()
+  }
+  cm.__focusPatched = true
+  focusPatched = true
+  console.log('[focus] 角度写入补丁已安装')
+}
+
+// 只负责把当前角度平滑地追向目标，真正的写入在 patch 里
 PIXI.Ticker.shared.add(() => {
   if (!model || model.destroyed) return
-  const dx = focusTarget.x - curFocus.x
-  const dy = focusTarget.y - curFocus.y
-  if (Math.abs(dx) < 0.002 && Math.abs(dy) < 0.002) return
-  // 0.35 的追帧系数，几帧内就能跟上，转头看起来是"跟手"而不是"慢慢飘"
-  curFocus.x += dx * 0.35
-  curFocus.y += dy * 0.35
-  try {
-    const cm = model.internalModel.coreModel
-    cm.setParameterValueById('ParamAngleX', curFocus.x * 30)
-    cm.setParameterValueById('ParamAngleY', -curFocus.y * 30)
-    cm.setParameterValueById('ParamEyeBallX', curFocus.x)
-    cm.setParameterValueById('ParamEyeBallY', -curFocus.y)
-  } catch {}
+  if (Math.abs(focusTarget.x - curFocus.x) > 0.002) curFocus.x += (focusTarget.x - curFocus.x) * 0.35
+  if (Math.abs(focusTarget.y - curFocus.y) > 0.002) curFocus.y += (focusTarget.y - curFocus.y) * 0.35
 }, null, PIXI.UPDATE_PRIORITY.LOW)
 
 // ---------- Ctrl + 滚轮连续调大小 ------------------------------------------

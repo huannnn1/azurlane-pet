@@ -399,6 +399,8 @@ ipcMain.on('pet:pixel-result', (_e, opaque) => {
 
 /** 视线跟随状态：光标坐标、最后活动时间、是否已回正 */
 let lastFocus = { x: -1, y: -1, at: 0, idle: false }
+let focusSendCount = 0
+let focusLogAt = 0
 
 /**
  * 把光标在窗口内的坐标发给渲染层，让她转头看鼠标。
@@ -417,10 +419,16 @@ function updateFocus(lx, ly, bw, bh) {
     const near = Math.hypot(lx - cx, ly - cy) < maxDist
     try {
       win.webContents.send('pet:focus', near ? { x: Math.round(lx), y: Math.round(ly) } : { x: Math.round(cx), y: Math.round(cy) })
+      focusSendCount++
+      if (now - focusLogAt > 2000) {
+        focusLogAt = now
+        console.log('[focus] 发送', focusSendCount, '次，坐标', Math.round(lx), Math.round(ly), 'near=', near)
+      }
     } catch {}
   } else if (!lastFocus.idle && now - lastFocus.at > 3000) {
     lastFocus.idle = true
     try { win.webContents.send('pet:focus', { x: Math.round(cx), y: Math.round(cy) }) } catch {}
+    console.log('[focus] 静止 3 秒，回正')
   }
 }
 

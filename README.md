@@ -154,6 +154,13 @@ assets/
 - `Ctrl+Alt+Z` 可能被输入法或其他软件占用，占用时只在日志里提示，托盘菜单仍可操作
 - 费用按 `deepseek-flash` 单价折算，法定节假日按工作日近似（会略微高估高峰时段用量）
 
+## 改代码时的坑
+
+- **模型尺寸必须用 `model.internalModel.originalWidth/Height`**。换成 `settings.Layout`、写死尺寸或 `getLocalBounds()` 都会让模型渲染到窗口外、画面全空。已用临时分支复现过：换掉之后截图从 54 KB 掉到 1.9 KB。仓库里的模型多数没有 `Layout` 字段，库会给 5000×5000 的占位画布，但 `originalWidth` 拿到的正是这个值，缩放后人物位置是对的。
+- **参数写入要在 `coreModel.update()` 之前**。视线跟随这类直接改 Live2D 参数的功能，如果排在 ticker 的 LOW 优先级里会被动作覆盖；正确做法是给 `coreModel.update` 打补丁，在它执行前写。
+- **拖动必须用 `setBounds` 并锁死宽高**，`setPosition` 在 125% DPI 下每帧漂移 1px。
+- **动作播完要显式回 `idle`**，皮肤里的动作几乎都是 Loop。
+
 ## 操作速查
 
 | 操作 | 效果 |
