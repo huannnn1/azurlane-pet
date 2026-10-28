@@ -67,26 +67,30 @@ let ASSETS = ''
  * assets 目录解析，按优先级：
  *  1. 环境变量 PET_ASSETS（调试用）
  *  2. config.json 里用户上次选的 assetsDir（可分发版靠这个）
- *  3. 打包版：portable 的 exe 所在目录 / exe 同级 / exe 上一级 / userData
+ *  3. 打包版：exe 所在目录及其上两级各自的 assets（覆盖「exe 放 release、assets 在项目根」这类布局）
  *  4. 开发版：项目自带 assets
  */
 function resolveAssetsRoot() {
   if (process.env.PET_ASSETS) return process.env.PET_ASSETS
-  if (config?.assetsDir && fs.existsSync(config.assetsDir)) return config.assetsDir
+  if (config?.assetsDir && hasSkins(config.assetsDir)) return config.assetsDir
 
   if (!app.isPackaged) return path.join(__dirname, 'assets')
 
-  // portable 启动时 exe 会解压到 temp 运行，用户放 exe 的目录在 PORTABLE_EXECUTABLE_DIR
+  // portable 启动时 exe 会解压到 temp 运行，用户真正放 exe 的目录在 PORTABLE_EXECUTABLE_DIR
   const portableDir = process.env.PORTABLE_EXECUTABLE_DIR
-  const exeDir = path.dirname(app.getPath('exe'))
-  const candidates = [
-    portableDir && path.join(portableDir, 'assets'),
-    path.join(exeDir, 'assets'),
-    path.join(exeDir, '..', 'assets'),
-    path.join(app.getPath('userData'), 'assets'),
-  ].filter(Boolean)
-  for (const c of candidates) if (fs.existsSync(c)) return c
-  return path.join(portableDir || exeDir, 'assets')
+  const bases = [portableDir, path.dirname(app.getPath('exe'))].filter(Boolean)
+
+  const candidates = []
+  for (const base of bases) {
+    candidates.push(path.join(base, 'assets'))
+    candidates.push(path.join(base, '..', 'assets'))
+    candidates.push(path.join(base, '..', '..', 'assets'))
+  }
+  candidates.push(path.join(app.getPath('userData'), 'assets'))
+
+  // 用 hasSkins 而不是 existsSync：上两级可能命中无关目录，得确认里面真有皮肤
+  for (const c of candidates) if (hasSkins(c)) return c
+  return path.join(portableDir || bases[0], 'assets')
 }
 
 /** 目录里是否真有皮肤（至少一个 <dir>/<dir>.model3.json） */
@@ -209,13 +213,23 @@ function autoSize(area) {
 
 function loadConfig() {
   try {
-    return { ...DEFAULT_CONFIG, ...JSON.parse(fs.readFileSync(CONFIG_FILE, 'utf8')) }
-  } catch {
+    const raw = fs.readFileSync(CONFIG_FILE, 'utf8')
+    // 记事本另存的 UTF-8 常带 BOM，直接 JSON.parse 会失败，
+    // 失败后会走到下面的兜底分支把配置重写掉——用户填的 Key 就这么没了
+    return { ...DEFAULT_CONFIG, ...JSON.parse(raw.replace(/^\uFEFF/, '')) }
+  } catch (e) {
+    // 解析失败先把原文件留个底，别静默覆盖用户手写坏掉的配置
+    try {
+      if (fs.existsSync(CONFIG_FILE) && fs.statSync(CONFIG_FILE).size > 0) {
+        fs.copyFileSync(CONFIG_FILE, `${CONFIG_FILE}.bad`)
+        console.warn('[config] 解析失败，已备份为 config.json.bad:', e.message)
+      }
+    } catch {}
     try {
       fs.mkdirSync(path.dirname(CONFIG_FILE), { recursive: true })
       fs.writeFileSync(CONFIG_FILE, JSON.stringify(DEFAULT_CONFIG, null, 2), 'utf8')
-    } catch (e) {
-      console.warn('[config] 无法写入配置文件，使用内存默认值:', e.message)
+    } catch (err) {
+      console.warn('[config] 无法写入配置文件，使用内存默认值:', err.message)
     }
     return DEFAULT_CONFIG
   }
@@ -353,7 +367,10 @@ async function chooseAssetsDir() {
     title: '选择 Live2D 模型目录（assets）',
     buttonLabel: '用这个目录',
     properties: ['openDirectory'],
-    defaultPath: fs.existsSync(ASSETS) ? ASSETS : app.getPath('home'),
+    // 优先落在 exe 所在目录，用户一眼就能看到同级的 assets
+    defaultPath: hasSkins(ASSETS)
+      ? ASSETS
+      : (process.env.PORTABLE_EXECUTABLE_DIR || path.dirname(app.getPath('exe')) || app.getPath('home')),
   })
   if (canceled || !filePaths?.length) return false
 
@@ -1068,11 +1085,17 @@ app.whenReady().then(async () => {
     return
   }
 
-  // 打包版第一次跑、又没找到皮肤：引导选目录（只自动打扰一次，之后走托盘菜单）
-  if (!SNAPSHOT_MODE && !hasSkins(ASSETS) && !config.assetsPromptShown) {
-    config.assetsPromptShown = true
-    saveConfig()
-    await chooseAssetsDir()
+  // 打包版找不到皮肤时引导选目录：
+  //  - 首次（没配过）弹一次
+  //  - 之前配的目录失效了（用户移走/改名）也弹一次，弹完清掉失效配置免得反复骚扰
+  if (!SNAPSHOT_MODE && !hasSkins(ASSETS)) {
+    const staleDir = config.assetsDir
+    if (!config.assetsPromptShown || staleDir) {
+      config.assetsPromptShown = true
+      if (staleDir) config.assetsDir = ''
+      saveConfig()
+      await chooseAssetsDir()
+    }
   }
 
   createWindow()
