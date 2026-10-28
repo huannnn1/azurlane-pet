@@ -1,6 +1,6 @@
 {
   "name": "azurlane-pet",
-  "version": "1.3.0",
+  "version": "1.4.0",
   "private": true,
   "description": "碧蓝航线 Live2D 桌面宠物，带 DSH token 用量与 DeepSeek 余额 HUD",
   "main": "main.js",
@@ -15,6 +15,7 @@
     "usage": "node tools/dsh_usage.mjs"
   },
   "dependencies": {
+    "koffi": "^3.3.4",
     "pixi-live2d-display": "^0.4.0",
     "pixi.js": "^7.4.3"
   },
@@ -38,7 +39,8 @@
       "package.json"
     ],
     "asarUnpack": [
-      "tools/**/*"
+      "tools/**/*",
+      "node_modules/koffi/**/*"
     ],
     "win": {
       "target": [

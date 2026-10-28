@@ -68,7 +68,14 @@ const CAL_STEPS = [
 ]
 
 // ---------- 模型 ----------------------------------------------------------
+/** 加载中的轻量提示 */
+function showLoading(on) {
+  const e = el('loading')
+  if (e) e.classList.toggle('off', !on)
+}
+
 async function loadModel(url) {
+  showLoading(true)
   if (model) {
     try { app.stage.removeChild(model) } catch {}
     // 库的 destroy 只有传 texture/baseTexture 才会释放 GPU 纹理，
@@ -90,6 +97,7 @@ async function loadModel(url) {
     model = await PIXI.live2d.Live2DModel.from(url, { autoInteract: false, idleMotionGroup: 'idle' })
   } catch (e) {
     console.log('[skin] 加载失败:', skinName, e.message)
+    showLoading(false)
     if (skinName) { try { window.pet.skinFailed(skinName) } catch {} }
     throw e
   }
@@ -113,6 +121,33 @@ async function loadModel(url) {
   startIdle()
   setCalBar('')
   showEmpty(false)
+  showLoading(false)
+  playLoginEntrance()
+}
+
+/**
+ * 出场动作：每个皮肤都有 login（240/240），播完再回待机。
+ * 它也是 Loop 且时长从 3.8 秒到 31.8 秒不等，所以按实际时长定时收回，
+ * 但夹在 3~8 秒，别让最长那个卡上半分钟。
+ */
+let loginTimer = null
+async function playLoginEntrance() {
+  if (!model || !groups?.login?.length) return
+  let dur = 0
+  try { dur = await window.pet.motionDuration('login') } catch {}
+  try {
+    model.motion('login')
+    console.log('[skin] 出场动作 login，时长', (dur || 0).toFixed(1) + 's')
+  } catch (e) {
+    console.log('[skin] 出场动作播放失败', e.message)
+    return
+  }
+  const waitMs = Math.min(Math.max(dur || 4, 3), 8) * 1000
+  if (loginTimer) clearTimeout(loginTimer)
+  loginTimer = setTimeout(() => {
+    loginTimer = null
+    if (!dragging && model) play('idle')
+  }, waitMs)
 }
 
 async function switchSkin(url) {
@@ -416,6 +451,30 @@ function setActivity(active) {
   if (active) playRandomMain()
 }
 
+/**
+ * DSH 阶段 → 待机动作。只挑变化明显、不频繁的几个事件，
+ * tool/result、step/* 这类高频事件忽略掉，否则动作会被切得稀碎。
+ */
+const STATE_MOTION = {
+  'tool/call': ['touch_special', 'main_2'],      // 执行工具：抬手干活
+  'assistant/message': ['main_3'],               // 写回复
+  'user/message': ['touch_head'],                // 等用户说话，像在听
+  'job/registered': ['main_2'],                  // 起后台任务
+  'turn/end': ['idle'],                          // 回合结束，回待机
+}
+
+function onDsState(type) {
+  if (!model || dragging) return
+  const candidates = STATE_MOTION[type]
+  if (!candidates) return
+  const key = candidates.find((k) => groups[k]?.length)
+  if (!key) return
+  try {
+    model.motion(key)
+    console.log('[activity] 切动作', key, '←', type)
+  } catch {}
+}
+
 // ---------- HUD -----------------------------------------------------------
 const fmt = (n) => {
   if (!Number.isFinite(n)) return '--'
@@ -508,6 +567,7 @@ function boot() {
     if (rel) switchSkin(rel)
   })
   window.pet.onActivity((active) => setActivity(active))
+  window.pet.onState((type) => onDsState(type))
   scheduleIdleTick()
 
   el('empty')?.addEventListener('click', () => window.pet.chooseAssets())

@@ -56,6 +56,7 @@ const DEFAULT_CONFIG = {
   sizeScale: 1,
   alwaysOnTop: true,
   autoStart: false,
+  hideOnFullscreen: true, // 检测到全屏应用/演示模式时自动让位
   deepseek: { apiKey: '', baseUrl: 'https://api.deepseek.com' },
   usage: { refreshMinutes: 5, sessionOnly: false },
 }
@@ -279,8 +280,11 @@ function setupFileLog() {
 }
 
 // ---- 隐藏 / 恢复（中键隐藏，托盘图标恢复）--------------------------------
+let hiddenByUser = false   // 区分「用户主动藏起来」和「全屏时自动让位」
+
 function hidePet() {
   if (!win || !win.isVisible()) return
+  hiddenByUser = true
   win.hide()
   if (tray) tray.setToolTip('碧蓝桌宠（已隐藏）— 点图标或 Ctrl+Alt+Z 恢复')
   if (tray && !config.hintShown) {
@@ -297,6 +301,9 @@ function hidePet() {
 
 function showPet() {
   if (!win) return
+  hiddenByUser = false
+  // 全屏期间用户主动叫她出来，这次全屏就不再自动藏了
+  if (fsHidden) fsOverride = true
   win.showInactive()
   win.setAlwaysOnTop(true, 'screen-saver')
   win.setIgnoreMouseEvents(true, { forward: true })
@@ -426,6 +433,12 @@ function createTray() {
     { label: '选择皮肤…', click: () => openSkinsWindow() },
     { label: '用量明细…', click: () => openUsageWindow() },
     { label: '重置位置', click: resetPosition },
+    {
+      label: '全屏时自动让位',
+      type: 'checkbox',
+      checked: config.hideOnFullscreen !== false,
+      click: (mi) => { config.hideOnFullscreen = mi.checked; saveConfig() },
+    },
     { type: 'separator' },
     { label: '选择皮肤目录…', click: () => chooseAssetsDir() },
     { label: '退出', click: () => app.quit() },
@@ -448,6 +461,9 @@ function createWindow() {
     transparent: true,
     backgroundColor: '#00000000',
     frame: false,
+    // Windows 上无边框窗口默认带 WS_THICKFRAME，HWND 会比 getBounds 大 16x8 DIP，
+    // 拖动时这个偏差会被放大成「越拖越大」。关掉后尺寸才精确等于请求值。
+    thickFrame: false,
     resizable: false,
     maximizable: false,
     fullscreenable: false,
@@ -651,6 +667,14 @@ function buildMotionMenu() {
     { label: '摸头 touch_head', click: () => playMotion('touch_head') },
     { label: '摸身体 touch_body', click: () => playMotion('touch_body') },
     { label: '特殊 touch_special', click: () => playMotion('touch_special') },
+    { type: 'separator' },
+    {
+      label: '随机播一个',
+      click: () => {
+        const pick = all[Math.floor(Math.random() * all.length)]
+        if (pick) playMotion(pick)
+      },
+    },
   ]
 
   if (mains.length) {
@@ -867,17 +891,71 @@ ipcMain.on('pet:skin-failed', (_e, skin) => {
   win.webContents.send('pet:skin-changed', skinRelPath(prefer))
 })
 
+// ---- 全屏应用检测 --------------------------------------------------------
+// 用 shell32 的 SHQueryUserNotificationState 判断系统是否处于「D3D 全屏」或
+// 「演示模式」，是的话自动让位，别压在全屏视频/游戏/PPT 上面。
+let fsProbe = null
+let fsHidden = false
+let fsOverride = false   // 用户在全屏期间手动叫出来，就不再自动藏
+
+function initFullscreenProbe() {
+  try {
+    const koffi = require('koffi')
+    const shell32 = koffi.load('shell32.dll')
+    fsProbe = {
+      query: shell32.func('int SHQueryUserNotificationState(int *pquns)'),
+      buf: new Int32Array(1),
+    }
+    console.log('[fullscreen] 全屏检测已启用')
+    return true
+  } catch (e) {
+    console.warn('[fullscreen] 全屏检测不可用:', e.message)
+    return false
+  }
+}
+
+function isFullscreenApp() {
+  if (!fsProbe) return false
+  try {
+    if (fsProbe.query(fsProbe.buf) !== 0) return false
+    const s = fsProbe.buf[0]
+    return s === 3 || s === 4   // QUNS_RUNNING_D3D_FULL_SCREEN / QUNS_PRESENTATION_MODE
+  } catch { return false }
+}
+
+function startFullscreenWatch() {
+  if (!initFullscreenProbe()) return
+  setInterval(() => {
+    if (!win || win.isDestroyed()) return
+    if (config.hideOnFullscreen === false) { fsHidden = false; return }
+    const fs = isFullscreenApp()
+    if (fs === fsHidden) return
+    if (fs && !fsOverride) {
+      fsHidden = true
+      console.log('[fullscreen] 检测到全屏应用，暂时隐藏')
+      win.hide()
+    } else if (!fs) {
+      fsHidden = false
+      fsOverride = false
+      if (!hiddenByUser) {
+        console.log('[fullscreen] 全屏结束，恢复显示')
+        win.showInactive()
+      }
+    }
+  }, 3000)
+}
+
 // ---- DSH 活动状态（用于待机动作节奏）--------------------------------------
 const SESSIONS_ROOT = process.env.DSH_HOME
   ? path.join(process.env.DSH_HOME, 'sessions')
   : path.join(require('node:os').homedir(), '.dsh', 'sessions')
 const ACTIVE_WINDOW_MS = 20000
 
-/** 扫最近被写过的会话文件时间戳（只看目录 + stat，不解压） */
-function latestSessionMtime() {
-  let latest = 0
+/** 扫最近被写过的会话文件（只看目录 + stat，不解压） */
+function latestSessionFile() {
+  let best = { mtime: 0, file: null }
   let workspaces = []
-  try { workspaces = fs.readdirSync(SESSIONS_ROOT, { withFileTypes: true }) } catch { return 0 }
+  try { workspaces = fs.readdirSync(SESSIONS_ROOT, { withFileTypes: true }) } catch { return best }
   for (const ws of workspaces) {
     if (!ws.isDirectory()) continue
     const wsPath = path.join(SESSIONS_ROOT, ws.name)
@@ -888,23 +966,71 @@ function latestSessionMtime() {
       const f = path.join(wsPath, sub.name, 'session.v4.jsonl.zstd')
       try {
         const st = fs.statSync(f)
-        if (st.mtimeMs > latest) latest = st.mtimeMs
+        if (st.mtimeMs > best.mtime) best = { mtime: st.mtimeMs, file: f }
       } catch {}
     }
   }
-  return latest
+  return best
+}
+
+/**
+ * 只读会话文件尾部，解出最后一条事件类型。
+ * 目的是把「DSH 正在活动」细分到 思考/执行工具/回复/等待输入，
+ * 用来切不同的待机动作，所以不需要全量解析。
+ */
+const ZSTD_MAGIC = Buffer.from([0x28, 0xb5, 0x2f, 0xfd])
+const zlib = require('node:zlib')
+
+function readLastEventType(file) {
+  try {
+    const st = fs.statSync(file)
+    const size = Math.min(st.size, 128 * 1024)
+    const fd = fs.openSync(file, 'r')
+    const buf = Buffer.alloc(size)
+    try { fs.readSync(fd, buf, 0, size, st.size - size) } finally { fs.closeSync(fd) }
+
+    const idx = buf.lastIndexOf(ZSTD_MAGIC)
+    if (idx < 0) return null
+    const text = zlib.zstdDecompressSync(buf.subarray(idx)).toString('utf8')
+    const lines = text.split('\n')
+    for (let i = lines.length - 1; i >= 0; i--) {
+      const line = lines[i].trim()
+      if (!line) continue
+      try {
+        const o = JSON.parse(line)
+        if (o.type) return o.type
+      } catch {}
+    }
+  } catch {}
+  return null
 }
 
 let lastActive = null
+let lastStateType = null
+let lastStateAt = 0
+const STATE_MIN_GAP = 5000   // 状态切换最小间隔，别让动作一直被打断
+
 function startActivityWatch() {
   setInterval(() => {
     if (!win || win.isDestroyed()) return
-    const latest = latestSessionMtime()
-    const active = latest > 0 && (Date.now() - latest) < ACTIVE_WINDOW_MS
+    const { mtime, file } = latestSessionFile()
+    const active = mtime > 0 && (Date.now() - mtime) < ACTIVE_WINDOW_MS
     if (active !== lastActive) {
       lastActive = active
       console.log('[activity]', active ? 'DSH 正在活动' : '空闲')
       try { win.webContents.send('pet:activity', active) } catch {}
+    }
+
+    // 活动时再细分阶段，让待机动作跟着 DSH 在干什么走
+    if (active && file) {
+      const type = readLastEventType(file)
+      const now = Date.now()
+      if (type && type !== lastStateType && now - lastStateAt > STATE_MIN_GAP) {
+        lastStateType = type
+        lastStateAt = now
+        console.log('[activity] 状态 →', type)
+        try { win.webContents.send('pet:state', type) } catch {}
+      }
     }
   }, 2500)
 }
@@ -1014,6 +1140,14 @@ function setSkin(dir) {
 ipcMain.handle('pet:skins-detail', () => skinsDetail())
 ipcMain.handle('pet:set-skin', (_e, dir) => ({ ok: setSkin(dir) }))
 
+/** 查某个动作的时长（login 出场要用，各皮肤从 3.8 秒到 31.8 秒不等） */
+ipcMain.handle('pet:motion-duration', (_e, group) => {
+  try {
+    const p = path.join(ASSETS, config.skin, 'motions', `${group}.motion3.json`)
+    return JSON.parse(fs.readFileSync(p, 'utf8')).Meta?.Duration ?? 0
+  } catch { return 0 }
+})
+
 ipcMain.handle('pet:toggle-fav', (_e, dir) => {
   const list = Array.isArray(config.favorites) ? [...config.favorites] : []
   const i = list.indexOf(dir)
@@ -1115,6 +1249,15 @@ function registerShortcuts() {
       else showPet()
     })
     console.log('[shortcut]', ACCELERATOR, ok ? '已注册' : '注册失败（可能被占用）')
+    if (!ok && tray) {
+      tray.setToolTip('碧蓝桌宠 — Ctrl+Alt+Z 被占用，请用托盘图标')
+      try {
+        tray.displayBalloon({
+          title: '快捷键被占用',
+          content: 'Ctrl+Alt+Z 已被其他程序占用，暂时用托盘图标或右键菜单操作。',
+        })
+      } catch {}
+    }
   } catch (e) {
     console.warn('[shortcut] 注册失败', e.message)
   }
@@ -1213,6 +1356,7 @@ app.whenReady().then(async () => {
   createTray()
   registerShortcuts()
   watchDisplayChanges()
+  startFullscreenWatch()
 
   // 拖动路径自检：PET_BENCH_DRAG=1 时模拟 20 次拖动移动，检查尺寸会不会漂移
   if (process.env.PET_BENCH_DRAG === '1') {

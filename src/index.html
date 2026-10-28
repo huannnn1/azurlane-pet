@@ -71,11 +71,20 @@
   #empty b { display: block; font-size: 12.5px; margin-bottom: 4px; color: #9cc4ff; }
   #empty span { color: #a9b8d4; }
   #empty u { color: #7ee2a8; text-decoration: none; }
+  /* 模型加载期间的轻量提示，加载完淡出 */
+  #loading {
+    position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
+    color: rgba(255, 255, 255, .6); font-size: 11px; letter-spacing: 1.5px;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, .85);
+    pointer-events: none; transition: opacity .35s ease;
+  }
+  #loading.off { opacity: 0; }
 </style>
 </head>
 <body>
 <canvas id="stage"></canvas>
 <div id="calbar"></div>
+<div id="loading">正在唤醒…</div>
 <div id="empty" title="点击选择模型目录">
   <b>没找到 Live2D 模型</b>
   <span>点这里选 <u>assets 皮肤目录</u>，<br>或右键菜单 → 选择皮肤目录…</span>
