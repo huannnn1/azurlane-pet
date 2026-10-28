@@ -55,11 +55,30 @@
     pointer-events: none; z-index: 10;
   }
   #calbar.on { display: block; }
+  /* 找不到模型时的自救提示（可点击） */
+  #empty {
+    display: none;
+    position: absolute; left: 12px; right: 12px; top: 50%; transform: translateY(-50%);
+    padding: 14px 14px 12px; border-radius: 12px; text-align: center;
+    background: linear-gradient(180deg, rgba(16,20,30,.92), rgba(16,20,30,.96));
+    border: 1px solid rgba(120,170,255,.35);
+    box-shadow: 0 8px 26px rgba(0,0,0,.55);
+    color: #e8eefc; font-size: 11px; line-height: 1.6;
+    cursor: pointer; z-index: 9;
+  }
+  #empty.on { display: block; }
+  #empty b { display: block; font-size: 12.5px; margin-bottom: 4px; color: #9cc4ff; }
+  #empty span { color: #a9b8d4; }
+  #empty u { color: #7ee2a8; text-decoration: none; }
 </style>
 </head>
 <body>
 <canvas id="stage"></canvas>
 <div id="calbar"></div>
+<div id="empty" title="点击选择模型目录">
+  <b>没找到 Live2D 模型</b>
+  <span>点这里选 <u>assets 皮肤目录</u>，<br>或右键菜单 → 选择皮肤目录…</span>
+</div>
 <div id="hud" data-opaque="1" title="右键打开菜单">
   <span id="dot"></span>
   <span class="val" id="bal">--</span>

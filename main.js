@@ -1,8 +1,16 @@
-const { app, BrowserWindow, ipcMain, screen, Menu, Tray, nativeImage } = require('electron')
+const { app, BrowserWindow, ipcMain, screen, Menu, Tray, nativeImage, dialog } = require('electron')
 const path = require('node:path')
 const fs = require('node:fs')
 const https = require('node:https')
 const { execFile } = require('node:child_process')
+
+// 启动探针：确认 main.js 真的被执行（仅打包版，避免污染开发日志）
+try {
+  if (process.resourcesPath && process.resourcesPath.endsWith('resources')) {
+    fs.writeFileSync(path.join(require('node:os').tmpdir(), 'pet-boot-marker.log'),
+      `loaded at ${new Date().toISOString()} packaged=${app.isPackaged} root=${__dirname}\n`)
+  }
+} catch {}
 
 const ROOT = __dirname
 const USAGE_SCRIPT = app.isPackaged
@@ -15,8 +23,27 @@ const CONFIG_FILE = app.isPackaged
   : path.join(ROOT, 'config.json')
 
 // --snapshot 用独立 userData，避免和正在运行的桌宠抢缓存锁
-if (process.argv.includes('--snapshot')) {
-  app.setPath('userData', path.join(ROOT, '.snapshot-profile'))
+// 打包后 Chromium 会拒绝未知参数，所以同时支持环境变量 PET_SNAPSHOT=1
+const SNAPSHOT_MODE = process.argv.includes('--snapshot') || process.env.PET_SNAPSHOT === '1'
+if (SNAPSHOT_MODE) {
+  // 先把日志接上，后面任何一步炸了都能看到
+  const logFile = path.join(require('node:os').tmpdir(), 'azurlane-pet-boot.log')
+  try { fs.writeFileSync(logFile, `start packaged=${app.isPackaged} root=${ROOT}\n`) } catch {}
+  const wrap = (fn, tag) => (...a) => {
+    fn(...a)
+    try { fs.appendFileSync(logFile, tag + a.map((x) => (typeof x === 'string' ? x : JSON.stringify(x))).join(' ') + '\n') } catch {}
+  }
+  console.log = wrap(console.log, '')
+  console.error = wrap(console.error, '[err] ')
+
+  try {
+    app.setPath('userData', app.isPackaged
+      ? path.join(require('node:os').tmpdir(), 'azurlane-pet-snapshot')
+      : path.join(ROOT, '.snapshot-profile'))
+    console.log('[boot] userData =', app.getPath('userData'))
+  } catch (e) {
+    console.log('[boot] setPath 失败:', e.message)
+  }
 }
 
 const DEFAULT_CONFIG = {
@@ -33,19 +60,41 @@ const DEFAULT_CONFIG = {
   usage: { refreshMinutes: 5, sessionOnly: false },
 }
 
-const ASSETS = resolveAssetsRoot()
+/** 当前生效的模型目录（loadConfig 之后由 resolveAssetsRoot 填充） */
+let ASSETS = ''
 
-/** assets 目录：打包后优先找 exe 同级的 assets，开发时用项目里的 */
+/**
+ * assets 目录解析，按优先级：
+ *  1. 环境变量 PET_ASSETS（调试用）
+ *  2. config.json 里用户上次选的 assetsDir（可分发版靠这个）
+ *  3. 打包版：portable 的 exe 所在目录 / exe 同级 / exe 上一级 / userData
+ *  4. 开发版：项目自带 assets
+ */
 function resolveAssetsRoot() {
   if (process.env.PET_ASSETS) return process.env.PET_ASSETS
-  if (app.isPackaged) {
-    const exeDir = path.dirname(app.getPath('exe'))
-    for (const c of [path.join(exeDir, 'assets'), path.join(exeDir, '..', 'assets')]) {
-      if (fs.existsSync(c)) return c
-    }
-    return path.join(exeDir, 'assets')
-  }
-  return path.join(__dirname, 'assets')
+  if (config?.assetsDir && fs.existsSync(config.assetsDir)) return config.assetsDir
+
+  if (!app.isPackaged) return path.join(__dirname, 'assets')
+
+  // portable 启动时 exe 会解压到 temp 运行，用户放 exe 的目录在 PORTABLE_EXECUTABLE_DIR
+  const portableDir = process.env.PORTABLE_EXECUTABLE_DIR
+  const exeDir = path.dirname(app.getPath('exe'))
+  const candidates = [
+    portableDir && path.join(portableDir, 'assets'),
+    path.join(exeDir, 'assets'),
+    path.join(exeDir, '..', 'assets'),
+    path.join(app.getPath('userData'), 'assets'),
+  ].filter(Boolean)
+  for (const c of candidates) if (fs.existsSync(c)) return c
+  return path.join(portableDir || exeDir, 'assets')
+}
+
+/** 目录里是否真有皮肤（至少一个 <dir>/<dir>.model3.json） */
+function hasSkins(dir) {
+  try {
+    return fs.readdirSync(dir, { withFileTypes: true })
+      .some((d) => d.isDirectory() && fs.existsSync(path.join(dir, d.name, `${d.name}.model3.json`)))
+  } catch { return false }
 }
 
 /** 扫描 assets 下所有 <skin>/<skin>.model3.json */
@@ -147,6 +196,7 @@ function loadConfig() {
 let win = null
 let config = loadConfig()
 let tray = null
+ASSETS = resolveAssetsRoot()
 
 // ---- 隐藏 / 恢复（中键隐藏，托盘图标恢复）--------------------------------
 function hidePet() {
@@ -177,6 +227,7 @@ function togglePet() {
 }
 
 ipcMain.on('pet:hide', () => hidePet())
+ipcMain.on('pet:choose-assets', () => chooseAssetsDir())
 
 // ---- 鼠标穿透：用主进程轮询全局光标位置，不依赖渲染层 mousemove ----
 // 渲染层把「模型矩形 + HUD 矩形」发上来，主进程按屏幕坐标判定，避免 mousemove 丢事件时
@@ -208,16 +259,59 @@ function startHoverWatch() {
   }, 40)
 }
 
+/** 让用户挑 assets 目录，校验通过后保存并热切换，返回是否成功 */
+async function chooseAssetsDir() {
+  const { canceled, filePaths } = await dialog.showOpenDialog({
+    title: '选择 Live2D 模型目录（assets）',
+    buttonLabel: '用这个目录',
+    properties: ['openDirectory'],
+    defaultPath: fs.existsSync(ASSETS) ? ASSETS : app.getPath('home'),
+  })
+  if (canceled || !filePaths?.length) return false
+
+  // 用户可能直接选 assets，也可能选了它的上一级
+  const dir = [filePaths[0], path.join(filePaths[0], 'assets')].find(hasSkins)
+  if (!dir) {
+    await dialog.showMessageBox({
+      type: 'warning',
+      message: '这个目录里没有找到皮肤',
+      detail: '需要是包含 <皮肤名>/<皮肤名>.model3.json 的 assets 目录。\n可以用 tools/fetch_all.mjs 下载。',
+      buttons: ['知道了'],
+    })
+    return false
+  }
+
+  ASSETS = dir
+  config.assetsDir = dir
+  const list = scanSkins()
+  if (!list.includes(config.skin) && list.length) config.skin = list[0]
+  saveConfig()
+  console.log('[assets] 已切换 ->', dir, '共', list.length, '个皮肤')
+  if (win && !win.isDestroyed()) {
+    win.webContents.send('pet:assets-changed', skinRelPath(config.skin))
+  }
+  return true
+}
+
+/** 托盘图标：优先用打进 asar 的内置图标，assets 里的仅作回退 */
+function trayIcon() {  for (const p of [path.join(ROOT, 'src', 'tray_32.png'), path.join(ASSETS, 'tray_32.png')]) {
+    try {
+      const img = nativeImage.createFromPath(p)
+      if (!img.isEmpty()) return img
+    } catch {}
+  }
+  return nativeImage.createEmpty()
+}
+
 function createTray() {
-  const iconPath = path.join(ROOT, 'assets', 'tray_32.png')
-  let image = nativeImage.createFromPath(iconPath)
-  if (image.isEmpty()) image = nativeImage.createEmpty()
-  tray = new Tray(image)
+  tray = new Tray(trayIcon())
   tray.setToolTip('碧蓝桌宠 — 点我显示 / 隐藏')
   tray.on('click', togglePet)
+  tray.on('double-click', () => win?.showInactive())
   tray.setContextMenu(Menu.buildFromTemplate([
     { label: '显示 / 隐藏', click: togglePet },
     { type: 'separator' },
+    { label: '选择皮肤目录…', click: () => chooseAssetsDir() },
     { label: '退出', click: () => app.quit() },
   ]))
 }
@@ -260,13 +354,20 @@ function createWindow() {
   // 默认整窗穿透：鼠标事件转发进来，命中模型后再关掉穿透
   win.setIgnoreMouseEvents(true, { forward: true })
 
-  const SNAPSHOT = process.argv.includes('--snapshot')
+  const SNAPSHOT = SNAPSHOT_MODE
   if (!SNAPSHOT) win.once('ready-to-show', () => win.showInactive())
   win.on('closed', () => { win = null })
 
   // 把渲染进程的日志转到终端，方便排查
-  win.webContents.on('console-message', (_e, level, message, line, source) => {
-    console.log(`[renderer:${level}] ${message} (${source}:${line})`)
+  // Electron 45+ 回调是 (event, params)；旧版是 (event, level, message, line, source)
+  win.webContents.on('console-message', (_e, ...args) => {
+    const p = args[0]
+    if (p && typeof p === 'object') {
+      console.log(`[renderer:${p.level}] ${p.message} (${p.sourceId}:${p.lineNumber})`)
+    } else {
+      const [level, message, line, source] = args
+      console.log(`[renderer:${level}] ${message} (${source}:${line})`)
+    }
   })
   win.webContents.on('did-fail-load', (_e, code, desc, url) => {
     console.error('[load-fail]', code, desc, url)
@@ -436,6 +537,7 @@ ipcMain.on('pet:menu', () => {
     { label: '重新加载', click: () => win.reload() },
     { label: '打开配置', click: () => require('electron').shell.openPath(CONFIG_FILE) },
     { label: '打开皮肤目录', click: () => require('electron').shell.openPath(ASSETS) },
+    { label: '选择皮肤目录…', click: () => chooseAssetsDir() },
     { type: 'separator' },
     { label: '退出', click: () => app.quit() },
   ]).popup({ window: win })
@@ -550,8 +652,16 @@ function readUsage() {
   return new Promise((resolve) => {
     execFile(
       process.execPath,
-      [USAGE_SCRIPT, '--json', '--days', '1'],
-      { env: { ...process.env, ELECTRON_RUN_AS_NODE: '1' }, timeout: 20000 },
+      [USAGE_SCRIPT, '--json', '--today'],
+      {
+        // 缓存落到 userData：portable 版每次解压到新临时目录，只有 userData 是持久的
+        env: {
+          ...process.env,
+          ELECTRON_RUN_AS_NODE: '1',
+          DSH_USAGE_CACHE_DIR: app.getPath('userData'),
+        },
+        timeout: 60000,
+      },
       (err, stdout, stderr) => {
         if (err) {
           console.error('[usage] 执行失败:', err.message, stderr?.slice(0, 300))
@@ -606,9 +716,18 @@ function fetchBalance() {
 ipcMain.handle('pet:balance', () => fetchBalance())
 
 // ---- 生命周期 -----------------------------------------------------------
-app.whenReady().then(() => {
+app.whenReady().then(async () => {
   console.log('[boot] config.deepseek.apiKey 长度 =', (config.deepseek?.apiKey || '').length)
+  console.log('[boot] assets =', ASSETS, '皮肤数 =', scanSkins().length)
   fetchBalance().then((r) => console.log('[balance:boot]', JSON.stringify(r)))
+
+  // 打包版第一次跑、又没找到皮肤：引导选目录（只自动打扰一次，之后走托盘菜单）
+  if (!SNAPSHOT_MODE && !hasSkins(ASSETS) && !config.assetsPromptShown) {
+    config.assetsPromptShown = true
+    saveConfig()
+    await chooseAssetsDir()
+  }
+
   createWindow()
   createTray()
   app.on('activate', () => { if (BrowserWindow.getAllWindows().length === 0) createWindow() })

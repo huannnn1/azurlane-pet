@@ -13,6 +13,10 @@ tools/download.log
 tools/failures.json
 tools/.usage-cache.json
 
+# 构建产物（build/ 例外：icon.png 要入库）
+release/
+dist/
+
 # 系统
 Thumbs.db
 .DS_Store

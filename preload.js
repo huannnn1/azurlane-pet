@@ -19,6 +19,8 @@ contextBridge.exposeInMainWorld('pet', {
   saveHitareas: (skin, data) => ipcRenderer.invoke('pet:save-hitareas', skin, data),
   clearHitareas: (skin) => ipcRenderer.invoke('pet:clear-hitareas', skin),
   onSkin: (cb) => ipcRenderer.on('pet:skin-changed', (_e, rel) => cb(rel)),
+  onAssetsChanged: (cb) => ipcRenderer.on('pet:assets-changed', (_e, rel) => cb(rel)),
+  chooseAssets: () => ipcRenderer.send('pet:choose-assets'),
   onFit: (cb) => ipcRenderer.on('pet:fit-changed', (_e, m) => cb(m)),
   onCalibrate: (cb) => ipcRenderer.on('pet:calibrate', () => cb()),
   onHitareasCleared: (cb) => ipcRenderer.on('pet:hitareas-cleared', () => cb()),

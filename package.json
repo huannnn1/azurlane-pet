@@ -7,10 +7,12 @@
   "scripts": {
     "start": "electron .",
     "snapshot": "electron . --snapshot",
+    "dist": "electron-builder --win portable",
     "fetch:skin": "node tools/fetch_skin.mjs",
     "fetch:all": "node tools/fetch_all.mjs",
     "verify": "node tools/verify_all.mjs",
-    "dist": "electron-builder --win portable"
+    "names": "node tools/build_skin_names.mjs",
+    "usage": "node tools/dsh_usage.mjs"
   },
   "dependencies": {
     "pixi-live2d-display": "^0.4.0",
@@ -24,7 +26,8 @@
     "appId": "com.huannnn1.azurlanepet",
     "productName": "AzurLanePet",
     "directories": {
-      "output": "release"
+      "output": "release",
+      "buildResources": "build"
     },
     "files": [
       "main.js",
@@ -32,22 +35,23 @@
       "src/**/*",
       "tools/dsh_usage.mjs",
       "tools/skin_names.json",
-      "package.json",
-      "!**/*.map"
+      "package.json"
     ],
     "asarUnpack": [
-      "tools/dsh_usage.mjs",
-      "tools/skin_names.json"
+      "tools/**/*"
     ],
     "win": {
       "target": [
-        "portable"
+        {
+          "target": "portable",
+          "arch": ["x64"]
+        }
       ],
-      "icon": "build/icon.png"
+      "icon": "build/icon.png",
+      "artifactName": "AzurLanePet-${version}.exe"
     },
     "portable": {
       "artifactName": "AzurLanePet-${version}.exe"
-    },
-    "compression": "maximum"
+    }
   }
 }

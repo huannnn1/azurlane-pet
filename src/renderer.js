@@ -59,7 +59,7 @@ async function loadModel(url) {
     modelRect = null
   }
 
-  skinName = url.match(/assets\/([^/]+)\//)?.[1] ?? null
+  skinName = decodeURIComponent(url).match(/assets[\/\\]([^\/\\]+)[\/\\]/)?.[1] ?? null
 
   try {
     model = await PIXI.live2d.Live2DModel.from(url, { autoInteract: false, idleMotionGroup: 'idle' })
@@ -87,6 +87,7 @@ async function loadModel(url) {
   layout()
   startIdle()
   setCalBar('')
+  showEmpty(false)
 }
 
 async function switchSkin(url) {
@@ -161,12 +162,26 @@ function publishInteractive() {
   } else if (modelRect) {
     rects.push({ x: modelRect.x, y: modelRect.y, w: modelRect.w, h: modelRect.h })
   }
+  // 没找到模型时，整窗可点，方便点提示卡去选目录
+  const empty = el('empty')
+  if (empty?.classList.contains('on')) {
+    rects.push({ x: 0, y: 0, w: window.innerWidth, h: window.innerHeight })
+  }
   const hud = el('hud')
   if (hud) {
     const r = hud.getBoundingClientRect()
     rects.push({ x: r.x, y: r.y, w: r.width, h: r.height })
   }
   try { window.pet.interactive(rects) } catch {}
+}
+
+/** 没模型时的自救提示卡 */
+function showEmpty(on) {
+  const e = el('empty')
+  if (!e) return
+  e.classList.toggle('on', !!on)
+  if (on) setCalBar('')
+  publishInteractive()
 }
 
 // ---------- 触摸区标定 ----------------------------------------------------
@@ -323,6 +338,9 @@ const fmt = (n) => {
 }
 
 async function refreshUsage() {
+  // 首次要全量解压几千个会话文件，给个「统计中」的反馈，别让 HUD 干晾着
+  el('tok').textContent = '统计中'
+  el('tok').className = 'val dim'
   let u
   try {
     u = await window.pet.usage()
@@ -367,17 +385,30 @@ async function refreshBalance() {
 }
 
 function boot() {
+  window.pet.skins().then((list) => {
+    if (!list || !list.length) showEmpty(true)
+  }).catch(() => {})
+
   window.pet.skin().then((url) => {
     MODEL_URL = url
     return loadModel(url)
   }).catch((e) => {
     console.log('[boot] 模型加载失败:', e.message)
-    setCalBar('这个皮肤加载失败，正在换一个…')
+    // 没有文件可换时给用户一个能自救的入口，而不是一直空白
+    showEmpty(true)
   })
 
   window.pet.onSkin((rel) => switchSkin(rel))
+  window.pet.onAssetsChanged((rel) => {
+    showEmpty(false)
+    if (rel) switchSkin(rel)
+  })
   window.pet.onActivity((active) => setActivity(active))
   scheduleIdleTick()
+
+  el('empty')?.addEventListener('click', () => window.pet.chooseAssets())
+  // 点 HUD 也能开菜单：余额显示「未配置」时用户有个顺手的入口
+  el('hud')?.addEventListener('click', () => window.pet.menu())
 
   window.pet.onCalibrate(() => startCalibration())
   window.pet.onHitareasCleared(async () => {
