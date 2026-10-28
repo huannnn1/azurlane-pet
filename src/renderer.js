@@ -55,6 +55,12 @@ let dragMoved = false
 let downAt = null
 let hoverInside = false   // 光标是否在人物上（穿透判定回传，HUD hover 模式与抓取手势都用它）
 let hasHitAreas = false
+
+/** 鼠标在人物身上时显示抓取手势，拖动中换成抓紧 */
+function updateCursor() {
+  if (!canvas) return
+  canvas.style.cursor = dragging ? 'grabbing' : (hoverInside ? 'grab' : 'default')
+}
 let groups = {}
 let fitMode = 'auto'
 let anchors = null        // 标定后的触摸锚点 { head:{x,y,r}, body:..., special:... }
@@ -393,6 +399,7 @@ canvas.addEventListener('pointerdown', (e) => {
   dragging = true
   dragMoved = false
   downAt = { x: e.screenX, y: e.screenY }
+  updateCursor()
   window.pet.dragStart({ x: e.screenX, y: e.screenY })
   canvas.setPointerCapture?.(e.pointerId)
 })
@@ -411,6 +418,7 @@ window.addEventListener('pointerup', (e) => {
   if (!dragging) return
   dragging = false
   window.pet.dragEnd()
+  updateCursor()
   // 松手时按总位移再复核一次：拖动途中指针事件可能丢，
   // 只看 dragMoved 会把一次真拖动误判成点击，从而播出带镜头的触摸动作
   const total = Math.hypot(e.screenX - downAt.x, e.screenY - downAt.y)
@@ -429,6 +437,7 @@ function abortDrag() {
   if (!dragging) return
   dragging = false
   window.pet.dragEnd()
+  updateCursor()
 }
 window.addEventListener('pointercancel', abortDrag)
 window.addEventListener('blur', abortDrag)
@@ -696,7 +705,7 @@ function boot() {
   window.pet.onState((type) => onDsState(type))
   window.pet.onBubble((on) => { bubbleOn = !!on })
   window.pet.onHud((mode) => { hudMode = mode || 'always'; applyHudMode(); layout() })
-  window.pet.onHover((inside) => { hoverInside = !!inside; applyHudMode() })
+  window.pet.onHover((inside) => { hoverInside = !!inside; applyHudMode(); updateCursor() })
   window.pet.config().then((c) => {
     bubbleOn = c?.bubble !== false
     hudMode = c?.hud ?? 'always'
