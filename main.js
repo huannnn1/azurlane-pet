@@ -59,6 +59,7 @@ const DEFAULT_CONFIG = {
   hideOnFullscreen: true, // 检测到全屏应用/演示模式时自动让位
   bubble: true, // 头顶气泡台词
   hud: 'always', // always | hover | off
+  touchAuto: true, // true: 用模型内置的 Touch* 网格自动识别触摸区；false: 用手动标定
   deepseek: { apiKey: '', baseUrl: 'https://api.deepseek.com' },
   usage: { refreshMinutes: 5, sessionOnly: false },
 }
@@ -672,11 +673,39 @@ function createWindow() {
     console.error('[load-fail]', code, desc, url)
   })
 
+  // B1 验收：PET_TEST_HIT="x1,y1;x2,y2" 时在指定窗口坐标上模拟命中并打印结果
+  if (process.env.PET_TEST_HIT) {
+    win.webContents.once('did-finish-load', () => {
+      setTimeout(async () => {
+        if (!win || win.isDestroyed()) return
+        for (const pair of process.env.PET_TEST_HIT.split(';')) {
+          const [x, y] = pair.split(',').map(Number)
+          if (!Number.isFinite(x) || !Number.isFinite(y)) continue
+          try {
+            const r = await win.webContents.executeJavaScript(
+              `(window.__petHitTest ? window.__petHitTest(${x}, ${y}) : 'no-hook')`,
+            )
+            console.log('[test-hit]', x, y, '->', r)
+            await new Promise((res) => setTimeout(res, 1200))
+          } catch (e) {
+            console.log('[test-hit] 失败', e.message)
+          }
+        }
+      }, 6000)
+    })
+  }
+
   // B0 调试：PET_TOUCH_DEBUG=1 时让渲染层把模型里的 Touch 网格信息打出来
   // PET_TOUCH_DEBUG=2 时额外做一次「播 touch_idle3 再扫一遍」的对比
   // PET_TOUCH_DEBUG=3 时改成「把 touch_idle3 参数拉起来再扫」，验证画外网格会不会移进画内
   const touchDebugMode = process.env.PET_TOUCH_DEBUG
-  if (touchDebugMode === '1' || touchDebugMode === '2' || touchDebugMode === '3') {
+  if (touchDebugMode === '4') {
+    win.webContents.once('did-finish-load', () => {
+      setTimeout(() => {
+        if (win && !win.isDestroyed()) win.webContents.send('pet:touch-scan')
+      }, 6000)
+    })
+  } else if (touchDebugMode === '1' || touchDebugMode === '2' || touchDebugMode === '3') {
     win.webContents.once('did-finish-load', () => {
       setTimeout(() => {
         if (!win || win.isDestroyed()) return
@@ -1008,6 +1037,23 @@ ipcMain.on('pet:menu', () => {
             saveConfig()
             if (win) win.webContents.send('pet:bubble', mi.checked)
           },
+        },
+        {
+          label: '触摸区',
+          submenu: [
+            ['auto', '自动识别（模型内置）'],
+            ['manual', '手动标定'],
+          ].map(([v, label]) => {
+            const cur = config.touchAuto === false ? 'manual' : 'auto'
+            return {
+              label: label + (cur === v ? '  ✓' : ''),
+              click: () => {
+                config.touchAuto = v === 'auto'
+                saveConfig()
+                if (win) win.webContents.send('pet:touch-mode', v)
+              },
+            }
+          }),
         },
         {
           label: 'HUD 显示',

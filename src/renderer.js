@@ -53,7 +53,9 @@ let modelRect = null
 let dragging = false
 let dragMoved = false
 let downAt = null
+let dragZoneHit = null  // 在 TouchDrag 区按下时记住它，松手播动作而不是移动窗口
 let hoverInside = false   // 光标是否在人物上（穿透判定回传，HUD hover 模式与抓取手势都用它）
+let touchMode = 'auto'    // auto：用模型里的 Touch* 网格；manual：用用户标定的锚点
 let hasHitAreas = false
 
 /** 鼠标在人物身上时显示抓取手势，拖动中换成抓紧 */
@@ -130,6 +132,7 @@ async function loadModel(url) {
   showEmpty(false)
   showLoading(false)
   installFocusPatch()   // 给新模型的 coreModel.update 打上视线补丁
+  registerTouchAreas()  // 把模型里的 Touch* 网格注册成自动触摸区
   // 换皮肤后冒一句中文名，方便确认换的是谁
   window.pet.skinLabel()
     .then((label) => { if (label) say(label, 2000) })
@@ -234,13 +237,67 @@ function layout() {
 
 window.addEventListener('resize', layout)
 
+// ---------- 自动触摸区：把模型里的 Touch* 网格注册成命中区 ----------
+// 网格名就是动作组名（TouchIdle3 -> touch_idle3），不用人工映射。
+// 画外过滤不单独做：库的 isHit 每次实时取包围盒，停在画布外的区天然点不到。
+const TOUCH_PRIORITY = (name) => {
+  const n = String(name).toLowerCase()
+  if (n.includes('drag')) return 5
+  if (n.includes('idle')) return 4
+  if (n.includes('special')) return 3
+  if (n.includes('head')) return 2
+  if (n.includes('body')) return 1
+  return 0
+}
+
+/** TouchIdle3 -> touch_idle3 */
+function meshToMotion(name) {
+  return String(name).replace(/([a-z0-9])([A-Z])/g, '$1_$2').toLowerCase()
+}
+
+let touchAreaCount = 0
+
+/** 扫描模型里的 Touch* 网格并注册成命中区，返回注册数量 */
+function registerTouchAreas() {
+  const im = model?.internalModel
+  const cm = im?.coreModel?._model || im?.coreModel
+  if (!im || !cm) return 0
+  if (touchMode === 'manual') {
+    // 手动模式：清掉自动注册，交回锚点/兜底逻辑
+    im.hitAreas = {}
+    hasHitAreas = (im.settings?.hitAreas?.length ?? 0) > 0
+    return 0
+  }
+  const ids = cm.drawables?.ids ?? []
+  const areas = {}
+  let count = 0
+  for (let i = 0; i < ids.length; i++) {
+    const id = String(ids[i])
+    if (!/^touch/i.test(id)) continue
+    // 动作文件不存在的区直接跳过，免得点了没反应
+    if (!groups[meshToMotion(id)]?.length) continue
+    areas[id] = { id, name: id, index: i }
+    count++
+  }
+  if (!count) return 0
+  console.log('[touch] 注册前 hitAreas:', Object.keys(im.hitAreas ?? {}).join(',') || '(空)')
+  im.hitAreas = areas
+  console.log('[touch] 注册后 hitAreas:', Object.keys(im.hitAreas ?? {}).join(',') || '(空)')
+  hasHitAreas = true
+  touchAreaCount = count
+  console.log('[touch] 自动注册命中区', count, '个:', Object.keys(areas).slice(0, 8).join(','))
+  return count
+}
+
 function hitAt(x, y) {
   if (!model) return []
   if (!modelRect) return []
   const { x: rx, y: ry, w, h } = modelRect
+  // 自动模式且模型里有 Touch* 网格：自动区优先，不用锚点也不用兜底
+  const useAuto = touchMode === 'auto' && touchAreaCount > 0
 
   // 标定过：按锚点算最近区域（x 按宽高比换算成"高度单位"，避免竖图横向误差）
-  if (anchors) {
+  if (!useAuto && anchors) {
     const nx = (x - rx) / w
     const ny = (y - ry) / h
     const aspect = w / h
@@ -256,9 +313,35 @@ function hitAt(x, y) {
     return []
   }
 
-  // 内置 HitAreas（官方模型）
-  if (hasHitAreas) {
-    try { return model.hitTest(x, y) ?? [] } catch { return [] }
+  // 自动注册的 Touch 网格，或模型自带 HitAreas
+  if (useAuto || hasHitAreas) {
+    try {
+      const hits = model.hitTest(x, y) ?? []
+      if (!window.__hitLogged) {
+        window.__hitLogged = true
+        const im = model.internalModel
+        const cm2 = im?.coreModel?._model || im?.coreModel
+        let conv = 'n/a'
+        try {
+          const p = { x, y }
+          model.toModelPosition(p, p)
+          conv = `${Math.round(p.x)},${Math.round(p.y)}`
+        } catch (e) { conv = 'err:' + e.message }
+        let b0 = 'n/a'
+        try {
+          const b = im.getDrawableBounds(im.hitAreas.TouchBody?.index ?? 0, { x: 0, y: 0, width: 0, height: 0 })
+          b0 = `${Math.round(b.x)},${Math.round(b.y)} ${Math.round(b.width)}x${Math.round(b.height)}`
+        } catch (e) { b0 = 'err:' + e.message }
+        console.log('[touch] hitTest', x, y, '->', JSON.stringify(hits),
+          '转换后=', conv, 'TouchBody bounds=', b0,
+          'originalWH=', im.originalWidth, im.originalHeight)
+      }
+      if (hits.length > 1) {
+        // 优先级：Drag > Idle > Special > Head > Body，同级保持库返回的顺序
+        hits.sort((a, b) => TOUCH_PRIORITY(b) - TOUCH_PRIORITY(a))
+      }
+      return hits
+    } catch { return [] }
   }
 
   // 兜底：按身高比例切三段
@@ -412,7 +495,16 @@ canvas.addEventListener('pointerdown', (e) => {
     return
   }
   if (e.button !== 0) return
-  if (!hitAt(e.clientX, e.clientY).length) return
+  const hits = hitAt(e.clientX, e.clientY)
+  if (!hits.length) return
+  // TouchDrag 区：按下只播拖拽动作，不移动窗口（Alt+左键强制拖窗口作为退路）
+  const dragArea = hits.find((h) => /drag/i.test(h))
+  if (dragArea && !e.altKey) {
+    dragZoneHit = dragArea
+    dragging = false
+    console.log('[hit] 落在', dragArea, '，按拖拽区处理（不移动窗口）。Alt+左键可强制拖窗口')
+    return
+  }
   dragging = true
   dragMoved = false
   downAt = { x: e.screenX, y: e.screenY }
@@ -432,6 +524,13 @@ window.addEventListener('pointermove', (e) => {
 })
 
 window.addEventListener('pointerup', (e) => {
+  // 拖拽区按下后松手：播该区的拖拽动作，不涉及窗口
+  if (dragZoneHit) {
+    const area = dragZoneHit
+    dragZoneHit = null
+    playHit(area)
+    return
+  }
   if (!dragging) return
   dragging = false
   window.pet.dragEnd()
@@ -471,9 +570,16 @@ function play(groupName) {
 }
 
 function playHit(area) {
+  // 1) 自动触摸区：网格名直接就是动作组名（TouchIdle3 -> touch_idle3）
+  const mapped = meshToMotion(area)
+  if (groups[mapped]?.length && play(mapped)) {
+    console.log('[hit] 命中网格', area, '-> 播放', mapped)
+    return true
+  }
+  // 2) 旧的手动映射
   console.log('[hit] 播放触摸动作', area, 'dragMoved=', dragMoved)
   const named = HIT_MOTION[area]
-  if (named && play(named)) return
+  if (named && play(named)) return true
   const fallback = ['touch_head', 'touch_body', 'touch_special', 'main_1'].find(play)
   return fallback
 }
@@ -609,6 +715,88 @@ function checkLowBalance(total) {
     lowWarned.level = 10
     say('余额不多了哦')
   }
+}
+
+// ---------- B0 补充实验：自动扫描「什么操作能把画外网格移进画内」----------
+// 只在 PET_TOUCH_DEBUG=4 时触发。做法：对每个带 touch 的参数分别设 min/max 并
+// 调 coreModel.update() 后重扫，再依次播待机动作各等 1 秒重扫。
+async function scanActivation() {
+  const im = model?.internalModel
+  const cmRaw = im?.coreModel
+  const cm = cmRaw?._model || cmRaw
+  if (!im || !cm) { console.log('[activate] 模型不可用'); return }
+
+  const drawIds = cm.drawables?.ids ?? []
+  const ow = im.originalWidth
+  const oh = im.originalHeight
+  const touchIdx = []
+  for (let i = 0; i < drawIds.length; i++) if (/touch/i.test(String(drawIds[i]))) touchIdx.push(i)
+
+  const scanInCanvas = () => {
+    const set = new Set()
+    for (const i of touchIdx) {
+      let arr
+      try { arr = im.getDrawableVertices(i) } catch { continue }
+      if (!arr || arr.length < 2) continue
+      let minX = Infinity
+      let maxX = -Infinity
+      let minY = Infinity
+      let maxY = -Infinity
+      for (let v = 0; v + 1 < arr.length; v += 2) {
+        if (arr[v] < minX) minX = arr[v]
+        if (arr[v] > maxX) maxX = arr[v]
+        if (arr[v + 1] < minY) minY = arr[v + 1]
+        if (arr[v + 1] > maxY) maxY = arr[v + 1]
+      }
+      if (!(maxX < 0 || minX > ow || maxY < 0 || minY > oh)) set.add(drawIds[i])
+    }
+    return set
+  }
+
+  const base = scanInCanvas()
+  console.log('[activate] 初始画内网格:', base.size, '/', touchIdx.length, [...base].join(','))
+
+  // 1) 扫参数：每个带 touch 的参数试 min / max
+  const paramIds = cm.parameters?.ids ?? []
+  const pmin = cm.parameters?.minimumValues ?? []
+  const pmax = cm.parameters?.maximumValues ?? []
+  const touchParams = []
+  for (let i = 0; i < paramIds.length; i++) {
+    if (/touch/i.test(String(paramIds[i]))) touchParams.push({ id: paramIds[i], i })
+  }
+  console.log('[activate] 待扫参数数:', touchParams.length)
+
+  const findings = []
+  for (const { id, i } of touchParams) {
+    let origin = 0
+    try { origin = cm.getParameterValueById(id) } catch { continue }
+    for (const [label, val] of [['min', pmin[i]], ['max', pmax[i]]]) {
+      if (val == null || !Number.isFinite(val)) continue
+      try {
+        cm.setParameterValueById(id, val)
+        cm.update()          // 关键：改完参数必须 update，顶点才会重算
+      } catch { continue }
+      const now = scanInCanvas()
+      const added = [...now].filter((k) => !base.has(k))
+      if (added.length) {
+        findings.push({ id, label, added })
+        console.log('[activate]', id, '=', label, '-> 进画内:', added.join(','))
+      }
+      try { cm.setParameterValueById(id, origin); cm.update() } catch {}
+    }
+  }
+  if (!findings.length) console.log('[activate] 参数扫描：没有任何参数能把画外网格移进画内')
+
+  // 2) 播待机动作，各等 1 秒后重扫
+  for (const m of ['idle1', 'idle3', 'idle5', 'idle']) {
+    try { model.motion(m) } catch {}
+    await new Promise((r) => setTimeout(r, 1000))
+    const now = scanInCanvas()
+    const added = [...now].filter((k) => !base.has(k))
+    console.log('[activate] 播', m, '-> 画内', now.size, '个', added.length ? '新增: ' + added.join(',') : '(无新增)')
+  }
+
+  console.log('[activate] 扫描结束，参数命中数:', findings.length)
 }
 
 // ---------- B0 调试：核实 Touch 网格 ----------
@@ -877,6 +1065,20 @@ function boot() {
   window.pet.onActivity((active) => setActivity(active))
   window.pet.onState((type) => onDsState(type))
   window.pet.onBubble((on) => { bubbleOn = !!on })
+  // 测试用：外部可通过 executeJavaScript 调 window.__petHitTest(x,y) 模拟一次命中
+  window.__petHitTest = (x, y) => {
+    try {
+      const hits = hitAt(x, y)
+      if (!hits.length) return '未命中'
+      const area = hits[0]
+      const mapped = meshToMotion(area)
+      playHit(area)
+      return `命中 ${area} -> 动作 ${mapped}`
+    } catch (e) {
+      return '异常: ' + e.message
+    }
+  }
+
   // 测试用：外部可通过 executeJavaScript 调 window.__petFocus(x,y) 强制视线
   window.__petFocus = (x, y) => {
     focusTarget = { x, y }
@@ -887,6 +1089,13 @@ function boot() {
   window.pet.onHover((inside) => { hoverInside = !!inside; applyHudMode(); updateCursor() })
   // B0 调试入口：主进程置 PET_TOUCH_DEBUG=1 时触发
   window.pet.onTouchDebug((arg) => dumpTouchMeshes(arg))
+  window.pet.onTouchScan(() => scanActivation())
+  // 切换自动/手动触摸区
+  window.pet.onTouchMode((mode) => {
+    touchMode = mode === 'manual' ? 'manual' : 'auto'
+    if (model) registerTouchAreas()
+    console.log('[touch] 触摸区模式 ->', touchMode)
+  })
   // 系统空闲时降帧 + 拉长动作间隔；人一回来立刻恢复
   window.pet.onDrowsy((on) => {
     drowsy = !!on
@@ -897,8 +1106,11 @@ function boot() {
     bubbleOn = c?.bubble !== false
     hudMode = c?.hud ?? 'always'
     sizeScale = c?.sizeScale ?? 1
+    touchMode = c?.touchAuto === false ? 'manual' : 'auto'
     applyHudMode()
     layout()
+    // 模式在模型加载之后才确定时，重注册一次
+    if (model) registerTouchAreas()
   }).catch(() => {})
   scheduleIdleTick()
 
