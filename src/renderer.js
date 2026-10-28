@@ -561,6 +561,22 @@ function boot() {
     try { model?.motion(key) } catch (e) { console.log('[motion] 播放失败', key, e.message) }
   })
   window.pet.onVisible((v) => setRendering(v))
+  // 视线跟随：把窗口内坐标归一化到 -1~1 交给模型
+  let lastFocusLog = 0
+  window.pet.onFocus(({ x, y }) => {
+    if (!model) return
+    const W = window.innerWidth
+    const H = window.innerHeight
+    if (!W || !H) return
+    const nx = Math.max(-1, Math.min(1, (x / W) * 2 - 1))
+    const ny = Math.max(-1, Math.min(1, (y / H) * 2 - 1))
+    try { model.focus(nx, ny) } catch {}
+    const now = Date.now()
+    if (now - lastFocusLog > 1500) {
+      lastFocusLog = now
+      console.log('[focus]', nx.toFixed(2), ny.toFixed(2))
+    }
+  })
   window.pet.onNoSkins(() => showEmpty(true))
   window.pet.onAssetsChanged((rel) => {
     showEmpty(false)

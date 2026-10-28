@@ -354,6 +354,33 @@ ipcMain.on('pet:interactive', (_e, rects) => {
   interactive = Array.isArray(rects) ? rects : []
 })
 
+/** 视线跟随状态：光标坐标、最后活动时间、是否已回正 */
+let lastFocus = { x: -1, y: -1, at: 0, idle: false }
+
+/**
+ * 把光标在窗口内的坐标发给渲染层，让她转头看鼠标。
+ * 只在坐标真的变化（超过 1px）时发；3 秒不动或离得太远就回正前方。
+ */
+function updateFocus(lx, ly, bw, bh) {
+  if (!win || win.isDestroyed() || !bw || !bh) return
+  const now = Date.now()
+  const cx = bw / 2
+  const cy = bh / 2
+
+  if (Math.abs(lx - lastFocus.x) > 1 || Math.abs(ly - lastFocus.y) > 1) {
+    lastFocus = { x: lx, y: ly, at: now, idle: false }
+    // 离窗口超过 1.5 个屏宽就别转了，她看不见那么远
+    const maxDist = screen.getPrimaryDisplay().workArea.width * 1.5
+    const near = Math.hypot(lx - cx, ly - cy) < maxDist
+    try {
+      win.webContents.send('pet:focus', near ? { x: Math.round(lx), y: Math.round(ly) } : { x: Math.round(cx), y: Math.round(cy) })
+    } catch {}
+  } else if (!lastFocus.idle && now - lastFocus.at > 3000) {
+    lastFocus.idle = true
+    try { win.webContents.send('pet:focus', { x: Math.round(cx), y: Math.round(cy) }) } catch {}
+  }
+}
+
 function startHoverWatch() {
   if (hoverTimer) clearInterval(hoverTimer)
   hoverTimer = setInterval(() => {
@@ -362,17 +389,24 @@ function startHoverWatch() {
     // 窗口会卡在原地，松手还可能被当成一次点击去播动作（看起来像突然放大）
     if (dragOrigin) return
     let inside = false
+    let lx = 0
+    let ly = 0
+    let bw = 0
+    let bh = 0
     try {
       const p = screen.getCursorScreenPoint()
       const b = win.getBounds()
-      const lx = p.x - b.x
-      const ly = p.y - b.y
+      lx = p.x - b.x
+      ly = p.y - b.y
+      bw = b.width
+      bh = b.height
       inside = interactive.some((r) => lx >= r.x && lx <= r.x + r.w && ly >= r.y && ly <= r.y + r.h)
     } catch { inside = false }
     if (inside !== lastInside) {
       lastInside = inside
       try { win.setIgnoreMouseEvents(!inside, { forward: true }) } catch {}
     }
+    updateFocus(lx, ly, bw, bh)
   }, 40)
 }
 

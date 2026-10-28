@@ -41,6 +41,7 @@ contextBridge.exposeInMainWorld('pet', {
   onActivity: (cb) => ipcRenderer.on('pet:activity', (_e, active) => cb(active)),
   onState: (cb) => ipcRenderer.on('pet:state', (_e, type) => cb(type)),
   onVisible: (cb) => ipcRenderer.on('pet:visible', (_e, v) => cb(v)),
+  onFocus: (cb) => ipcRenderer.on('pet:focus', (_e, p) => cb(p)),
   onNoSkins: (cb) => ipcRenderer.on('pet:no-skins', () => cb()),
   skinOk: (skin) => ipcRenderer.send('pet:skin-ok', skin),
   skinFailed: (skin) => ipcRenderer.send('pet:skin-failed', skin),
