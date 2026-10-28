@@ -673,6 +673,74 @@ function createWindow() {
     console.error('[load-fail]', code, desc, url)
   })
 
+  // 拖拽自动化测试：注入真实输入事件，覆盖「拖窗口 / 非触摸区拖动 / Alt 强制拖动」
+  if (process.env.PET_DRAG_TEST === '1') {
+    win.webContents.once('did-finish-load', () => {
+      setTimeout(async () => {
+        if (!win || win.isDestroyed()) return
+        const sleep = (ms) => new Promise((r) => setTimeout(r, ms))
+        const inject = (type, x, y, modifiers = []) => {
+          // 渲染层用 e.screenX/screenY 算位移，所以必须同时给 globalX/globalY
+          const rect = win.getBounds()
+          win.webContents.sendInputEvent({
+            type,
+            x,
+            y,
+            globalX: rect.x + x,
+            globalY: rect.y + y,
+            button: 'left',
+            clickCount: 1,
+            modifiers,
+          })
+        }
+        let pts = {}
+        try {
+          pts = await win.webContents.executeJavaScript('window.__touchPoints ? window.__touchPoints() : {}')
+        } catch (e) {
+          console.log('[drag-test] 取坐标失败:', e.message)
+        }
+        console.log('[drag-test] 触摸区坐标:', JSON.stringify(pts).slice(0, 300))
+        // 优先用窗口内的区做测试（cover 模式会把部分区裁到窗口外）
+        const W = win.getBounds().width
+        const H = win.getBounds().height
+        const inWindow = (p) => Array.isArray(p) && p[0] >= 2 && p[1] >= 2 && p[0] <= W - 2 && p[1] <= H - 2
+        const pick = ['TouchBody', 'TouchSpecial', 'TouchHead'].map((k) => [k, pts[k]]).find(([, p]) => inWindow(p))
+        if (!pick) { console.log('[drag-test] 没有落在窗口内的触摸区，跳过'); return }
+        const [pickName, pickPt] = pick
+        const body = pickPt
+        console.log('[drag-test] 选用测试区:', pickName, pickPt, '窗口', W, 'x', H)
+        // 注入输入事件前先确保窗口可接收
+        try { win.showInactive(); win.focus() } catch {}
+        console.log('[drag-test] 窗口 bounds=', JSON.stringify(win.getBounds()),
+          'visible=', win.isVisible(), 'focused=', win.isFocused())
+
+        const runCase = async (label, x, y, dx, dy, modifiers = []) => {
+          const before = win.getBounds()
+          inject('mouseDown', x, y, modifiers)
+          await sleep(80)
+          inject('mouseMove', x + dx / 2, y + dy / 2, modifiers)
+          await sleep(80)
+          inject('mouseMove', x + dx, y + dy, modifiers)
+          await sleep(80)
+          inject('mouseUp', x + dx, y + dy, modifiers)
+          await sleep(400)
+          const after = win.getBounds()
+          const moved = Math.abs(after.x - before.x) + Math.abs(after.y - before.y)
+          console.log(`[drag-test] ${label}: 位置 ${before.x},${before.y} -> ${after.x},${after.y}，位移 ${moved}px`)
+          return moved
+        }
+
+        // 情况 1：在触摸区上拖
+        await runCase(`${pickName} 拖动`, body[0], body[1], 40, 24)
+        // 情况 2：在身体下方（不透明、但不在任何触摸矩形里）拖
+        await runCase('身体外（腿上）拖动', body[0], Math.min(H - 3, body[1] + 55), 40, 24)
+        // 情况 3：Alt + 在触摸区上拖
+        await runCase(`Alt+${pickName} 拖动`, body[0], body[1], 30, 18, ['alt'])
+        console.log('[drag-test] 结束')
+      }, 7000)
+    })
+  }
+
   // B1 验收：PET_TEST_HIT="x1,y1;x2,y2" 时在指定窗口坐标上模拟命中并打印结果
   if (process.env.PET_TEST_HIT) {
     win.webContents.once('did-finish-load', () => {
@@ -699,7 +767,13 @@ function createWindow() {
   // PET_TOUCH_DEBUG=2 时额外做一次「播 touch_idle3 再扫一遍」的对比
   // PET_TOUCH_DEBUG=3 时改成「把 touch_idle3 参数拉起来再扫」，验证画外网格会不会移进画内
   const touchDebugMode = process.env.PET_TOUCH_DEBUG
-  if (touchDebugMode === '4') {
+  if (touchDebugMode === '5') {
+    win.webContents.once('did-finish-load', () => {
+      setTimeout(() => {
+        if (win && !win.isDestroyed()) win.webContents.send('pet:touch-verify')
+      }, 6000)
+    })
+  } else if (touchDebugMode === '4') {
     win.webContents.once('did-finish-load', () => {
       setTimeout(() => {
         if (win && !win.isDestroyed()) win.webContents.send('pet:touch-scan')

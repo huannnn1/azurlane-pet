@@ -720,6 +720,71 @@ function checkLowBalance(total) {
   }
 }
 
+// ---------- 自动验证触摸区：程序取包围盒中心再转屏幕坐标，不靠手算 ----------
+function verifyTouchAreas() {
+  const im = model?.internalModel
+  const cm = im?.coreModel?._model || im?.coreModel
+  if (!im || !cm) { console.log('[verify] 模型不可用'); return }
+  const ow = im.originalWidth
+  const oh = im.originalHeight
+  const areas = Object.entries(im.hitAreas ?? {})
+  if (!areas.length) { console.log('[verify] 没有注册任何触摸区'); return }
+
+  const inCanvas = []
+  const outCanvas = []
+  for (const [name, def] of areas) {
+    let b
+    try { b = im.getDrawableBounds(def.index, { x: 0, y: 0, width: 0, height: 0 }) } catch { continue }
+    const isOut = b.x + b.width < 0 || b.x > ow || b.y + b.height < 0 || b.y > oh
+    const cx = b.x + b.width / 2
+    const cy = b.y + b.height / 2
+    let gx = cx
+    let gy = cy
+    try {
+      const p = new PIXI.Point(cx, cy)
+      model.toGlobal(p, p)   // 模型本地坐标 -> 窗口坐标
+      gx = p.x
+      gy = p.y
+    } catch {}
+    const hits = hitAt(gx, gy)
+    const rec = { name, gx: Math.round(gx), gy: Math.round(gy), hits, ok: hits.includes(name) }
+    if (isOut) outCanvas.push(rec)
+    else inCanvas.push(rec)
+  }
+
+  console.log('[verify] 画内区', inCanvas.length, '个，画外区', outCanvas.length, '个')
+  for (const r of inCanvas) {
+    console.log('[verify] 画内', r.name, `(${r.gx},${r.gy})`,
+      r.ok ? '✓ 命中自己' : '✗ 命中: ' + (r.hits.join(',') || '无'))
+  }
+
+  // 画外区不该在「窗口内任何一点」被命中。用窗口内的网格点扫一遍才靠谱：
+  // 画外区的包围盒在负坐标，拿它自己的中心去测只会得到窗口外坐标，没有意义。
+  const inNames = new Set(inCanvas.map((r) => r.name))
+  const badHits = new Map()
+  let scanned = 0
+  try {
+    const W = app.screen.width
+    const H = app.screen.height
+    for (let x = 4; x < W; x += 12) {
+      for (let y = 4; y < H; y += 12) {
+        scanned++
+        for (const h of hitAt(x, y)) {
+          if (!inNames.has(h)) badHits.set(h, (badHits.get(h) ?? 0) + 1)
+        }
+      }
+    }
+  } catch (e) {
+    console.log('[verify] 窗口内扫描失败:', e.message)
+  }
+  console.log('[verify] 窗口内扫描点', scanned, '个；画外区被误命中种类', badHits.size,
+    badHits.size ? [...badHits.keys()].slice(0, 8).join(',') : '(无)')
+
+  const inHits = inCanvas.filter((r) => r.ok).length
+  console.log('[verify] 汇总：画内命中', inHits, '/', inCanvas.length,
+    '；窗口内误命中画外区', badHits.size, '种')
+}
+
 // ---------- B0 补充实验：自动扫描「什么操作能把画外网格移进画内」----------
 // 只在 PET_TOUCH_DEBUG=4 时触发。做法：对每个带 touch 的参数分别设 min/max 并
 // 调 coreModel.update() 后重扫，再依次播待机动作各等 1 秒重扫。
@@ -1068,6 +1133,22 @@ function boot() {
   window.pet.onActivity((active) => setActivity(active))
   window.pet.onState((type) => onDsState(type))
   window.pet.onBubble((on) => { bubbleOn = !!on })
+  // 测试用：返回各触摸区在窗口内的坐标（拖拽自动化测试用）
+  window.__touchPoints = () => {
+    try {
+      const im = model?.internalModel
+      if (!im) return {}
+      const out = {}
+      for (const [name, def] of Object.entries(im.hitAreas ?? {})) {
+        const b = im.getDrawableBounds(def.index, { x: 0, y: 0, width: 0, height: 0 })
+        const p = new PIXI.Point(b.x + b.width / 2, b.y + b.height / 2)
+        model.toGlobal(p, p)
+        out[name] = [Math.round(p.x), Math.round(p.y)]
+      }
+      return out
+    } catch { return {} }
+  }
+
   // 测试用：外部可通过 executeJavaScript 调 window.__petHitTest(x,y) 模拟一次命中
   window.__petHitTest = (x, y) => {
     try {
@@ -1093,6 +1174,7 @@ function boot() {
   // B0 调试入口：主进程置 PET_TOUCH_DEBUG=1 时触发
   window.pet.onTouchDebug((arg) => dumpTouchMeshes(arg))
   window.pet.onTouchScan(() => scanActivation())
+  window.pet.onTouchVerify(() => verifyTouchAreas())
   // 切换自动/手动触摸区
   window.pet.onTouchMode((mode) => {
     touchMode = mode === 'manual' ? 'manual' : 'auto'
