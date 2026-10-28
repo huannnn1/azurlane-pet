@@ -126,28 +126,37 @@ async function loadModel(url) {
 }
 
 /**
- * 出场动作：每个皮肤都有 login（240/240），播完再回待机。
- * 它也是 Loop 且时长从 3.8 秒到 31.8 秒不等，所以按实际时长定时收回，
- * 但夹在 3~8 秒，别让最长那个卡上半分钟。
+ * 播一次动作，按实际时长收回待机。
+ * 皮肤里的触摸/剧情动作几乎都是 Loop 的，不显式收回会一直循环下去。
+ * group 可以是单个名字或候选数组（按顺序取第一个当前皮肤有的）。
  */
-let loginTimer = null
-async function playLoginEntrance() {
-  if (!model || !groups?.login?.length) return
+let onceTimer = null
+async function playOnce(group, { min = 3, max = 8 } = {}) {
+  if (!model) return false
+  const key = Array.isArray(group)
+    ? group.find((g) => groups[g]?.length)
+    : (groups[group]?.length ? group : null)
+  if (!key) return false
+  if (key === 'idle') { play('idle'); return true }
+
   let dur = 0
-  try { dur = await window.pet.motionDuration('login') } catch {}
-  try {
-    model.motion('login')
-    console.log('[skin] 出场动作 login，时长', (dur || 0).toFixed(1) + 's')
-  } catch (e) {
-    console.log('[skin] 出场动作播放失败', e.message)
-    return
-  }
-  const waitMs = Math.min(Math.max(dur || 4, 3), 8) * 1000
-  if (loginTimer) clearTimeout(loginTimer)
-  loginTimer = setTimeout(() => {
-    loginTimer = null
+  try { dur = await window.pet.motionDuration(key) } catch {}
+  try { model.motion(key) } catch { return false }
+  console.log('[motion] 播放一次', key, (dur || 0).toFixed(1) + 's')
+
+  const waitMs = Math.min(Math.max(dur || 4, min), max) * 1000
+  if (onceTimer) clearTimeout(onceTimer)
+  onceTimer = setTimeout(() => {
+    onceTimer = null
     if (!dragging && model) play('idle')
   }, waitMs)
+  return true
+}
+
+/** 出场动作：每个皮肤都有 login，播完回待机 */
+async function playLoginEntrance() {
+  if (!model || !groups?.login?.length) return
+  await playOnce('login', { min: 3, max: 8 })
 }
 
 async function switchSkin(url) {
@@ -488,25 +497,22 @@ function setActivity(active) {
 /**
  * DSH 阶段 → 待机动作。只挑变化明显、不频繁的几个事件，
  * tool/result、step/* 这类高频事件忽略掉，否则动作会被切得稀碎。
+ * 用上 skin 里原本闲置的 mission_complete / complete / mail / home。
  */
 const STATE_MOTION = {
-  'tool/call': ['touch_special', 'main_2'],      // 执行工具：抬手干活
-  'assistant/message': ['main_3'],               // 写回复
-  'user/message': ['touch_head'],                // 等用户说话，像在听
-  'job/registered': ['main_2'],                  // 起后台任务
-  'turn/end': ['idle'],                          // 回合结束，回待机
+  'tool/call': ['touch_special', 'main_2'],       // 执行工具：抬手干活
+  'assistant/message': ['main_3'],                // 写回复
+  'user/message': ['home', 'main_1'],             // 等用户说话，别再用摸头
+  'job/registered': ['main_2'],                   // 起后台任务
+  'job/settled': ['mail', 'complete', 'idle'],    // 后台任务结束
+  'turn/end': ['mission_complete', 'complete', 'idle'],  // 干完了，该有反馈
 }
 
 function onDsState(type) {
   if (!model || dragging) return
   const candidates = STATE_MOTION[type]
   if (!candidates) return
-  const key = candidates.find((k) => groups[k]?.length)
-  if (!key) return
-  try {
-    model.motion(key)
-    console.log('[activity] 切动作', key, '←', type)
-  } catch {}
+  playOnce(candidates, { min: 3, max: 6 })
 }
 
 // ---------- HUD -----------------------------------------------------------
