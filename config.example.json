@@ -9,6 +9,7 @@
   "fit": "auto",
   "hintShown": false,
   "assetsDir": "",
+  "favorites": [],
   "deepseek": {
     "apiKey": "在这里填你的 DeepSeek API Key",
     "baseUrl": "https://api.deepseek.com"
