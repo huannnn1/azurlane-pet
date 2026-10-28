@@ -665,14 +665,22 @@ function createWindow() {
     }
     win.webContents.once('did-finish-load', () => {
       setTimeout(async () => {
+        let blank = false
         try {
           const img = await win.webContents.capturePage()
           const out = app.isPackaged
             ? path.join(app.getPath('userData'), 'snapshot.png')
             : path.join(ROOT, 'snapshot.png')
           fs.mkdirSync(path.dirname(out), { recursive: true })
-          fs.writeFileSync(out, img.toPNG())
-          console.log('[snapshot] saved ->', out)
+          const buf = img.toPNG()
+          fs.writeFileSync(out, buf)
+          // 空白截图（模型没渲染出来）是这轮踩过的坑，让流程自己盯住
+          if (buf.length < 30 * 1024) {
+            blank = true
+            console.error('[snapshot] 疑似空白：', out, buf.length, 'bytes')
+          } else {
+            console.log('[snapshot] saved ->', out, buf.length, 'bytes')
+          }
         } catch (e) {
           console.error('[snapshot] failed', e)
         }
@@ -681,6 +689,8 @@ function createWindow() {
           console.log('[bench] 隐藏窗口，观察 9 秒')
           win.hide()
           setTimeout(() => app.quit(), 9000)
+        } else if (blank) {
+          app.exit(1)   // 非零退出码，让脚本/CI 能感知截图异常
         } else {
           app.quit()
         }
