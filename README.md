@@ -161,6 +161,12 @@ assets/
 - **拖动必须用 `setBounds` 并锁死宽高**，`setPosition` 在 125% DPI 下每帧漂移 1px。
 - **动作播完要显式回 `idle`**，皮肤里的动作几乎都是 Loop。
 
+## 触摸区是怎么来的
+
+自动触摸区直接读模型里的网格：`TouchHead` / `TouchBody` / `TouchSpecial` / `TouchIdleN` / `TouchDragN`，网格名按下划线转成动作组（`TouchIdle3 → touch_idle3`），240 个皮肤全部自带这三个基础区，不用手动标定。
+
+**有一个限制**：游戏会把暂时不可用的区「停放」在画布外的负坐标区（实测 `benningdun_2` 的 72 个区里有 68 个停在 y = -3 万 ～ -6 万），所以这些区点不到。Drag 区和部分 Idle 区默认就是这样。它们的激活机制不是参数驱动的——把 73 个带 touch 的参数逐个设成最大最小值、每次都调 `coreModel.update()` 后重扫，没有任何一个能让它们移进画内；播 idle1/idle3/idle5 也一样。所以 **Drag/Idle 区暂不支持**，需要的话请用手动标定，或在菜单里切到「手动标定」。
+
 ## 操作速查
 
 | 操作 | 效果 |

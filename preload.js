@@ -54,6 +54,7 @@ contextBridge.exposeInMainWorld('pet', {
   onTouchScan: (cb) => ipcRenderer.on('pet:touch-scan', () => cb()),
   onTouchVerify: (cb) => ipcRenderer.on('pet:touch-verify', () => cb()),
   onTouchMode: (cb) => ipcRenderer.on('pet:touch-mode', (_e, mode) => cb(mode)),
+  onTouchOverlay: (cb) => ipcRenderer.on('pet:touch-overlay', (_e, on) => cb(on)),
   onNoSkins: (cb) => ipcRenderer.on('pet:no-skins', () => cb()),
   skinOk: (skin) => ipcRenderer.send('pet:skin-ok', skin),
   skinFailed: (skin) => ipcRenderer.send('pet:skin-failed', skin),

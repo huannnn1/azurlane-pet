@@ -56,6 +56,7 @@ let downAt = null
 let dragZoneHit = null  // 在 TouchDrag 区按下时记住它，松手播动作而不是移动窗口
 let hoverInside = false   // 光标是否在人物上（穿透判定回传，HUD hover 模式与抓取手势都用它）
 let touchMode = 'auto'    // auto：用模型里的 Touch* 网格；manual：用用户标定的锚点
+let showTouchAreas = false // 是否显示触摸区矩形
 let hasHitAreas = false
 
 /** 鼠标在人物身上时显示抓取手势，拖动中换成抓紧 */
@@ -133,6 +134,7 @@ async function loadModel(url) {
   showLoading(false)
   installFocusPatch()   // 给新模型的 coreModel.update 打上视线补丁
   registerTouchAreas()  // 把模型里的 Touch* 网格注册成自动触摸区
+  if (showTouchAreas) setTouchOverlay(true)
   // 换皮肤后冒一句中文名，方便确认换的是谁
   window.pet.skinLabel()
     .then((label) => { if (label) say(label, 2000) })
@@ -720,6 +722,41 @@ function checkLowBalance(total) {
   }
 }
 
+// ---------- B2：显示触摸区（菜单开关）----------
+// 把已注册的触摸区画成半透明矩形，方便看清哪里能点。
+function setTouchOverlay(on) {
+  if (!model) return
+  try {
+    const old = model.getChildByName('__touchOverlay')
+    if (old) { model.removeChild(old); old.destroy() }
+    if (!on) return
+    const im = model.internalModel
+    const layer = new PIXI.Graphics()
+    layer.name = '__touchOverlay'
+    const colors = { head: 0xff5555, body: 0x55ff88, special: 0x55aaff, idle: 0xffdd55, drag: 0xff55ff, other: 0xffffff }
+    let drawn = 0
+    for (const [name, def] of Object.entries(im.hitAreas ?? {})) {
+      let b
+      try { b = im.getDrawableBounds(def.index, { x: 0, y: 0, width: 0, height: 0 }) } catch { continue }
+      const low = name.toLowerCase()
+      const color = low.includes('head') ? colors.head
+        : low.includes('body') ? colors.body
+          : low.includes('special') ? colors.special
+            : low.includes('idle') ? colors.idle
+              : low.includes('drag') ? colors.drag : colors.other
+      layer.beginFill(color, 0.16)
+      layer.lineStyle(45, color, 0.95)
+      layer.drawRect(b.x, b.y, b.width, b.height)
+      layer.endFill()
+      drawn++
+    }
+    model.addChild(layer)
+    console.log('[touch] 显示触摸区，矩形数', drawn)
+  } catch (e) {
+    console.log('[touch] 显示触摸区失败:', e.message)
+  }
+}
+
 // ---------- 自动验证触摸区：程序取包围盒中心再转屏幕坐标，不靠手算 ----------
 function verifyTouchAreas() {
   const im = model?.internalModel
@@ -1175,6 +1212,7 @@ function boot() {
   window.pet.onTouchDebug((arg) => dumpTouchMeshes(arg))
   window.pet.onTouchScan(() => scanActivation())
   window.pet.onTouchVerify(() => verifyTouchAreas())
+  window.pet.onTouchOverlay((on) => setTouchOverlay(!!on))
   // 切换自动/手动触摸区
   window.pet.onTouchMode((mode) => {
     touchMode = mode === 'manual' ? 'manual' : 'auto'
@@ -1192,6 +1230,7 @@ function boot() {
     hudMode = c?.hud ?? 'always'
     sizeScale = c?.sizeScale ?? 1
     touchMode = c?.touchAuto === false ? 'manual' : 'auto'
+    showTouchAreas = c?.showTouchAreas === true
     applyHudMode()
     layout()
     // 模式在模型加载之后才确定时，重注册一次

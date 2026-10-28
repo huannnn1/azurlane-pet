@@ -60,6 +60,7 @@ const DEFAULT_CONFIG = {
   bubble: true, // 头顶气泡台词
   hud: 'always', // always | hover | off
   touchAuto: true, // true: 用模型内置的 Touch* 网格自动识别触摸区；false: 用手动标定
+  showTouchAreas: false, // 是否在画面上显示触摸区矩形
   deepseek: { apiKey: '', baseUrl: 'https://api.deepseek.com' },
   usage: { refreshMinutes: 5, sessionOnly: false },
 }
@@ -1127,7 +1128,19 @@ ipcMain.on('pet:menu', () => {
                 if (win) win.webContents.send('pet:touch-mode', v)
               },
             }
-          }),
+          }).concat([
+            { type: 'separator' },
+            {
+              label: '显示触摸区',
+              type: 'checkbox',
+              checked: config.showTouchAreas === true,
+              click: (mi) => {
+                config.showTouchAreas = mi.checked
+                saveConfig()
+                if (win) win.webContents.send('pet:touch-overlay', mi.checked)
+              },
+            },
+          ]),
         },
         {
           label: 'HUD 显示',
