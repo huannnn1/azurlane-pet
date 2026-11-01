@@ -148,7 +148,15 @@ async function loadModel(url) {
  * group 可以是单个名字或候选数组（按顺序取第一个当前皮肤有的）。
  */
 let onceTimer = null
-async function playOnce(group, { min = 3, max = 8 } = {}) {
+
+/**
+ * 播一个动作，播完再回待机。
+ * 按动作文件的真实时长来等（加 0.3 秒余量），不再用 max 截断——
+ * 之前 max 默认 8 秒，导致任何超过 8 秒的动作都会在 8 秒被硬切回待机，
+ * 看起来就是动到一半突然回正。
+ * max 现在只作为异常兜底（默认 120 秒），正常动作根本碰不到。
+ */
+async function playOnce(group, { min = 3, max = 120 } = {}) {
   if (!model) return false
   const key = Array.isArray(group)
     ? group.find((g) => groups[g]?.length)
@@ -161,7 +169,8 @@ async function playOnce(group, { min = 3, max = 8 } = {}) {
   try { model.motion(key) } catch { return false }
   console.log('[motion] 播放一次', key, (dur || 0).toFixed(1) + 's')
 
-  const waitMs = Math.min(Math.max(dur || 4, min), max) * 1000
+  const real = Math.max(dur || 0, min)
+  const waitMs = Math.min(real + 0.3, max) * 1000
   if (onceTimer) clearTimeout(onceTimer)
   onceTimer = setTimeout(() => {
     onceTimer = null
@@ -173,7 +182,7 @@ async function playOnce(group, { min = 3, max = 8 } = {}) {
 /** 出场动作：每个皮肤都有 login，播完回待机 */
 async function playLoginEntrance() {
   if (!model || !groups?.login?.length) return
-  await playOnce('login', { min: 3, max: 8 })
+  await playOnce('login', { min: 3 })
 }
 
 async function switchSkin(url) {
@@ -577,7 +586,10 @@ function play(groupName) {
 function playHit(area) {
   // 1) 自动触摸区：网格名直接就是动作组名（TouchIdle3 -> touch_idle3）
   const mapped = meshToMotion(area)
-  if (groups[mapped]?.length && play(mapped)) {
+  if (groups[mapped]?.length) {
+    // 用 playOnce：按动作真实时长播完再回待机，同时占住 onceTimer，
+    // 避免待机定时器在动作播到一半时插进来把动作切走
+    playOnce(mapped, { min: 2 })
     console.log('[hit] 命中网格', area, '-> 播放', mapped)
     return true
   }
@@ -636,6 +648,8 @@ let idleTimer = null
 
 function playRandomMain() {
   if (!model || dragging) return
+  // 正在播一次性动作（触摸/出场/点击）时不要插队，等它播完
+  if (onceTimer) return
   const keys = ['main_1', 'main_2', 'main_3'].filter((k) => groups[k]?.length)
   if (keys.length) {
     try { model.motion(keys[Math.floor(Math.random() * keys.length)]) } catch {}
@@ -680,6 +694,8 @@ function onDsState(type) {
   }
   const candidates = STATE_MOTION[type]
   if (!candidates) return
+  // 正在播一次性动作（出场、手动选的、点到触发的）时不要插队打断
+  if (onceTimer) return
   playOnce(candidates, { min: 3, max: 6 })
 }
 
@@ -1142,7 +1158,8 @@ function boot() {
   // 菜单里手动挑的动作：直接播，不经过命中区逻辑
   window.pet.onMotion((key) => {
     console.log('[motion] 手动播放', key)
-    try { model?.motion(key) } catch (e) { console.log('[motion] 播放失败', key, e.message) }
+    // 手动选的动作也按真实时长播完再回待机，不要被待机定时器或 8 秒上限打断
+    playOnce(key, { min: 2 })
   })
   window.pet.onVisible((v) => setRendering(v))
   // 视线跟随：把窗口内坐标归一化到 -1~1 交给模型
